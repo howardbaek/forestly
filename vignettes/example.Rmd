@@ -1,8 +1,8 @@
 ---
-title: "example"
+title: "rainfall"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example}
+  %\VignetteIndexEntry{rainfall}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,6 +14,166 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Load Required Package 
 ```{r setup}
-library(forestly)
+library(DescTools)      # Compare risk difference (Obtain confidence interval)
+library(plotly)         # Interactive figure 
+library(reactable)      # Interactive table 
+library(dplyr)          
+library(tidyr)
+devtools::load_all()
 ```
+
+
+# Define analysis data
+
+```{r}
+# tidy_ae_table is defined in R/ folder with same name 
+# obtain AE inforation ready for visulization
+db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
+                    observation_from = adae,
+                    treatment_var = "TRTA",
+                    treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                    listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX", 
+                                    "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
+```
+
+```{r}
+# Calculate test using M&N method 
+tb <- cbind(db$table,
+            with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
+
+t_display <- tb %>% mutate(fig_prop = NA, fig_diff = est, 
+                           ae = tools::toTitleCase(tolower(ae))) %>% 
+                    select(ae, stratum, fig_prop, fig_diff, n_1, pct_1, n_2, pct_2)
+```
+
+```{r}
+# Listing of subjects
+t_detail <- db$listing
+```
+
+```{r}
+color <- c("gold", "purple")
+```
+
+# Create Table
+
+```{r}
+# function to create proportion of subjects figure
+fig_prop_cell <- function(value, index){
+  
+  tmp <- tb[index, ] %>% pivot_longer(cols = starts_with("pct"))
+  xlim <- round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) )
+  
+  sparkline_point(x = tmp$value,
+                  y = tmp$ae,
+                  xlim = xlim,
+                  color = color,
+                  height = 30)
+  
+}
+
+# function to create Axis 
+fig_prop_footer <- function(value){
+  
+  tmp <- tb[1, ] %>% pivot_longer(cols = starts_with("pct"))
+  xlim <- round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) )
+  sparkline_draw_axis(color = color, 
+                      label = levels(db$listing$treatment), 
+                      xlim = xlim)
+  
+}
+
+# function to create proportion difference figure
+fig_diff_cell <- function(value, index){
+  
+  tmp <- tb[index, ] 
+  xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
+  
+  sparkline_errorbar(tmp$est, 
+                     tmp$lower, 
+                     tmp$upper, 
+                     xlim = xlim, 
+                     color = "black")
+  
+}
+
+# function to create Axis 
+fig_diff_footer <- function(value){
+  
+  tmp <- tb[1, ] %>% pivot_longer(cols = starts_with("pct"))
+  xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
+  sparkline_draw_axis(showlegend = FALSE, 
+                      xlab = "MK9999 <- Favor -> Placebo", 
+                      color = "black",
+                      xlim = xlim, height = 60, margin_bottom = 50)
+  
+}
+```
+
+```{r}
+Sys.time()
+```
+
+```{r}
+# mk_reactable saved in the R/ folder: define default behavior of reactable. 
+t_display %>% mk_reactable(
+  
+  # reactable configuration https://glin.github.io/reactable/reference/reactable.html
+  resizable = TRUE, 
+  filterable = TRUE,
+  searchable = TRUE, 
+  defaultPageSize = 10, 
+  borderless = TRUE, 
+  striped = TRUE, 
+  highlight = TRUE, 
+  
+  # No padding between two cells (ensure no break line between reference line)
+  theme = reactableTheme(cellPadding = "0px 8px"),
+  
+  # Default sort variable 
+  defaultSorted = c("fig_diff"),
+  
+  # Define listing of subjects
+  details = function(index){
+    t_row <- t_display[index, ]
+    subset(db$listing, ae %in% t_row$ae) %>% mk_reactable
+  },
+  
+  # Customize cell feature 
+  columnGroups = list(
+    colGroup(name = "MK9999 (N = 84)",  columns = c("n_1", "pct_1")),
+    colGroup(name = "Placebo (N = 86)", columns = c("n_2", "pct_2"))
+  ),
+  # 
+  column = list(
+    ae = colDef(header = "Adverse Events", minWidth = 300, align = "right"),
+
+    stratum = colDef(header = "Stratum", show = FALSE),
+
+    fig_prop = colDef(header = "AE Proportion (%)",
+                      minWidth = 300, align = "center",
+                      cell = fig_prop_cell, footer = fig_prop_footer
+    ),
+
+
+    fig_diff = colDef(header = "Risk Diff (%) + 95% CI",
+                      defaultSortOrder = "desc",
+                      minWidth = 200, align = "center",
+                      cell = fig_diff_cell, footer = fig_diff_footer,
+                      show = TRUE),
+
+    n_1 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
+    n_2 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
+    pct_1 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) ),
+    pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) )
+  )
+
+)
+```
+
+```{r}
+Sys.time()
+```
+

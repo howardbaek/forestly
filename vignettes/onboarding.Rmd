@@ -1,0 +1,48 @@
+---
+title: "onboarding"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Datasets: 
+
+`adsl`: subject level information
+`adae`: adverse events information one record per row. 
+
+Source: https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-project/browse/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/analysis/adam/datasets
+
+```{r}
+devtools::load_all()        # https://r-pkgs.org/whole-game.html
+head(adsl)[,1:5]            # dataset saved in the data folder will be loaded 
+```
+
+
+> You are able to see dataest label by using `View(adsl)`. More details can be found in the [data guide](https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-project/browse/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/analysis/adam/datasets/dataguide.pdf)
+
+## Adverse Events Structure
+
+- Adverse Events (AE) term: `adae$AEDECOD`
+- Source of Organ (SOC) `adae$AESOC`
+- Serious AE `adae$AESER`
+- Drug related AE `adae$AEREL`
+- AE result in death `adae$AEOUT`
+
+Note: Each AE term belongs to an SOC. 
+
+As a clinician, I would be interested to explore the adverse events in multiple layers. 
+
+1. How many (N and %) subjects encounter AE? (by AE term and by SOC)
+2. How many (N and %) subjects encounter serious AE? (by AE term and by SOC)
+3. How many (N and %) subjects encounter drug related AE? (by AE term and by SOC)
+4. How many (N and %) subjects encounter drug related serious AE? (by AE term and by SOC)
+5. How many (N and %) subjects encounter drug related AE result in death? (by AE term and by SOC)
+6. For AE of particular interest, who are they? 
+
+## Demo
+
+Refer `vignettes/example.Rmd` or the compiled one at 
+
+
