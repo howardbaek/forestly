@@ -3,3 +3,7 @@
 .RData
 .Ruserdata
 inst/doc
+docs
+doc
+Meta
+sync_bitbucket.R
