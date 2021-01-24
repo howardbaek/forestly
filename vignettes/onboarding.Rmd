@@ -43,6 +43,6 @@ As a clinician, I would be interested to explore the adverse events in multiple 
 
 ## Demo
 
-Refer `vignettes/example.Rmd` or the compiled one at 
+Refer `vignettes/example.Rmd` or the compiled one at https://elong0527.github.io/forestly/articles/example.html
 
 
