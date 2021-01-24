@@ -14,16 +14,12 @@ The goal of forestly is to …
 You can install the released version of forestly from
 [CRAN](https://CRAN.R-project.org) with:
 
-``` r
-install.packages("forestly")
-```
+    install.packages("forestly")
 
 And the development version from [GitHub](https://github.com/) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("elong0527/forestly")
-```
+    # install.packages("devtools")
+    devtools::install_github("elong0527/forestly")
 
 ## Resources:
 
