@@ -1,8 +1,8 @@
 ---
-title: "rainfall"
+title: "example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rainfall}
+  %\VignetteIndexEntry{example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -50,6 +50,7 @@ t_display <- tb %>% mutate(fig_prop = NA, fig_diff = est,
 
 ```{r}
 # Listing of subjects
+# Require proper format for the header. 
 t_detail <- db$listing
 ```
 
@@ -138,7 +139,7 @@ t_display %>% mk_reactable(
   # Define listing of subjects
   details = function(index){
     t_row <- t_display[index, ]
-    subset(db$listing, ae %in% t_row$ae) %>% mk_reactable
+    subset(t_detail, toupper(ae) %in% toupper(t_row$ae)) %>% mk_reactable
   },
   
   # Customize cell feature 
