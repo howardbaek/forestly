@@ -3,5 +3,6 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   example: example.html
-last_built: 2021-01-24T20:04Z
+  onboarding: onboarding.html
+last_built: 2021-01-24T21:31Z
 
