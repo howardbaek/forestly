@@ -1,3 +1,19 @@
+#' tidy_population
+#'
+#' Get population level tidy data
+#'
+#' @param population_from
+#' @param population_where
+#' @param treatment_var
+#' @param treatment_order
+#' @param stratum_var
+#' @param baseline_var
+#'
+#' @return a table of population information
+#'
+#' @export
+#'
+#' @examples
 tidy_population <- function(population_from,
                             population_where = NULL,
                             treatment_var = "TRT01A",
@@ -36,3 +52,4 @@ tidy_population <- function(population_from,
 
   pop
 }
+
