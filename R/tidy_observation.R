@@ -1,3 +1,16 @@
+#' tidy_observation
+#'
+#' Select the Desired Observation
+#'
+#' @param observation_from
+#' @param observation_where
+#' @param treatment_var
+#' @param treatment_order
+#'
+#' @return a table of observation information
+#' @export
+#'
+#' @examples
 tidy_observation <- function(observation_from,
                              observation_where,
                              treatment_var    = treatment_var,
@@ -26,3 +39,4 @@ tidy_observation <- function(observation_from,
 
   db
 }
+
