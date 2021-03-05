@@ -2,7 +2,7 @@
 #'
 #' Select the Desired Observation
 #'
-#' @param observation_from
+#' @param observation_from a variable to define the observation dataset
 #' @param observation_where
 #' @param treatment_var
 #' @param treatment_order
