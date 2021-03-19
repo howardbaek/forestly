@@ -1,15 +1,23 @@
 #' tidy_population
 #'
-#' Get population level tidy data
+#' Get population level tidy data.
 #'
-#' @param population_from The input population level data table. For example, "subject level information" from the table "adsl".
-#' @param population_where Tells the function which rows of the table should be select, according to the value of certain column. For example, select subset where "ITTFL=='Y'.
-#' @param treatment_var The function will create a new column called "treatment" based on the column of this parameter. For example, the "treatment" column will be equal to "TRT01A".
-#' @param treatment_order Tells the function which rows of the table should be select, only if the values in "treatment" is in this parameter. It also provide the label names of the treatments after turning them into factors. For example, include rows which treatment = "Placebo" and treatment = "Xanomeline High Dose", and change the factor labels into "Placebo" and "MK9999".
-#' @param stratum_var The function will create a new column called "stratum" based on this parameter.
+#' @param population_from A data frame to obtain population level variables.
+#'                        Typically an 'adsl' dataset.
+#'                        It is the source of variables mentioned in
+#'                        'population_where', 'treatment_var', 'stratum_var' and 'covariate_var'.
+#' @param population_where A character string to define the criteria to select analysis population.
+#' @param treatment_var  A character string to define the variable of new column called "treatment".
+#' @param treatment_order A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
+#'                        It also provide the label names of the treatments after turning them into factors.
+#' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.
+#'                    Only one 'stratum_var' is allowed.
 #' @param baseline_var Tells the function which column of the table to be selected as the final output.
 #'
-#' @return an output table of population information.
+#' @return an output data frame of population level information.
+#'         USUBJID: Unique subject identifier.
+#'         treatment: Actual treatment.
+#'         stratum: baseline stratum in 'population_from'.
 #'
 #' @export
 #'
