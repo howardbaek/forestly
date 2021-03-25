@@ -1,6 +1,6 @@
 #' tidy_observation
 #'
-#' This function is used to prepare the observation datasets for the use in function tidy_ae_table().
+#' This function is used to prepare the observation datasets for the use in function `tidy_ae_table()`.
 #' The function filter the `adae` dataset, and define proper treatment order in the dataset.
 #'
 #'
