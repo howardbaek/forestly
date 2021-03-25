@@ -6,7 +6,7 @@
 #' @param population_from A data frame to obtain population level variables.
 #'                        Typically an 'adsl' dataset.
 #'                        It is the source of variables mentioned in
-#'                        'population_where', 'treatment_var', 'stratum_var' and 'covariate_var'.
+#'                        `population_where`, `treatment_var`, `stratum_var` and `covariate_var`.
 #' @param population_where A character string to define the criteria to select analysis population.
 #' @param treatment_var  A character string to define the variable of new column called "treatment".
 #' @param treatment_order A vector of character strings that tells the 
