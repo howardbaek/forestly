@@ -5,7 +5,7 @@
 #'
 #'
 #' @param observation_from A data frame to obtain observation level variables.
-#'                         Typically an 'adae' dataset for time-to-event analysis.
+#'                         Typically an `adae` dataset for time-to-event analysis.
 #'                         It is the source of variables mentioned in
 #'                         `observation_where`, `start_date_var`, `end_date_var`, `censor_var`.
 #' @param observation_where A character string to define the criteria to select analysis observation.
