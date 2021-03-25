@@ -1,7 +1,7 @@
 #' tidy_population
 #'
 #' This function is used to prepare the observation datasets for the use in function tidy_ae_table().
-#' The function filter the 'adsl' dataset, and define a 'treatment' in the dataset.
+#' The function filter the `adsl` dataset, and define proper treatment order in the dataset.
 #'
 #' @param population_from A data frame to obtain population level variables.
 #'                        Typically an 'adsl' dataset.
