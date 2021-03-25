@@ -32,7 +32,8 @@
 #'  stratum_var      = NULL,
 #'  baseline_var     = NULL)
 #'
-#'
+#' tidy_population(population_from = adsl)
+#' tidy_population(population_from = adsl, stratum_var = "RACE")
 tidy_population <- function(population_from,
                             population_where = NULL,
                             treatment_var = "TRT01A",
