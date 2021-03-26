@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • forestly</title>
+<title>sparkline_errorbar — sparkline_errorbar • forestly</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="sparkline_errorbar — sparkline_errorbar" />
+<meta property="og:description" content="sparkline_errorbar" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -115,110 +116,41 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>sparkline_errorbar</h1>
+    
+    <div class="hidden name"><code>sparkline_errorbar.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>sparkline_errorbar</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>sparkline_errorbar</span><span class='op'>(</span>
+  <span class='va'>est</span>,
+  <span class='va'>lower</span>,
+  <span class='va'>upper</span>,
+  color <span class='op'>=</span> <span class='cn'>NULL</span>,
+  height <span class='op'>=</span> <span class='fl'>30</span>,
+  xlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  vline <span class='op'>=</span> <span class='cn'>NULL</span>,
+  margin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>l <span class='op'>=</span> <span class='fl'>0</span>, r <span class='op'>=</span> <span class='fl'>0</span>, b <span class='op'>=</span> <span class='fl'>0</span>, t <span class='op'>=</span> <span class='fl'>0</span>, pad <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-data-preparation" class="hasAnchor"><a href="#section-data-preparation" class="anchor"></a>Data Preparation</h2>
-          <p class="section-desc"><p>Prepare data ready for visualization</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="tidy_ae_table.html">tidy_ae_table()</a></code> </p>
-        </td>
-        <td><p>tidy_ae_table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_observation.html">tidy_observation()</a></code> </p>
-        </td>
-        <td><p>tidy_observation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_population.html">tidy_population()</a></code> </p>
-        </td>
-        <td><p>tidy_population</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-sparkline" class="hasAnchor"><a href="#section-sparkline" class="anchor"></a>Sparkline</h2>
-          <p class="section-desc"><p>Sparkline figures</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="sparkline_draw_axis.html">sparkline_draw_axis()</a></code> </p>
-        </td>
-        <td><p>sparkline_draw_axis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sparkline_errorbar.html">sparkline_errorbar()</a></code> </p>
-        </td>
-        <td><p>sparkline_errorbar</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sparkline_point.html">sparkline_point()</a></code> </p>
-        </td>
-        <td><p>sparkline_point</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-utility" class="hasAnchor"><a href="#section-utility" class="anchor"></a>Utility</h2>
-          <p class="section-desc"><p>Utility functions</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="prop_test_mn.html">prop_test_mn()</a></code> </p>
-        </td>
-        <td><p>Test of Equal Proportion Using Miettinen and Nurminen Method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mk_reactable.html">mk_reactable()</a></code> </p>
-        </td>
-        <td><p>mk_reactable</p></td>
-      </tr>
-    </tbody>
-    </table>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='va'>est</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>lower</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>upper</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>5</span><span class='op'>)</span>
+<span class='va'>color</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"red"</span>, <span class='st'>"blue"</span>, <span class='st'>"gold"</span><span class='op'>)</span>
+<span class='fu'>sparkline_errorbar</span><span class='op'>(</span><span class='va'>est</span>, <span class='va'>lower</span>, <span class='va'>upper</span>, <span class='va'>color</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot_ly(data = db, x = ~est, y = ~1:nrow(db), color = color,     colors = color, text = hover_text, hoverinfo = "text", type = "scatter",     mode = "markers", height = height): could not find function "plot_ly"</span></div><div class='input'>
+</div></pre>
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

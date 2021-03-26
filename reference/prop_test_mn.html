@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • forestly</title>
+<title>Test of Equal Proportion Using Miettinen and Nurminen Method — prop_test_mn • forestly</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,16 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Test of Equal Proportion Using Miettinen and Nurminen Method — prop_test_mn" />
+<meta property="og:description" content="
+
+Assign numbers and define parameters
+Perform algebra for calculating maximum likelihood estimates of proportion on treatment and control groups.
+Calculate sample variance based on step 2 and constract test-statistics
+For non-inferiority or one-sided equivalence hypothesis, the p-value is computed based on the test-statistic (Zdiff) using the standard normal distribution.
+For superiority or two-sided test, the p-value is computed based on the test statistic (Zdiff^2) using the Chi-square distribuiton with df = 1.
+
+" />
 
 
 
@@ -58,7 +67,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -115,110 +124,71 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Test of Equal Proportion Using Miettinen and Nurminen Method</h1>
+    
+    <div class="hidden name"><code>prop_test_mn.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+<ol>
+<li><p>Assign numbers and define parameters</p></li>
+<li><p>Perform algebra for calculating maximum likelihood estimates of proportion on treatment and control groups.</p></li>
+<li><p>Calculate sample variance based on step 2 and constract test-statistics</p></li>
+<li><p>For non-inferiority or one-sided equivalence hypothesis, the p-value is computed based on the test-statistic (Zdiff) using the standard normal distribution.</p></li>
+<li><p>For superiority or two-sided test, the p-value is computed based on the test statistic (Zdiff^2) using the Chi-square distribuiton with df = 1.</p></li>
+</ol>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    </div>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-data-preparation" class="hasAnchor"><a href="#section-data-preparation" class="anchor"></a>Data Preparation</h2>
-          <p class="section-desc"><p>Prepare data ready for visualization</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="tidy_ae_table.html">tidy_ae_table()</a></code> </p>
-        </td>
-        <td><p>tidy_ae_table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_observation.html">tidy_observation()</a></code> </p>
-        </td>
-        <td><p>tidy_observation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_population.html">tidy_population()</a></code> </p>
-        </td>
-        <td><p>tidy_population</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-sparkline" class="hasAnchor"><a href="#section-sparkline" class="anchor"></a>Sparkline</h2>
-          <p class="section-desc"><p>Sparkline figures</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="sparkline_draw_axis.html">sparkline_draw_axis()</a></code> </p>
-        </td>
-        <td><p>sparkline_draw_axis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sparkline_errorbar.html">sparkline_errorbar()</a></code> </p>
-        </td>
-        <td><p>sparkline_errorbar</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sparkline_point.html">sparkline_point()</a></code> </p>
-        </td>
-        <td><p>sparkline_point</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-utility" class="hasAnchor"><a href="#section-utility" class="anchor"></a>Utility</h2>
-          <p class="section-desc"><p>Utility functions</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="prop_test_mn.html">prop_test_mn()</a></code> </p>
-        </td>
-        <td><p>Test of Equal Proportion Using Miettinen and Nurminen Method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mk_reactable.html">mk_reactable()</a></code> </p>
-        </td>
-        <td><p>mk_reactable</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>prop_test_mn</span><span class='op'>(</span><span class='va'>x0</span>, <span class='va'>n0</span>, <span class='va'>x1</span>, <span class='va'>n1</span>, delta <span class='op'>=</span> <span class='fl'>0</span>, sides <span class='op'>=</span> <span class='st'>"two.sided"</span>, alpha <span class='op'>=</span> <span class='fl'>0.05</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x0</th>
+      <td><p>number of successes for the first group.</p></td>
+    </tr>
+    <tr>
+      <th>n0</th>
+      <td><p>number of trials for the first group.</p></td>
+    </tr>
+    <tr>
+      <th>x1</th>
+      <td><p>number of successes for the second group.</p></td>
+    </tr>
+    <tr>
+      <th>n1</th>
+      <td><p>number of trials for the second group.</p></td>
+    </tr>
+    <tr>
+      <th>delta</th>
+      <td><p>assumed proportion difference</p></td>
+    </tr>
+    <tr>
+      <th>sides</th>
+      <td><p>specify the hypothesis directions: two.sided, righ(less than), left(greater than)</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>pre-difined significant level</p></td>
+    </tr>
     </table>
-  </div>
 
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='va'>x0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>; <span class='va'>n0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>100</span><span class='op'>)</span>;
+<span class='va'>x1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>5</span><span class='op'>)</span>; <span class='va'>n1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>100</span><span class='op'>)</span>;
+<span class='fu'>prop_test_mn</span><span class='op'>(</span><span class='va'>x0</span>, <span class='va'>n0</span>, <span class='va'>x1</span>, <span class='va'>n1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   est     lower    upper         p
+#&gt; 1   3 -1.880929 8.985639 0.1753120
+#&gt; 2   3 -2.640984 9.460757 0.2495744</div><div class='input'>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
