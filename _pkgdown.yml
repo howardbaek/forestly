@@ -1,0 +1,15 @@
+destination: docs
+reference:
+  - title: "Data Preparation"
+    desc: "Prepare data ready for visualization"
+    contents:
+      - starts_with("tidy")
+  - title: "Sparkline"
+    desc: "Sparkline figures"
+    contents:
+      - starts_with("sparkline")
+  - title: "Utility"
+    desc: "Utility functions"
+    contents:
+      - prop_test_mn
+      - mk_reactable

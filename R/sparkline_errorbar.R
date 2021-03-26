@@ -1,4 +1,5 @@
 #' sparkline_errorbar
+#'
 #' @param est A vector of
 #' @param lower
 #' @param upper
@@ -36,12 +37,14 @@ sparkline_errorbar <- function(est,
   db$upper1 <- formatC(db$upper, digits = 2, format = "f")
 
   hover_text <- with(db, paste0(est1, " (",lower1, ", ", upper1, ")") )
+  color <- factor(color, levels = color)
+
 
   p <- plot_ly(data = db,
                x = ~ est,
                y = ~ 1:nrow(db),
                color = color,
-               colors = color,
+               colors = as.character(color),
                text = hover_text,
                hoverinfo = 'text',
                type = 'scatter',
