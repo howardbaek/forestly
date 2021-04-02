@@ -1,6 +1,6 @@
 #' sparkline_point
 #'
-#' This funtion is
+#' This function is drawing the scatter plot
 #'
 #' @param
 #'
@@ -12,6 +12,8 @@
 #' sparkline_point(x = x, y = y, color = color, height = 30)
 #'
 #' @export
+#'
+library(plotly)
 sparkline_point <- function(
                             x,
                             y,
@@ -40,3 +42,9 @@ sparkline_point <- function(
                          ...)
 
 }
+
+x <- 1:5
+y <- 1:5
+color <- c("red", "blue", "gold","grey","green")
+sparkline_point(x = x, y = y, color = color, height = 50)
+
