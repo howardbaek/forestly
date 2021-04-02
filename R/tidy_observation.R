@@ -1,13 +1,13 @@
 #' tidy_observation
 #'
-#' This function is used to prepare the observation datasets for the use in function tidy_ae_table().
-#' The function filter the 'adae' dataset, and define a 'treatment' in the dataset.
+#' This function is used to prepare the observation datasets for the use in function `tidy_ae_table()`.
+#' The function filter the `adae` dataset, and define proper treatment order in the dataset.
 #'
 #'
 #' @param observation_from A data frame to obtain observation level variables.
-#'                         Typically an 'adae' dataset for time-to-event analysis.
+#'                         Typically an `adae` dataset for time-to-event analysis.
 #'                         It is the source of variables mentioned in
-#'                         'observation_where', 'start_date_var', 'end_date_var', 'censor_var'.
+#'                         `observation_where`, `start_date_var`, `end_date_var`, `censor_var`.
 #' @param observation_where A character string to define the criteria to select analysis observation.
 #' @param treatment_var A character string to define the variable of new column called "treatment".
 #' @param treatment_order A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
