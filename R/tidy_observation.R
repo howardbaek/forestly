@@ -108,4 +108,3 @@ tidy_observation <- function(observation_from,
 
   db
 }
-
