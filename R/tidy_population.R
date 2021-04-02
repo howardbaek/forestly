@@ -9,15 +9,9 @@
 #'                        `population_where`, `treatment_var`, `stratum_var` and `covariate_var`.
 #' @param population_where A character string to define the criteria to select analysis population.
 #' @param treatment_var  A character string to define the variable of new column called "treatment".
-<<<<<<< HEAD
 #' @param treatment_order A vector of character strings that tells the
 #'                        function which rows of the table should be select,
 #'                        only if the values in "treatment" is in this vector.
-=======
-#' @param treatment_order A vector of character strings that tells the 
-#'                function which rows of the table should be select, 
-#'                only if the values in "treatment" is in this vector.
->>>>>>> b12fc9d65880731249002043123e7918d147d5a2
 #'                        It also provide the label names of the treatments after turning them into factors.
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.
 #'                    Only one 'stratum_var' is allowed.
