@@ -8,7 +8,7 @@
 #' @param height A number of the distance to determine the height of x-axis
 #'
 #' @return A x-axis with limits and legend.
-#'jjjjjjj
+#
 #' @examples
 #'
 color <- c("red", "blue")

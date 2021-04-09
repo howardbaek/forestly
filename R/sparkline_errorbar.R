@@ -1,10 +1,14 @@
 #' sparkline_errorbar
 #'
-#' @param est A vector of
-#' @param lower
-#' @param upper
-#' @param color
-#' @param height
+#'# You need to download "plotly" package first. Also you need function sparkline_layout.
+#'
+#' @param est A vector  determined the point of your bar
+#' @param lower A vector determined the leftmost point
+#' @param upper A vector determined the rightmost point
+#' @param color A vector of colors you want your bar to be
+#' @param height A variable determines the distance between your bars
+#'
+#' @return Three horizontal bars with the points and color you fixed.
 #'
 #' @examples
 #'
