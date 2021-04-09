@@ -1,6 +1,6 @@
 #' sparkline_errorbar
 #'
-#'# You need to download "plotly" package first. Also you need function sparkline_layout.
+#'# This function is used to draw error bars based on the parameters you defined.
 #'
 #' @param est A vector  determined the point of your bar
 #' @param lower A vector determined the leftmost point
@@ -16,7 +16,7 @@ est <- c(0,1,2)
 lower <- c(-1, -2, -1)
 upper <- c(3, 5, 5)
 color <- c("red", "blue", "gold")
-sparkline_errorbar(est, lower, upper, color)
+#' sparkline_errorbar(est, lower, upper, color)
 #'
 #' @export
 sparkline_errorbar <- function(est,

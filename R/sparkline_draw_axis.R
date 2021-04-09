@@ -16,23 +16,23 @@ label <- c("MK9999", "Placebo")
 xlim  <- c(-2, 2)
 xlab  <- "Example"
 #'
-sparkline_draw_axis(color, label, xlim,
-                    showlegend = FALSE, height = 30)
+#' sparkline_draw_axis(color, label, xlim,
+                    #'showlegend = FALSE, height = 30)
 #'
-sparkline_draw_axis(color, label, xlim,
-                    showlegend = TRUE, height = 60)
+#' sparkline_draw_axis(color, label, xlim,
+                    #' showlegend = TRUE, height = 60)
 #'
-sparkline_draw_axis(color, label, xlim, xlab = "Example",
-                     showlegend = FALSE, height = 60)
+#' sparkline_draw_axis(color, label, xlim, xlab = "Example",
+                     #' showlegend = FALSE, height = 60)
 #'
-sparkline_draw_axis(color, label, xlim, xlab = "Example",
-                    showlegend = TRUE, height = 100)
+#' sparkline_draw_axis(color, label, xlim, xlab = "Example",
+                    #' showlegend = TRUE, height = 100)
 #'
-sparkline_draw_axis(color, label, xlim, xlab = "Example",
-                    mode = "lines", showlegend = TRUE, height = 100)
+#' sparkline_draw_axis(color, label, xlim, xlab = "Example",
+                    #' mode = "lines", showlegend = TRUE, height = 100)
 #'
-sparkline_draw_axis(color, label, xlim, xlab = "Example",
-                    mode = "markers+lines", showlegend = TRUE, height = 100)
+#' sparkline_draw_axis(color, label, xlim, xlab = "Example",
+                    #' mode = "markers+lines", showlegend = TRUE, height = 100)
 #'
 #' @export
 sparkline_draw_axis <- function(color,
