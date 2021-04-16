@@ -1,6 +1,6 @@
 library(dplyr)
 
-test_that("tidy_population must have a input data.",{
+test_that("tidy_population's variable 'population_from' must have a input data.",{
   expect_error(tidy_population(),"argument \"population_from\" is missing")
 })
 
@@ -11,113 +11,65 @@ test_that("tidy_population can generate the table", {
 
 test_that("tidy_population can tidy the data", {
 
-  # function to creat expectation table: tidy_population(population_from = adsl).
-  e1 <- function(data){
-    pop <- subset(data, TRUE)
-    pop[["treatment"]] <- pop[["TRT01A"]]
-    pop <- subset(pop, treatment %in% unique(data[["TRT01A"]]))
+  # function to creat expectation table.
+  expectation_table <- function(data, pop_where, trt_var, trt_order, str_var){
+    pop <- eval(parse(text = paste0("subset(data,", pop_where, ")")))
+    pop[["treatment"]] <- pop[[trt_var]]
+    pop <- subset(pop, treatment %in% trt_order)
 
-    label_name = unique(data[["TRT01A"]])
+    if (!is.null(names(trt_order))) {
+      label_name = names(trt_order)
+    } else {label_name = trt_order}
 
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = unique(data[["TRT01A"]]), labels = label_name)
-    pop[["stratum"]] <- "All"
-    pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
+    pop[["treatment"]] <- factor(pop[["treatment"]], levels = trt_order, labels = label_name)
 
-    return(pop)
-  }
+    if(length(str_var) == 0){
+      pop[["stratum"]] <- "All"
+    }else{
+      pop[["stratum"]] <- pop[[str_var]]
+    }
 
-  # function to create expectation table: tidy_population(population_from = adsl, population_where="ITTFL=='Y'").
-  e2 <- function(data){
-    pop <- subset(data, ITTFL=='Y')
-    pop[["treatment"]] <- pop[["TRT01A"]]
-    pop <- subset(pop, treatment %in% unique(data[["TRT01A"]]))
-
-    label_name = unique(data[["TRT01A"]])
-
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = unique(data[["TRT01A"]]), labels = label_name)
-    pop[["stratum"]] <- "All"
-    pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
-
-    return(pop)
-  }
-
-  # function to create expectation table: tidy_population(population_from = adsl, treatment_var = "TRT01P").
-  e3 <- function(data){
-    pop <- subset(data, TRUE)
-    pop[["treatment"]] <- pop[["TRT01P"]]
-    pop <- subset(pop, treatment %in% unique(data[["TRT01P"]]))
-
-    label_name = unique(data[["TRT01P"]])
-
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = unique(data[["TRT01P"]]), labels = label_name)
-    pop[["stratum"]] <- "All"
-    pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
-
-    return(pop)
-  }
-
-  # function to create expectation table: tidy_population(population_from = adsl, treatment_order  = c("ABC" = "Xanomeline Low Dose")).
-  e4 <- function(data){
-    pop <- subset(data, TRUE)
-    pop[["treatment"]] <- pop[["TRT01A"]]
-    pop <- subset(pop, treatment %in% c("ABC" = "Xanomeline Low Dose"))
-
-    label_name = names(c("ABC" = "Xanomeline Low Dose"))
-
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = c("ABC" = "Xanomeline Low Dose"), labels = label_name)
-    pop[["stratum"]] <- "All"
-    pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
-
-    return(pop)
-  }
-
-  # function to create expectation table: tidy_population(population_from = adsl, stratum_var = "RACE").
-  e5 <- function(data){
-    pop <- subset(data, TRUE)
-    pop[["treatment"]] <- pop[["TRT01A"]]
-    pop <- subset(pop, treatment %in% unique(data[["TRT01A"]]))
-
-    label_name = unique(data[["TRT01A"]])
-
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = unique(data[["TRT01A"]]), labels = label_name)
-    pop[["stratum"]] <- pop[["RACE"]]
     pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
 
     return(pop)
   }
 
 
-  # function to create expectation table: tidy_population(population_from  = adsl %>% rename(TRTA = TRT01A),
+  # compare the actual result with expectation table:
+  # tidy_population(population_from = adsl).
+  expect_equal(tidy_population(population_from = adsl), expectation_table(adsl,TRUE,"TRT01A",unique(adsl[["TRT01A"]]),NULL))
+
+  # compare the actual result with expectation table:
+  # tidy_population(population_from = adsl,
+  #                 population_where="ITTFL=='Y'").
+  expect_equal(tidy_population(population_from = adsl, population_where="ITTFL=='Y'"), expectation_table(adsl,"ITTFL=='Y'","TRT01A",unique(adsl[["TRT01A"]]),NULL))
+
+  # compare the actual result with expectation table:
+  # tidy_population(population_from = adsl,
+  #                 treatment_var = "TRT01P").
+  expect_equal(tidy_population(population_from = adsl, treatment_var = "TRT01P"), expectation_table(adsl,TRUE,"TRT01P",unique(adsl[["TRT01P"]]),NULL))
+
+  # compare the actual result with expectation table:
+  # tidy_population(population_from = adsl,
+  #                 treatment_order  = c("ABC" = "Xanomeline Low Dose")).
+  expect_equal(tidy_population(population_from = adsl, treatment_order  = c("ABC" = "Xanomeline Low Dose")), expectation_table(adsl,TRUE,"TRT01A",c("ABC" = "Xanomeline Low Dose"),NULL))
+
+  # compare the actual result with expectation table:
+  # tidy_population(population_from = adsl,
+  #                 stratum_var = "RACE").
+  expect_equal(tidy_population(population_from = adsl, stratum_var = "RACE"), expectation_table(adsl,TRUE,"TRT01A",unique(adsl[["TRT01A"]]),"RACE"))
+
+  # compare the actual result with expectation table:
+  # tidy_population(population_from  = adsl %>% rename(TRTA = TRT01A),
   #  population_where = "ITTFL=='Y'",
   #  treatment_var    = "TRTA",
   #  treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
   #  stratum_var      = NULL,
   #  baseline_var     = NULL).
-  e6 <- function(data){
-    data <- data %>% rename(TRTA = TRT01A)
-    pop <- subset(data, ITTFL=='Y')
-    pop[["treatment"]] <- pop[["TRTA"]]
-    pop <- subset(pop, treatment %in% c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    label_name = names(c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    pop[["treatment"]] <- factor(pop[["treatment"]], levels = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"), labels = label_name)
-    pop[["stratum"]] <- "All"
-
-    pop <- pop[, unique(c("USUBJID", "treatment", "stratum"))]
-
-    return(pop)
-  }
-
-  expect_equal(tidy_population(population_from = adsl), e1(adsl))
-  expect_equal(tidy_population(population_from = adsl, population_where="ITTFL=='Y'"), e2(adsl))
-  expect_equal(tidy_population(population_from = adsl, treatment_var = "TRT01P"), e3(adsl))
-  expect_equal(tidy_population(population_from = adsl, treatment_order  = c("ABC" = "Xanomeline Low Dose")), e4(adsl))
-  expect_equal(tidy_population(population_from = adsl, stratum_var = "RACE"), e5(adsl))
   expect_equal(tidy_population(population_from  = adsl %>% rename(TRTA = TRT01A),
                                population_where = "ITTFL=='Y'",
                                treatment_var    = "TRTA",
                                treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                                stratum_var      = NULL,
-                               baseline_var     = NULL), e6(adsl))
+                               baseline_var     = NULL), expectation_table(adsl %>% rename(TRTA = TRT01A),"ITTFL=='Y'","TRTA",c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),NULL))
 })
