@@ -16,7 +16,7 @@
 #' x <- 1:5
 #' y <- 1:5
 #' color <- c("red", "blue", "gold", "grey", "black")
-#' sparkline_point(x = x, y = y, color = color, height = 500, vline =1.5,
+#' sparkline_point(x = x, y = y, color = color, height = 500, vline = 1.5,
 #'                hover_text = c('a','b','c','d','e'))
 #' @export
 sparkline_point <- function(
