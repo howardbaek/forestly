@@ -1,4 +1,4 @@
-test_that("tidy_observation must have input data.",{
+test_that("tidy_observation's 4 variables:'observation_from', 'observation_where', 'treatment_var' and 'treatment_order', must have input data.",{
   expect_error(tidy_observation(observation_where = NULL,
                                 treatment_var = "TRTA",
                                 treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")), "argument \"observation_from\" is missing")
@@ -24,67 +24,45 @@ test_that("tidy_observation can generate the table", {
 test_that("tidy_observation can tidy the data", {
 
   # function to create the expectation table:
+  expectation_table <- function(data, ob_where, trt_var, trt_order){
+    db <- eval(parse(text = paste0("subset(data,", ob_where, ")")))
+    db[["treatment"]] <- db[[trt_var]]
+    db <- subset(db, treatment %in% trt_order)
+
+    label_name = names(trt_order)
+
+    db[["treatment"]] <- factor(db[["treatment"]], levels = trt_order, labels = label_name)
+
+    return(db)
+  }
+
+  # compare the actual result with expectation table:
   # tidy_observation(observation_from = adae,
   #                  observation_where = "SEX == 'M'",
   #                  treatment_var    = "TRTA",
-  #                 treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-  e1 <- function(data){
-    db <- subset(data, SEX == 'M')
-    db[["treatment"]] <- db[["TRTA"]]
-    db <- subset(db, treatment %in% c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    label_name = names(c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    db[["treatment"]] <- factor(db[["treatment"]], levels = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"), labels = label_name)
-
-    return(db)
-  }
-
-
-  # function to create the expectation table:
-  # tidy_observation(observation_from = adae,
-  #                  observation_where = NULL,
-  #                  treatment_var    = "TRTA",
-  #                  treatment_order  = c("ABC" = "Xanomeline Low Dose"))
-  e2 <- function(data){
-    db <- subset(data, TRUE)
-    db[["treatment"]] <- db[["TRTA"]]
-    db <- subset(db, treatment %in% c("ABC" = "Xanomeline Low Dose"))
-
-    label_name = names(c("ABC" = "Xanomeline Low Dose"))
-
-    db[["treatment"]] <- factor(db[["treatment"]], levels = c("ABC" = "Xanomeline Low Dose"), labels = label_name)
-
-    return(db)
-  }
-
-  # function to create the expectation table:
-  # tidy_observation(observation_from = adae,
-  #                  observation_where = NULL,
-  #                  treatment_var    = "TRTA",
-  #                 treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-  e3 <- function(data){
-    db <- subset(data, TRUE)
-    db[["treatment"]] <- db[["TRTA"]]
-    db <- subset(db, treatment %in% c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    label_name = names(c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
-    db[["treatment"]] <- factor(db[["treatment"]], levels = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"), labels = label_name)
-
-    return(db)
-  }
-
+  #                  treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")).
   expect_equal(tidy_observation(observation_from = adae,
                                 observation_where = "SEX == 'M'",
                                 treatment_var    = "TRTA",
-                                treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")), e1(adae))
+                                treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")), expectation_table(adae, "SEX == 'M'", "TRTA", c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")))
+
+  # compare the actual result with expectation table:
+  # tidy_observation(observation_from = adae,
+  #                  observation_where = NULL,
+  #                  treatment_var    = "TRTA",
+  #                  treatment_order  = c("ABC" = "Xanomeline Low Dose")).
   expect_equal(tidy_observation(observation_from = adae,
                                 observation_where = NULL,
                                 treatment_var    = "TRTA",
-                                treatment_order  = c("ABC" = "Xanomeline Low Dose")), e2(adae))
+                                treatment_order  = c("ABC" = "Xanomeline Low Dose")), expectation_table(adae, TRUE, "TRTA", c("ABC" = "Xanomeline Low Dose")))
+
+  # compare the actual result with expectation table:
+  # tidy_observation(observation_from = adae,
+  #                  observation_where = NULL,
+  #                  treatment_var    = "TRTA",
+  #                  treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")).
   expect_equal(tidy_observation(observation_from = adae,
                                 observation_where = NULL,
                                 treatment_var    = "TRTA",
-                                treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")), e3(adae))
+                                treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")), expectation_table(adae, TRUE, "TRTA", c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")))
 })
