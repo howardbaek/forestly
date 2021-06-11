@@ -1,7 +1,7 @@
 #' mk_reactable
 #'
 #' @examples
-#'
+#' library(reactable)
 #' mk_reactable(iris)
 #'
 #' @export
