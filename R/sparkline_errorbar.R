@@ -11,10 +11,10 @@
 #' @return Three horizontal bars with the points and color you fixed.
 #'
 #' @examples
-est <- c(0,1,2)
-lower <- c(-1, -2, -1)
-upper <- c(3, 5, 5)
-color <- c("red", "blue", "gold")
+#' est <- c(0,1,2)
+#' lower <- c(-1, -2, -1)
+#' upper <- c(3, 5, 5)
+#' color <- c("red", "blue", "gold")
 #' sparkline_errorbar(est, lower, upper, color)
 #'
 #' @export

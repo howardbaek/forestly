@@ -10,11 +10,12 @@
 #' @return A x-axis with limits and legend.
 #
 #' @examples
-#'
-color <- c("red", "blue")
-label <- c("MK9999", "Placebo")
-xlim  <- c(-2, 2)
-xlab  <- "Example"
+#' library(ggplot2)
+#' library(plotly)
+#' color <- c("red", "blue")
+#' label <- c("MK9999", "Placebo")
+#' xlim  <- c(-2, 2)
+#' xlab  <- "Example"
 #'
 #' sparkline_draw_axis(color, label, xlim,
                   #' showlegend = FALSE, height = 30)
