@@ -17,7 +17,7 @@ xlim  <- c(-2, 2)
 xlab  <- "Example"
 #'
 #' sparkline_draw_axis(color, label, xlim,
-                    #'showlegend = FALSE, height = 30)
+                  #' showlegend = FALSE, height = 30)
 #'
 #' sparkline_draw_axis(color, label, xlim,
                     #' showlegend = TRUE, height = 60)
