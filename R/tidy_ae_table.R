@@ -1,17 +1,28 @@
 #' tidy_ae_table
 #'
-#' @examples
+#' Define analysis data
+#' This function is used to obtain AE information ready for visualization
 #'
-#' library(dplyr)
-#' library(tidyr)
-#' db <- adsl %>% rename(TRTA = TRT01A)
-#' tidy_ae_table(population_from  = db,
-#'               observation_from = adae,
-#'               treatment_var = "TRTA",
-#'               treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
 #'
+#' @param population_from A data frame to obtain population level variables.Typically an 'adsl' dataset.
+#' @param observation_from A data frame to obtain observation level variables.
+#' @param population_where A character string to define the criteria to select analysis population.
+#' @param observation_where A character string to define the criteria to select analysis observation.
+#' @param treatment_var A character string to define the variable of new column called "treatment"
+#' @param treatment_order A character vector to define the treatment display order and label.
+#' @param ae_var A character string to define the variable of new column called ae"
+#' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
+#' @param listing_var  A character string to define the criteria to select the column of the table
+#'
+#' @return Return a standard adverse event data frame
 #' @export
-#'
+#' @examples
+#' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
+#'                     observation_from = adae,
+#'                     treatment_var = "TRTA",
+#'                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+#'                     listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX",
+#'                                     "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
 tidy_ae_table <- function(population_from,
                           observation_from,
                           population_where = "ITTFL=='Y'",
