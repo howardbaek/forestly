@@ -4,19 +4,19 @@
 #' This function is used to obtain AE information ready for visualization
 #'
 #'
-#' @param population_from data sources
-#' @param observation_from data sources
-#' @param population_where Select the rows which is "Y" in column "ITTFL"
+#' @param population_from A data frame to obtain population level variables.Typically an 'adsl' dataset.
+#' @param observation_from A data frame to obtain observation level variables.
+#' @param population_where A character string to define the criteria to select analysis population.
 #' @param observation_where A character string to define the criteria to select analysis observation.
 #' @param treatment_var A character string to define the variable of new column called "treatment"
-#' @param treatment_order To customize the sort order
-#' @param ae_var Select the Desired variable
+#' @param treatment_order A character vector to define the treatment display order and label.
+#' @param ae_var A character string to define the variable of new column called ae"
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
-#' @param listing_var Tells the function which column of the table to be selected as the final output
+#' @param listing_var  A character string to define the criteria to select the column of the table
 #'
-#' @return an data frame
+#' @return Return a standard adverse event data frame
 #' @export
-#' @example
+#' @examples
 #' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                     observation_from = adae,
 #'                     treatment_var = "TRTA",
