@@ -1,18 +1,19 @@
 #' mk_reactable
 #'
-#' This function is used to define default behavior of reactable
+#' mk_reactable
 #'
-#' @param data data source
-#' @param resizable make columns resizable by setting resizable to TRUE
-#' @param filterable make columns filterable using filterable to TRUE
-#' @param searchable make the entire table searchable using searchable
-#' @param defaultPageSize The page size options be customized 10 through pageSizeOptions
-#' @param borderless  customize table styling using Borderless
-#' @param striped customize table styling using Stiped
-#' @param highlight customize table styling using highlight
+#' This function is used to create a data table from tabular data with sorting and pagination by default.
+#' The data table is an HTML widget that can be used in R Markdown documents and Shiny applications, or viewed from an R console.
 #'
-#' @return an interactive data table with filtering,searching,pagination and custom table styling
-#' using Bordered + striped + highlighting
+#' @param data A data frame or matrix to obtain variables.such as 'iris' data set.
+#' @param resizable A character string to define the criteria to enable columns resizing.
+#' @param filterable A character string to define the criteria to enable columns filtering.
+#' @param searchable A character string to define the criteria to enable global table searching.
+#' @param defaultPageSize A character string to define the Page size options for the table.
+#' @param borderless  A character string to remove inner borders from table.
+#' @param striped A character string to add zebra-striping to table rows.
+#' @param highlight A character string to highlight table rows on hover.
+#' @return an interactive data table.
 #' @export
 #' @examples
 #' mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
