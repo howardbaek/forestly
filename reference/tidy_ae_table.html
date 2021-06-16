@@ -156,47 +156,47 @@
               treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
               treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div><div class='output co'>#&gt; $table
-#&gt; <span style='color: #949494;'># A tibble: 194 x 8</span><span>
+#&gt; <span style='color: #949494;'># A tibble: 194 x 8</span>
 #&gt;    ae                              stratum   n_1   n_2   N_1   N_2 pct_1 pct_2
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> ABDOMINAL DISCOMFORT            All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> ABDOMINAL PAIN                  All         2     1    84    86  2.38  1.16
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> ACROCHORDON EXCISION            All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> ACTINIC KERATOSIS               All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> AGITATION                       All         1     2    84    86  1.19  2.33
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> ALCOHOL USE                     All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> ALLERGIC GRANULOMATOUS ANGIITIS All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> AMNESIA                         All         2     0    84    86  2.38  0   
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> APPLICATION SITE DERMATITIS     All        12     9    84    86 14.3  10.5 
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> APPLICATION SITE DISCHARGE      All         1     0    84    86  1.19  0   
-#&gt; </span><span style='color: #949494;'># … with 184 more rows</span><span>
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                           <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> ABDOMINAL DISCOMFORT            All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #BCBCBC;'> 2</span> ABDOMINAL PAIN                  All         2     1    84    86  2.38  1.16
+#&gt; <span style='color: #BCBCBC;'> 3</span> ACROCHORDON EXCISION            All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #BCBCBC;'> 4</span> ACTINIC KERATOSIS               All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #BCBCBC;'> 5</span> AGITATION                       All         1     2    84    86  1.19  2.33
+#&gt; <span style='color: #BCBCBC;'> 6</span> ALCOHOL USE                     All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #BCBCBC;'> 7</span> ALLERGIC GRANULOMATOUS ANGIITIS All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #BCBCBC;'> 8</span> AMNESIA                         All         2     0    84    86  2.38  0   
+#&gt; <span style='color: #BCBCBC;'> 9</span> APPLICATION SITE DERMATITIS     All        12     9    84    86 14.3  10.5 
+#&gt; <span style='color: #BCBCBC;'>10</span> APPLICATION SITE DISCHARGE      All         1     0    84    86  1.19  0   
+#&gt; <span style='color: #949494;'># … with 184 more rows</span>
 #&gt; 
 #&gt; $listing
-#&gt; </span><span style='color: #949494;'># A tibble: 756 x 57</span><span>
+#&gt; <span style='color: #949494;'># A tibble: 756 x 57</span>
 #&gt;    USUBJID ae    treatment STUDYID SITEID TRTA  TRTAN   AGE AGEGR1 AGEGR1N RACE 
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> 01-701… DIAR… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> 01-701… ATRI… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    77 65-80        2 WHITE
-#&gt; </span><span style='color: #949494;'># … with 746 more rows, and 46 more variables: RACEN &lt;dbl&gt;, SEX &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   SAFFL &lt;chr&gt;, TRTSDT &lt;date&gt;, TRTEDT &lt;date&gt;, ASTDT &lt;date&gt;, ASTDTF &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   ASTDY &lt;dbl&gt;, AENDT &lt;date&gt;, AENDY &lt;dbl&gt;, ADURN &lt;dbl&gt;, ADURU &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AETERM &lt;chr&gt;, AELLT &lt;chr&gt;, AELLTCD &lt;dbl&gt;, AEDECOD &lt;chr&gt;, AEPTCD &lt;dbl&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AEHLT &lt;chr&gt;, AEHLTCD &lt;dbl&gt;, AEHLGT &lt;chr&gt;, AEHLGTCD &lt;dbl&gt;, AEBODSYS &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AESOC &lt;chr&gt;, AESOCCD &lt;dbl&gt;, AESEV &lt;chr&gt;, AESER &lt;chr&gt;, AESCAN &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AESCONG &lt;chr&gt;, AESDISAB &lt;chr&gt;, AESDTH &lt;chr&gt;, AESHOSP &lt;chr&gt;, AESLIFE &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AESOD &lt;chr&gt;, AEREL &lt;chr&gt;, AEACN &lt;chr&gt;, AEOUT &lt;chr&gt;, AESEQ &lt;dbl&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   TRTEMFL &lt;chr&gt;, AOCCFL &lt;chr&gt;, AOCCSFL &lt;chr&gt;, AOCCPFL &lt;chr&gt;, AOCC02FL &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   AOCC03FL &lt;chr&gt;, AOCC04FL &lt;chr&gt;, CQ01NAM &lt;chr&gt;, AOCC01FL &lt;chr&gt;</span><span>
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
+#&gt; <span style='color: #BCBCBC;'> 1</span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 2</span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 3</span> 01-701… DIAR… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 4</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 5</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 6</span> 01-701… ATRI… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 7</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
+#&gt; <span style='color: #BCBCBC;'> 8</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
+#&gt; <span style='color: #BCBCBC;'> 9</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
+#&gt; <span style='color: #BCBCBC;'>10</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    77 65-80        2 WHITE
+#&gt; <span style='color: #949494;'># … with 746 more rows, and 46 more variables: RACEN &lt;dbl&gt;, SEX &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   SAFFL &lt;chr&gt;, TRTSDT &lt;date&gt;, TRTEDT &lt;date&gt;, ASTDT &lt;date&gt;, ASTDTF &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ASTDY &lt;dbl&gt;, AENDT &lt;date&gt;, AENDY &lt;dbl&gt;, ADURN &lt;dbl&gt;, ADURU &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AETERM &lt;chr&gt;, AELLT &lt;chr&gt;, AELLTCD &lt;dbl&gt;, AEDECOD &lt;chr&gt;, AEPTCD &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AEHLT &lt;chr&gt;, AEHLTCD &lt;dbl&gt;, AEHLGT &lt;chr&gt;, AEHLGTCD &lt;dbl&gt;, AEBODSYS &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AESOC &lt;chr&gt;, AESOCCD &lt;dbl&gt;, AESEV &lt;chr&gt;, AESER &lt;chr&gt;, AESCAN &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AESCONG &lt;chr&gt;, AESDISAB &lt;chr&gt;, AESDTH &lt;chr&gt;, AESHOSP &lt;chr&gt;, AESLIFE &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AESOD &lt;chr&gt;, AEREL &lt;chr&gt;, AEACN &lt;chr&gt;, AEOUT &lt;chr&gt;, AESEQ &lt;dbl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   TRTEMFL &lt;chr&gt;, AOCCFL &lt;chr&gt;, AOCCSFL &lt;chr&gt;, AOCCPFL &lt;chr&gt;, AOCC02FL &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   AOCC03FL &lt;chr&gt;, AOCC04FL &lt;chr&gt;, CQ01NAM &lt;chr&gt;, AOCC01FL &lt;chr&gt;</span>
 #&gt; </div><div class='input'>
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
