@@ -7,7 +7,7 @@
 #' @param mode A vector of shapes. Add lines or markers in the legend
 #' @param height A number of the distance to determine the height of x-axis
 #'
-#' @return A x-axis with limits and legend.
+#' @return A x-axis with annotation on the bottom
 #
 #' @examples
 #' library(ggplot2)

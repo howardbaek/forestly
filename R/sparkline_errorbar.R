@@ -8,7 +8,7 @@
 #' @param color A vector of colors you want your bar to be
 #' @param height A variable determines the distance between your bars
 #'
-#' @return Three horizontal bars with the points and color you fixed.
+#' @return Sparkline error bar for interactive graphics
 #'
 #' @examples
 #' est <- c(0,1,2)
