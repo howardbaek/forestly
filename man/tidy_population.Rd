@@ -44,6 +44,7 @@ This function is used to prepare the observation datasets for the use in functio
 The function filter the \code{adsl} dataset, and define proper treatment order in the dataset.
 }
 \examples{
+library(dplyr)
 pop <- tidy_population(population_from  = adsl \%>\% rename(TRTA = TRT01A),
  population_where = "ITTFL=='Y'",
  treatment_var    = "TRTA",

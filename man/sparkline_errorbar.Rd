@@ -16,11 +16,25 @@ sparkline_errorbar(
   ...
 )
 }
+\arguments{
+\item{est}{A vector  determined the point of your bar}
+
+\item{lower}{A vector determined the leftmost point}
+
+\item{upper}{A vector determined the rightmost point}
+
+\item{color}{A vector of colors you want your bar to be}
+
+\item{height}{A variable determines the distance between your bars}
+}
+\value{
+Sparkline error bar for interactive graphics
+}
 \description{
-sparkline_errorbar
+This function is used to draw error bars based on the parameters you defined.
 }
 \examples{
-
+library(plotly)
 est <- c(0,1,2)
 lower <- c(-1, -2, -1)
 upper <- c(3, 5, 5)

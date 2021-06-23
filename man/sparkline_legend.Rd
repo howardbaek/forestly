@@ -9,12 +9,13 @@ sparkline_legend(p, title = "Treatment", pos = -1)
 \arguments{
 \item{p}{A parameter indicate which plot to add a tittle}
 
-\item{tittle}{A string adding as the tittle of the plot}
+\item{title}{A string adding as the tittle of the plot}
 }
 \description{
 This function is a internal function adding the title to the plot.
 }
 \examples{
+library(plotly)
 p <- plot_ly(cars, x = ~speed, y = ~dist)
 sparkline_legend <- function(p, title = "Treatment", pos = -1){
   plotly::layout(p,
