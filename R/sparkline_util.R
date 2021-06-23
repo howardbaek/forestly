@@ -6,6 +6,7 @@
 #' @param p A parameter indicate which plot to draw the vertical line
 #' @param x A number indicate where to add vertical line on the x_axis
 #' @examples
+#' library(plotly)
 #' p <- plot_ly(cars, x = ~speed, y = ~dist)
 #' add_vline = function(p, x, ...) {
 #'   l_shape = list(
@@ -36,8 +37,9 @@ add_vline = function(p, x, ...) {
 #'
 #'
 #' @param p A parameter indicate which plot to add a tittle
-#' @param tittle A string adding as the tittle of the plot
+#' @param title A string adding as the tittle of the plot
 #' @examples
+#' library(plotly)
 #' p <- plot_ly(cars, x = ~speed, y = ~dist)
 #' sparkline_legend <- function(p, title = "Treatment", pos = -1){
 #'   plotly::layout(p,
