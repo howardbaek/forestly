@@ -16,14 +16,31 @@ sparkline_point(
   ...
 )
 }
+\arguments{
+\item{x}{a data frame corresponding location of scatters on x-axis}
+
+\item{y}{a data frame corresponding location of scatters on y-axis}
+
+\item{color}{A character string define the color of different scatters.}
+
+\item{height}{A number define the height of the vertical line}
+
+\item{hover_text}{A character string describe the information of each scatters}
+
+\item{xlim}{A data frame define the range of x-axis on the plot}
+
+\item{vline}{A data frame indicates where to draw the vertical lines on the plot}
+
+\item{margin}{A data define the size of the plot}
+}
 \description{
-sparkline_point
+This function is drawing the scatters on the sparkline plot
 }
 \examples{
-
-x <- 1:3
-y <- 1:3
-color <- c("red", "blue", "gold")
-sparkline_point(x = x, y = y, color = color, height = 30)
-
+library(plotly)
+x <- 1:5
+y <- 1:5
+color <- c("red", "blue", "gold", "grey", "black")
+sparkline_point(x = x, y = y, color = color, height = 500, vline = 1.5,
+               hover_text = c('a','b','c','d','e'))
 }
