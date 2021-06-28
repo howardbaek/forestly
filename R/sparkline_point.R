@@ -24,6 +24,7 @@ sparkline_point <- function(
                             y,
                             color = NULL,
                             height = 30,
+                            width = 150,
                             hover_text = NULL,
                             xlim = NULL,
                             vline = NULL,
@@ -39,7 +40,8 @@ sparkline_point <- function(
                hoverinfo = 'text',
                type = 'scatter',
                mode = 'markers',
-               height = height)
+               height = height,
+               width = width)
 
   p %>% sparkline_layout(xlim = xlim,
                          vline = vline,
