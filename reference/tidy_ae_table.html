@@ -38,9 +38,12 @@
 
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 
 <meta property="og:title" content="tidy_ae_table — tidy_ae_table" />
-<meta property="og:description" content="tidy_ae_table" />
+<meta property="og:description" content="Define analysis data
+This function is used to obtain AE information ready for visualization" />
 
 
 
@@ -102,6 +105,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -124,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>tidy_ae_table</p>
+    <p>Define analysis data
+This function is used to obtain AE information ready for visualization</p>
     </div>
 
     <pre class="usage"><span class='fu'>tidy_ae_table</span><span class='op'>(</span>
@@ -139,64 +146,59 @@
   listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>observation_from</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>population_from</th>
+      <td><p>A data frame to obtain population level variables.Typically an 'adsl' dataset.</p></td>
+    </tr>
+    <tr>
+      <th>observation_from</th>
+      <td><p>A data frame to obtain observation level variables.</p></td>
+    </tr>
+    <tr>
+      <th>population_where</th>
+      <td><p>A character string to define the criteria to select analysis population.</p></td>
+    </tr>
+    <tr>
+      <th>observation_where</th>
+      <td><p>A character string to define the criteria to select analysis observation.</p></td>
+    </tr>
+    <tr>
+      <th>treatment_var</th>
+      <td><p>A character string to define the variable of new column called "treatment"</p></td>
+    </tr>
+    <tr>
+      <th>treatment_order</th>
+      <td><p>A character vector to define the treatment display order and label.</p></td>
+    </tr>
+    <tr>
+      <th>ae_var</th>
+      <td><p>A character string to define the variable of new column called ae"</p></td>
+    </tr>
+    <tr>
+      <th>stratum_var</th>
+      <td><p>A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.</p></td>
+    </tr>
+    <tr>
+      <th>listing_var</th>
+      <td><p>A character string to define the criteria to select the column of the table</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Return a standard adverse event data frame</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyr.tidyverse.org'>tidyr</a></span><span class='op'>)</span>
-<span class='va'>db</span> <span class='op'>&lt;-</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>TRTA <span class='op'>=</span> <span class='va'>TRT01A</span><span class='op'>)</span>
-<span class='fu'>tidy_ae_table</span><span class='op'>(</span>population_from  <span class='op'>=</span> <span class='va'>db</span>,
-              observation_from <span class='op'>=</span> <span class='va'>adae</span>,
-              treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
-              treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div><div class='output co'>#&gt; $table
-#&gt; <span style='color: #949494;'># A tibble: 194 x 8</span>
-#&gt;    ae                              stratum   n_1   n_2   N_1   N_2 pct_1 pct_2
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                           <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> ABDOMINAL DISCOMFORT            All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #BCBCBC;'> 2</span> ABDOMINAL PAIN                  All         2     1    84    86  2.38  1.16
-#&gt; <span style='color: #BCBCBC;'> 3</span> ACROCHORDON EXCISION            All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #BCBCBC;'> 4</span> ACTINIC KERATOSIS               All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #BCBCBC;'> 5</span> AGITATION                       All         1     2    84    86  1.19  2.33
-#&gt; <span style='color: #BCBCBC;'> 6</span> ALCOHOL USE                     All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #BCBCBC;'> 7</span> ALLERGIC GRANULOMATOUS ANGIITIS All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #BCBCBC;'> 8</span> AMNESIA                         All         2     0    84    86  2.38  0   
-#&gt; <span style='color: #BCBCBC;'> 9</span> APPLICATION SITE DERMATITIS     All        12     9    84    86 14.3  10.5 
-#&gt; <span style='color: #BCBCBC;'>10</span> APPLICATION SITE DISCHARGE      All         1     0    84    86  1.19  0   
-#&gt; <span style='color: #949494;'># … with 184 more rows</span>
-#&gt; 
-#&gt; $listing
-#&gt; <span style='color: #949494;'># A tibble: 756 x 57</span>
-#&gt;    USUBJID ae    treatment STUDYID SITEID TRTA  TRTAN   AGE AGEGR1 AGEGR1N RACE 
-#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;fct&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
-#&gt; <span style='color: #BCBCBC;'> 1</span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 2</span> 01-701… APPL… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 3</span> 01-701… DIAR… Placebo   CDISCP… 701    Plac…     0    63 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 4</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 5</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 6</span> 01-701… ATRI… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 7</span> 01-701… ERYT… Placebo   CDISCP… 701    Plac…     0    64 &lt;65          1 WHITE
-#&gt; <span style='color: #BCBCBC;'> 8</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
-#&gt; <span style='color: #BCBCBC;'> 9</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    71 65-80        2 WHITE
-#&gt; <span style='color: #BCBCBC;'>10</span> 01-701… APPL… MK9999    CDISCP… 701    Xano…    81    77 65-80        2 WHITE
-#&gt; <span style='color: #949494;'># … with 746 more rows, and 46 more variables: RACEN &lt;dbl&gt;, SEX &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   SAFFL &lt;chr&gt;, TRTSDT &lt;date&gt;, TRTEDT &lt;date&gt;, ASTDT &lt;date&gt;, ASTDTF &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   ASTDY &lt;dbl&gt;, AENDT &lt;date&gt;, AENDY &lt;dbl&gt;, ADURN &lt;dbl&gt;, ADURU &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AETERM &lt;chr&gt;, AELLT &lt;chr&gt;, AELLTCD &lt;dbl&gt;, AEDECOD &lt;chr&gt;, AEPTCD &lt;dbl&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AEHLT &lt;chr&gt;, AEHLTCD &lt;dbl&gt;, AEHLGT &lt;chr&gt;, AEHLGTCD &lt;dbl&gt;, AEBODSYS &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AESOC &lt;chr&gt;, AESOCCD &lt;dbl&gt;, AESEV &lt;chr&gt;, AESER &lt;chr&gt;, AESCAN &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AESCONG &lt;chr&gt;, AESDISAB &lt;chr&gt;, AESDTH &lt;chr&gt;, AESHOSP &lt;chr&gt;, AESLIFE &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AESOD &lt;chr&gt;, AEREL &lt;chr&gt;, AEACN &lt;chr&gt;, AEOUT &lt;chr&gt;, AESEQ &lt;dbl&gt;,</span>
-#&gt; <span style='color: #949494;'>#   TRTEMFL &lt;chr&gt;, AOCCFL &lt;chr&gt;, AOCCSFL &lt;chr&gt;, AOCCPFL &lt;chr&gt;, AOCC02FL &lt;chr&gt;,</span>
-#&gt; <span style='color: #949494;'>#   AOCC03FL &lt;chr&gt;, AOCC04FL &lt;chr&gt;, CQ01NAM &lt;chr&gt;, AOCC01FL &lt;chr&gt;</span>
-#&gt; </div><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>db</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_ae_table</span><span class='op'>(</span>population_from  <span class='op'>=</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>TRTA <span class='op'>=</span> <span class='va'>TRT01A</span><span class='op'>)</span>,
+                    observation_from <span class='op'>=</span> <span class='va'>adae</span>,
+                    treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
+                    treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span>,
+                    listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SITEID"</span>, <span class='st'>"USUBJID"</span>, <span class='st'>"AGE"</span>, <span class='st'>"RACE"</span>, <span class='st'>"SEX"</span>,
+                                    <span class='st'>"AETERM"</span>, <span class='st'>"AESER"</span>, <span class='st'>"AEREL"</span>, <span class='st'>"AEACN"</span>, <span class='st'>"AEOUT"</span><span class='op'>)</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in count(pop, treatment, stratum, name = "N"): could not find function "count"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
