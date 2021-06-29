@@ -1,12 +1,16 @@
 #' sparkline_errorbar
 #'
-#'# This function is used to draw error bars based on the parameters you defined.
+#' This function is used to draw error bars based on the parameters you defined.
 #'
-#' @param est A vector  determined the point of your bar
+#' @param est A vector determined the point of your bar
 #' @param lower A vector determined the leftmost point
 #' @param upper A vector determined the rightmost point
 #' @param color A vector of colors you want your bar to be
 #' @param height A variable determines the distance between your bars
+#' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
+#' @param vline Numeric value for the location to draw the vertical reference line.
+#' @param margin Numeric vector of figure margin
+#' @param ... Additional arguments transfer to `sparkline_layout`
 #'
 #' @return Sparkline error bar for interactive graphics
 #'
@@ -47,7 +51,7 @@ sparkline_errorbar <- function(est,
   color <- factor(color, levels = color)
 
 
-  p <- plot_ly(data = db,
+  p <- plotly::plot_ly(data = db,
                x = ~ est,
                y = ~ 1:nrow(db),
                color = color,
@@ -58,7 +62,7 @@ sparkline_errorbar <- function(est,
                mode = 'markers',
                height = height)
 
-  p <- p %>% add_trace(x = ~ mid,
+  p <- p %>% plotly::add_trace(x = ~ mid,
                        alpha = 0,
                        text = hover_text,
                        hoverinfo = 'text',

@@ -8,8 +8,7 @@ Authors@R:
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -17,7 +16,9 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
-    plotly
+    plotly,
+    brew,
+    magrittr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
@@ -25,7 +26,9 @@ Suggests:
     dplyr,
     tidyr,
     haven,
-    devtools
+    devtools,
+    htmltools,
+    reactR
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

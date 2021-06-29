@@ -10,21 +10,16 @@ add_vline(p, x, ...)
 \item{p}{A parameter indicate which plot to draw the vertical line}
 
 \item{x}{A number indicate where to add vertical line on the x_axis}
+
+\item{...}{Additional arguments transfer to layout}
 }
 \description{
 This function is a internal function drawing the vertical lines on the plot.
 }
 \examples{
 library(plotly)
+
 p <- plot_ly(cars, x = ~speed, y = ~dist)
-add_vline = function(p, x, ...) {
-  l_shape = list(
-    type = "line",
-    y0 = 0, y1 = 1, yref = "paper",
-    x0 = x, x1 = x,
-    line = list(...)
- )
- p \%>\% layout(shapes=list(l_shape))
-}
 add_vline(p, x = 7.5)
+
 }

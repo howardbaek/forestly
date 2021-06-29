@@ -6,6 +6,8 @@
 #' @param xlab A label of the x-axis
 #' @param mode A vector of shapes. Add lines or markers in the legend
 #' @param height A number of the distance to determine the height of x-axis
+#' @param showlegend Logical value to show legend.
+#' @param margin_bottom Numeric value of bottom margin
 #'
 #' @return A x-axis with annotation on the bottom
 #
@@ -45,7 +47,7 @@ sparkline_draw_axis <- function(color,
                                 height = ifelse(showlegend, 60, 30),
                                 margin_bottom = ifelse(showlegend, 0, height) ){
 
-  p <- plot_ly(x = 0,
+  p <- plotly::plot_ly(x = 0,
                y = 10,
                color = label,
                colors = color,
@@ -58,10 +60,10 @@ sparkline_draw_axis <- function(color,
 
   p <- p %>%
     sparkline_layout(margin = list(l = 0, r = 0, t = 0, b = b, pad = 0), xlim = xlim) %>%
-    layout(xaxis = list(title = list(text = xlab, standoff = 0),
+    plotly::layout(xaxis = list(title = list(text = xlab, standoff = 0),
                         showline=TRUE, ticks = "outside"),
            yaxis = list(range = c(0, 1))) %>%
-    style(hoverinfo = 'none')
+    plotly::style(hoverinfo = 'none')
 
   p
 

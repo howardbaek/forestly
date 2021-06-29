@@ -23,7 +23,16 @@ sparkline_layout(
 \item{color}{A character string define the color of vertical line.}
 
 \item{margin}{A data define the size of the plot}
+
+\item{fixedrange}{Logical value of fixing figure range}
 }
 \description{
 This is the function which adding color to vertical line.
+}
+\examples{
+
+library(plotly)
+p <- plot_ly(cars, x = ~speed, y = ~dist)
+sparkline_layout(p, color='red')
+
 }

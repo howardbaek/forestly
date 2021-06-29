@@ -6,11 +6,13 @@
 #' @param x a data frame corresponding location of scatters on x-axis
 #' @param y a data frame corresponding location of scatters on y-axis
 #' @param color A character string define the color of different scatters.
-#' @param height A number define the height of the vertical line
+#' @param height Numeric value of figure height.
+#' @param width Numeric value of figure width.
 #' @param hover_text A character string describe the information of each scatters
 #' @param xlim A data frame define the range of x-axis on the plot
 #' @param vline A data frame indicates where to draw the vertical lines on the plot
 #' @param margin A data define the size of the plot
+#' @param ... Additional arguments transfer to `sparkline_layout`
 #' @examples
 #' library(plotly)
 #' x <- 1:5
@@ -24,6 +26,7 @@ sparkline_point <- function(
                             y,
                             color = NULL,
                             height = 30,
+                            width = 150,
                             hover_text = NULL,
                             xlim = NULL,
                             vline = NULL,
@@ -39,7 +42,8 @@ sparkline_point <- function(
                hoverinfo = 'text',
                type = 'scatter',
                mode = 'markers',
-               height = height)
+               height = height,
+               width = width)
 
   p %>% sparkline_layout(xlim = xlim,
                          vline = vline,
