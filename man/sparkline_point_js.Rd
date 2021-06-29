@@ -58,25 +58,26 @@ library(htmltools)
 js <- sparkline_point_js(iris, "Sepal.Length")
 js <- sparkline_point_js(iris, "Sepal.Length", text = "x")
 js <- sparkline_point_js(iris, "Sepal.Length", text = "'count:' + x")
-js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width", text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'" )
+js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width", 
+                         text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'" )
 js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width")
 js <- sparkline_point_js(iris, "Sepal.Length", vline = 6)
 cat(js)
 
+col <- colDef(html = TRUE, cell = JS(js), width = 150,
+              style="font-size: 0px; padding: 0px; margin: 0px;"))
 p <- reactable(data = iris[,1:2],
                theme = reactableTheme(cellPadding = "0px 8px"),
                borderless = TRUE,
                highlight = TRUE,
                resizable = TRUE,
-               columns = list( Sepal.Length = colDef(html = TRUE,
-                                                     cell = JS(js),
-                                                     width = 150,
-                                                     style="font-size: 0px; padding: 0px; margin: 0px;")))
-
+               columns = list(Sepal.Length = col)
+               
+plotly_js <- "https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"
 browsable(tagList(
   reactR::html_dependency_react(),
   htmltools::tags$script(src="https://cdn.plot.ly/plotly-latest.min.js"),
-  htmltools::tags$script(src="https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"),
+  htmltools::tags$script(src=plotly_js),
   p
 ))
 }

@@ -47,7 +47,8 @@ The data table is an HTML widget that can be used in R Markdown documents and Sh
 }
 \examples{
 \dontrun{
-mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
+mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, 
+             searchable = TRUE, defaultPageSize = 10,
              borderless = TRUE, striped = TRUE, highlight = TRUE)
 }              
 
