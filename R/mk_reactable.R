@@ -14,11 +14,16 @@
 #' @param striped A character string to add zebra-striping to table rows.
 #' @param highlight A character string to highlight table rows on hover.
 #' @param ... Additional arguments transfered to reactable.
+#' 
 #' @return an interactive data table.
-#' @export
+#' 
 #' @examples
+#' \dontrun{
 #' mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
 #'              borderless = TRUE, striped = TRUE, highlight = TRUE)
+#' }              
+#'
+#' @export
 mk_reactable <- function(data,
                          resizable = TRUE,
                          filterable = TRUE,
