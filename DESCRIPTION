@@ -1,13 +1,12 @@
 Package: forestly
-Title: What the Package Does (One Line, Title Case)
+Title: Interactive Forest Plot
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Yilong",
+           family = "Zhang",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "yilong.zhang@merck.com")
+Description: Interactive Forest Plot.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -28,8 +27,8 @@ Suggests:
     haven,
     devtools,
     htmltools,
-    reactR
-VignetteBuilder: knitr
+    reactR,
+    ggplot2
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6)
 Config/testthat/edition: 3
