@@ -75,7 +75,7 @@ sparkline_legend <- function(p, title = "Treatment", pos = -1){
 #' @param vline A data frame indicates where to draw the vertical lines on the plot
 #' @param color A character string define the color of vertical line.
 #' @param margin A data define the size of the plot
-#' @example
+#' @examples
 #' p <- plot_ly(cars, x = ~speed, y = ~dist)
 #' sparkline_layout <- function(p,
 #'                              xlim  = NULL,

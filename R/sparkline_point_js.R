@@ -28,6 +28,8 @@
 #'   htmltools::tags$script(src="https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"),
 #'   p
 #' ))
+#'
+#' @export
 sparkline_point_js <- function(tbl,
                                x,
                                x_lower = NULL,
@@ -115,7 +117,7 @@ sparkline_point_js <- function(tbl,
   # Brew
 
   plotly_file <- tempfile(fileext = ".js")
-  brew::brew("inst/javascripts/sparkline.js", output = plotly_file)
+  brew::brew(system.file("javascripts/sparkline.js", package = "forestly"), output = plotly_file)
 
   js <- paste(readLines(plotly_file), collapse = "\n")
 
