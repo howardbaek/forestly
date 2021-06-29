@@ -15,6 +15,7 @@ sparkline_legend(p, title = "Treatment", pos = -1)
 This function is a internal function adding the title to the plot.
 }
 \examples{
+library(plotly)
 p <- plot_ly(cars, x = ~speed, y = ~dist)
 sparkline_legend <- function(p, title = "Treatment", pos = -1){
   plotly::layout(p,

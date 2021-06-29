@@ -15,6 +15,7 @@ add_vline(p, x, ...)
 This function is a internal function drawing the vertical lines on the plot.
 }
 \examples{
+library(plotly)
 p <- plot_ly(cars, x = ~speed, y = ~dist)
 add_vline = function(p, x, ...) {
   l_shape = list(
