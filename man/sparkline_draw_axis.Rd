@@ -19,7 +19,7 @@ sparkline_draw_axis(
 sparkline_draw_axis
 }
 \examples{
-
+library(plotly)
 color <- c("red", "blue")
 label <- c("MK9999", "Placebo")
 xlim  <- c(-2, 2)
@@ -34,13 +34,13 @@ sparkline_draw_axis(color, label, xlim,
 sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     showlegend = FALSE, height = 60)
 
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     showlegend = TRUE, height = 100)
-                    
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     mode = "lines", showlegend = TRUE, height = 100)
-           
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     mode = "markers+lines", showlegend = TRUE, height = 100)
 
 }
