@@ -1,6 +1,16 @@
 #' sparkline_draw_axis
 #'
+#' @param color A logical vector used to determine the color of the axis
+#' @param label A vector of names, when you layout the legend it will name the variables as what you put in label.
+#' @param xlim A vector to set the limits of x-axis
+#' @param xlab A label of the x-axis
+#' @param mode A vector of shapes. Add lines or markers in the legend
+#' @param height A number of the distance to determine the height of x-axis
+#'
+#' @return A x-axis with annotation on the bottom
+#
 #' @examples
+#' library(ggplot2)
 #' library(plotly)
 #' color <- c("red", "blue")
 #' label <- c("MK9999", "Placebo")
