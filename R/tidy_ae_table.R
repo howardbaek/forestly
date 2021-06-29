@@ -17,6 +17,7 @@
 #' @return Return a standard adverse event data frame
 #' @export
 #' @examples
+#' library(dplyr)
 #' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                     observation_from = adae,
 #'                     treatment_var = "TRTA",

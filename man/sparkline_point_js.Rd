@@ -51,7 +51,7 @@ sparkline_point_js(
 Sparkline Point Figure Javascript Render Using Plotly
 }
 \examples{
-
+\dontrun{
 library(reactable)
 library(htmltools)
 
@@ -79,5 +79,6 @@ browsable(tagList(
   htmltools::tags$script(src="https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"),
   p
 ))
+}
 
 }

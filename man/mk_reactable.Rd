@@ -46,6 +46,9 @@ This function is used to create a data table from tabular data with sorting and 
 The data table is an HTML widget that can be used in R Markdown documents and Shiny applications, or viewed from an R console.
 }
 \examples{
+\dontrun{
 mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
              borderless = TRUE, striped = TRUE, highlight = TRUE)
+}              
+
 }
