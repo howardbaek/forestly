@@ -3,9 +3,8 @@ title: "example"
 output: 
   html_document:
     df_print: paged
-    toc: yes
-    toc_depth: '2'
-  rmarkdown::html_vignette
+    toc: no
+  rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{example}
   %\VignetteEngine{knitr::rmarkdown}

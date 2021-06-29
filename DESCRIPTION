@@ -1,11 +1,9 @@
 Package: forestly
 Title: Interactive Forest Plot
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Yilong",
-           family = "Zhang",
-           role = c("aut", "cre"),
-           email = "yilong.zhang@merck.com")
+Authors@R: c(
+    person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
+    )
 Description: Interactive Forest Plot.
 License: GPL (>= 3)
 Encoding: UTF-8
