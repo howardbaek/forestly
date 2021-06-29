@@ -24,7 +24,9 @@ sparkline_point(
 
 \item{color}{A character string define the color of different scatters.}
 
-\item{height}{A number define the height of the vertical line}
+\item{height}{Numeric value of figure height.}
+
+\item{width}{Numeric value of figure width.}
 
 \item{hover_text}{A character string describe the information of each scatters}
 
@@ -33,6 +35,8 @@ sparkline_point(
 \item{vline}{A data frame indicates where to draw the vertical lines on the plot}
 
 \item{margin}{A data define the size of the plot}
+
+\item{...}{Additional arguments transfer to \code{sparkline_layout}}
 }
 \description{
 This function is drawing the scatters on the sparkline plot

@@ -6,6 +6,8 @@
 #' @param xlab A label of the x-axis
 #' @param mode A vector of shapes. Add lines or markers in the legend
 #' @param height A number of the distance to determine the height of x-axis
+#' @param showlegend Logical value to show legend.
+#' @param margin_bottom Numeric value of bottom margin
 #'
 #' @return A x-axis with annotation on the bottom
 #

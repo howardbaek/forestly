@@ -20,10 +20,38 @@ sparkline_point_js(
   color_vline = "#00000050"
 )
 }
+\arguments{
+\item{tbl}{A data frame}
+
+\item{x}{A vector of variable names in \code{tbl} for value.}
+
+\item{x_lower}{A vector of variable names in \code{tbl} for lower error difference.}
+
+\item{x_upper}{A vector of variable names in \code{tbl} for upper error difference. Default is the same as \code{x_lower}.}
+
+\item{xlim}{Numeric vectors of length 2, giving the x coordinates ranges.}
+
+\item{y}{Numeric vector of y-axis value.}
+
+\item{vline}{Numeric value for the location to draw the vertical reference line.}
+
+\item{text}{Character vector of text information dispalted for each point.}
+
+\item{height}{Numeric value of figure height.}
+
+\item{width}{Numeric value of figure width.}
+
+\item{color}{Character vector of point color name}
+
+\item{color_errorbar}{Character vector of errorbar color name}
+
+\item{color_vline}{Character vector of vertical reference line color name}
+}
 \description{
 Sparkline Point Figure Javascript Render Using Plotly
 }
 \examples{
+
 library(reactable)
 library(htmltools)
 

@@ -32,6 +32,8 @@ mk_reactable(
 \item{striped}{A character string to add zebra-striping to table rows.}
 
 \item{highlight}{A character string to highlight table rows on hover.}
+
+\item{...}{Additional arguments transfered to reactable.}
 }
 \value{
 an interactive data table.
@@ -44,6 +46,6 @@ This function is used to create a data table from tabular data with sorting and 
 The data table is an HTML widget that can be used in R Markdown documents and Shiny applications, or viewed from an R console.
 }
 \examples{
-library(reactable)
-mk_reactable(iris)
+mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
+             borderless = TRUE, striped = TRUE, highlight = TRUE)
 }

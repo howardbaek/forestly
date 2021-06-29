@@ -1,6 +1,20 @@
 #' Sparkline Point Figure Javascript Render Using Plotly
 #'
+#' @param tbl A data frame
+#' @param x A vector of variable names in `tbl` for value.
+#' @param x_lower A vector of variable names in `tbl` for lower error difference.
+#' @param x_upper A vector of variable names in `tbl` for upper error difference. Default is the same as `x_lower`.
+#' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
+#' @param y Numeric vector of y-axis value.
+#' @param vline Numeric value for the location to draw the vertical reference line.
+#' @param text Character vector of text information dispalted for each point.
+#' @param height Numeric value of figure height.
+#' @param width Numeric value of figure width.
+#' @param color Character vector of point color name
+#' @param color_errorbar Character vector of errorbar color name
+#' @param color_vline Character vector of vertical reference line color name
 #' @examples
+#'
 #' library(reactable)
 #' library(htmltools)
 #'
