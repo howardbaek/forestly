@@ -44,6 +44,7 @@ This function is used to obtain AE information ready for visualization
 }
 \examples{
 library(dplyr)
+library(tidyr)
 db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                     observation_from = adae,
                     treatment_var = "TRTA",
