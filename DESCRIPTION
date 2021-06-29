@@ -17,7 +17,8 @@ Imports:
     DescTools,
     reactable,
     plotly,
-    brew
+    brew,
+    magrittr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
@@ -25,7 +26,9 @@ Suggests:
     dplyr,
     tidyr,
     haven,
-    devtools
+    devtools,
+    htmltools,
+    reactR
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

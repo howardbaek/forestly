@@ -66,6 +66,7 @@ sparkline_legend <- function(p, title = "Treatment", pos = -1){
 #' @param fixedrange Logical value of fixing figure range
 #' @examples
 #'
+#' library(plotly)
 #' p <- plot_ly(cars, x = ~speed, y = ~dist)
 #' sparkline_layout(p, color='red')
 #'

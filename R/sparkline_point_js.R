@@ -120,7 +120,7 @@ sparkline_point_js <- function(tbl,
 
   # Convert color
   foo <- function(x){
-    rgba <- col2rgb(x, alpha = TRUE)
+    rgba <- grDevices::col2rgb(x, alpha = TRUE)
     rgba[4, ] <- rgba[4, ] / 255
     paste( paste0("'rgba(", apply( rgba, 2, paste, collapse = "," ), ")'"), collapse = ",")
   }

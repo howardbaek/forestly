@@ -31,6 +31,7 @@ This is the function which adding color to vertical line.
 }
 \examples{
 
+library(plotly)
 p <- plot_ly(cars, x = ~speed, y = ~dist)
 sparkline_layout(p, color='red')
 

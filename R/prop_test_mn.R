@@ -50,9 +50,9 @@ prop_test_mn <- function(x0, n0, x1, n1,
   z_stats <- (p1 - p0 - delta) / sqrt(V)
 
   if (sides == 'right' | sides == 'left'){
-    pvalue <- ifelse(delta <= 0, 1- pnorm(z_stats), pnorm(z_stats))
+    pvalue <- ifelse(delta <= 0, 1- stats::pnorm(z_stats), stats::pnorm(z_stats))
   } else if (sides == 'two.sided') {
-    pvalue <- 1-pchisq((z_stats^2), 1)
+    pvalue <- 1- stats::pchisq((z_stats^2), 1)
   }
 
   # Confidence Interval

@@ -51,7 +51,7 @@ sparkline_errorbar <- function(est,
   color <- factor(color, levels = color)
 
 
-  p <- plot_ly(data = db,
+  p <- plotly::plot_ly(data = db,
                x = ~ est,
                y = ~ 1:nrow(db),
                color = color,
@@ -62,7 +62,7 @@ sparkline_errorbar <- function(est,
                mode = 'markers',
                height = height)
 
-  p <- p %>% add_trace(x = ~ mid,
+  p <- p %>% plotly::add_trace(x = ~ mid,
                        alpha = 0,
                        text = hover_text,
                        hoverinfo = 'text',
