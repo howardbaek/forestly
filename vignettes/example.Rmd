@@ -1,9 +1,6 @@
 ---
 title: "example"
 output: 
-  html_document:
-    df_print: paged
-    toc: no
   rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{example}
