@@ -20,7 +20,7 @@ mk_reactable(
 mk_reactable
 }
 \examples{
-
+library(reactable)
 mk_reactable(iris)
 
 }
