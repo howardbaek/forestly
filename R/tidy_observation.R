@@ -97,7 +97,7 @@ tidy_observation <- function(observation_from,
 
   # Define treatment group
   db[["treatment"]] <- db[[treatment_var]]
-  db <- subset(db, treatment %in% treatment_order)
+  db <- db[db$treatment %in% treatment_order, ]
 
   # Define treatment label
   if (!is.null(names(treatment_order))) {

@@ -14,7 +14,7 @@
 #' @param color_errorbar Character vector of errorbar color name
 #' @param color_vline Character vector of vertical reference line color name
 #' @examples
-#'
+#' \dontrun{
 #' library(reactable)
 #' library(htmltools)
 #'
@@ -42,7 +42,8 @@
 #'   htmltools::tags$script(src="https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"),
 #'   p
 #' ))
-#'
+#' }
+#' 
 #' @export
 sparkline_point_js <- function(tbl,
                                x,
