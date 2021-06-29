@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="sparkline_point — sparkline_point" />
-<meta property="og:description" content="sparkline_point" />
+<meta property="og:description" content="This function is drawing the scatters on the sparkline plot" />
 
 
 
@@ -124,7 +124,7 @@
     </div>
 
     <div class="ref-description">
-    <p>sparkline_point</p>
+    <p>This function is drawing the scatters on the sparkline plot</p>
     </div>
 
     <pre class="usage"><span class='fu'>sparkline_point</span><span class='op'>(</span>
@@ -139,15 +139,51 @@
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>a data frame corresponding location of scatters on x-axis</p></td>
+    </tr>
+    <tr>
+      <th>y</th>
+      <td><p>a data frame corresponding location of scatters on y-axis</p></td>
+    </tr>
+    <tr>
+      <th>color</th>
+      <td><p>A character string define the color of different scatters.</p></td>
+    </tr>
+    <tr>
+      <th>height</th>
+      <td><p>A number define the height of the vertical line</p></td>
+    </tr>
+    <tr>
+      <th>hover_text</th>
+      <td><p>A character string describe the information of each scatters</p></td>
+    </tr>
+    <tr>
+      <th>xlim</th>
+      <td><p>A data frame define the range of x-axis on the plot</p></td>
+    </tr>
+    <tr>
+      <th>vline</th>
+      <td><p>A data frame indicates where to draw the vertical lines on the plot</p></td>
+    </tr>
+    <tr>
+      <th>margin</th>
+      <td><p>A data define the size of the plot</p></td>
+    </tr>
+    </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>
-<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>
-<span class='va'>color</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"red"</span>, <span class='st'>"blue"</span>, <span class='st'>"gold"</span><span class='op'>)</span>
-<span class='fu'>sparkline_point</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span>, color <span class='op'>=</span> <span class='va'>color</span>, height <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in plot_ly(x = x, y = y, color = color, colors = color, text = hover_text,     hoverinfo = "text", type = "scatter", mode = "markers", height = height): could not find function "plot_ly"</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://plotly-r.com'>plotly</a></span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>
+<span class='va'>color</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"red"</span>, <span class='st'>"blue"</span>, <span class='st'>"gold"</span>, <span class='st'>"grey"</span>, <span class='st'>"black"</span><span class='op'>)</span>
+<span class='fu'>sparkline_point</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>y</span>, color <span class='op'>=</span> <span class='va'>color</span>, height <span class='op'>=</span> <span class='fl'>500</span>, vline <span class='op'>=</span> <span class='fl'>1.5</span>,
+               hover_text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>,<span class='st'>'d'</span>,<span class='st'>'e'</span><span class='op'>)</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
