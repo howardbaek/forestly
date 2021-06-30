@@ -79,8 +79,9 @@ sparkline_point_js <- function(tbl,
   stopifnot(length(color_vline) %in% 1 )
 
   # Convert x and error bar
-  x_v <- tbl[[x]]
-  js_x <- paste(paste0("cell.row['", x, "']"), sep = ",")
+  # x_v <- tbl[[x]]
+  x_v <- 0
+  js_x <- paste(paste0("cell.row['", x, "']"), collapse = ",")
 
   if(is.null(x_lower)){
     js_x_lower <- 0
@@ -91,12 +92,12 @@ sparkline_point_js <- function(tbl,
   }else{
     x_l <- x_v - tbl[[x_lower]]
     x_u <- x_v + tbl[[x_upper]]
-    js_x_lower <- paste(paste0("cell.row['", x_lower, "']"), sep = ",")
-    js_x_upper <- paste(paste0("cell.row['", x_upper, "']"), sep = ",")
+    js_x_lower <- paste(paste0("cell.row['", x_lower, "']"), collapse = ",")
+    js_x_upper <- paste(paste0("cell.row['", x_upper, "']"), collapse = ",")
   }
 
   # Convert y
-  js_y <- paste(y, sep = ",")
+  js_y <- paste(y, collapse = ",")
 
   # Convert axis range
   if(is.null(xlim)){
