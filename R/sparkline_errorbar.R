@@ -7,6 +7,10 @@
 #' @param upper A vector determined the rightmost point
 #' @param color A vector of colors you want your bar to be
 #' @param height A variable determines the distance between your bars
+#' @param xlim The x limits of the plot. The default value, NULL, indicates that the range of the finite values to be plotted should be used.
+#' @param vline Set vertical borders
+#' @param margin Theme elements. l,r,b,t are the dimensions of each margin
+#' @param ... Other graphical parameters
 #'
 #' @return Sparkline error bar for interactive graphics
 #'
