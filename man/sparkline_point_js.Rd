@@ -62,16 +62,23 @@ js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width",
                          text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'" )
 js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width")
 js <- sparkline_point_js(iris, "Sepal.Length", vline = 6)
+
+js <- sparkline_point_js(iris, 
+                         x = c("Sepal.Length", "Sepal.Width"), 
+                         x_lower = "Sepal.Width",
+                         y = c(1,2),
+                         text = c("x[0]", "x[1]"),
+                         color = c("gold", "purple") )
 cat(js)
 
 col <- colDef(html = TRUE, cell = JS(js), width = 150,
-              style="font-size: 0px; padding: 0px; margin: 0px;"))
+              style="font-size: 0px; padding: 0px; margin: 0px;")
 p <- reactable(data = iris[,1:2],
                theme = reactableTheme(cellPadding = "0px 8px"),
                borderless = TRUE,
                highlight = TRUE,
                resizable = TRUE,
-               columns = list(Sepal.Length = col)
+               columns = list(Sepal.Length = col))
                
 plotly_js <- "https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"
 browsable(tagList(
