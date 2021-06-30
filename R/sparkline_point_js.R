@@ -15,7 +15,7 @@
 #' @param color_vline Character vector of vertical reference line color name
 #' @examples
 #' \dontrun{
-#'  
+#' 
 #' library(reactable)
 #' library(htmltools)
 #'
