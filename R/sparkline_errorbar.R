@@ -17,6 +17,8 @@
 #' @examples
 #' library(plotly)
 #' library(ggplot2)
+#' @examples
+#' library(plotly)
 #' est <- c(0,1,2)
 #' lower <- c(-1, -2, -1)
 #' upper <- c(3, 5, 5)
