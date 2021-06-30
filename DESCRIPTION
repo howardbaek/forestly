@@ -15,13 +15,14 @@ Imports:
     reactable,
     plotly,
     brew,
+    dplyr,
+    tidyr,
+    rlang,
     magrittr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    dplyr,
-    tidyr,
     haven,
     devtools,
     htmltools,
