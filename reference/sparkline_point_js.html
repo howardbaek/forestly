@@ -207,7 +207,45 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://glin.github.io/reactable/'>reactable</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/rstudio/htmltools'>htmltools</a></span><span class='op'>)</span>
+
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span><span class='op'>)</span>
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span>, text <span class='op'>=</span> <span class='st'>"x"</span><span class='op'>)</span>
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span>, text <span class='op'>=</span> <span class='st'>"'count:' + x"</span><span class='op'>)</span>
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span>, x_lower <span class='op'>=</span> <span class='st'>"Sepal.Width"</span>, 
+                         text <span class='op'>=</span> <span class='st'>"'range:' + x + '(' + x_lower + ',' + x_upper + ')'"</span> <span class='op'>)</span>
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span>, x_lower <span class='op'>=</span> <span class='st'>"Sepal.Width"</span><span class='op'>)</span>
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, <span class='st'>"Sepal.Length"</span>, vline <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+
+<span class='va'>js</span> <span class='op'>&lt;-</span> <span class='fu'>sparkline_point_js</span><span class='op'>(</span><span class='va'>iris</span>, 
+                         x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Sepal.Length"</span>, <span class='st'>"Sepal.Width"</span><span class='op'>)</span>, 
+                         x_lower <span class='op'>=</span> <span class='st'>"Sepal.Width"</span>,
+                         y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>,
+                         text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x[0]"</span>, <span class='st'>"x[1]"</span><span class='op'>)</span>,
+                         color <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"gold"</span>, <span class='st'>"purple"</span><span class='op'>)</span> <span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span><span class='op'>(</span><span class='va'>js</span><span class='op'>)</span>
+
+<span class='va'>col</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://glin.github.io/reactable/reference/colDef.html'>colDef</a></span><span class='op'>(</span>html <span class='op'>=</span> <span class='cn'>TRUE</span>, cell <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/htmlwidgets/man/JS.html'>JS</a></span><span class='op'>(</span><span class='va'>js</span><span class='op'>)</span>, width <span class='op'>=</span> <span class='fl'>150</span>,
+              style<span class='op'>=</span><span class='st'>"font-size: 0px; padding: 0px; margin: 0px;"</span><span class='op'>)</span>
+<span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://glin.github.io/reactable/reference/reactable.html'>reactable</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>iris</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>,
+               theme <span class='op'>=</span> <span class='fu'><a href='https://glin.github.io/reactable/reference/reactableTheme.html'>reactableTheme</a></span><span class='op'>(</span>cellPadding <span class='op'>=</span> <span class='st'>"0px 8px"</span><span class='op'>)</span>,
+               borderless <span class='op'>=</span> <span class='cn'>TRUE</span>,
+               highlight <span class='op'>=</span> <span class='cn'>TRUE</span>,
+               resizable <span class='op'>=</span> <span class='cn'>TRUE</span>,
+               columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>Sepal.Length <span class='op'>=</span> <span class='va'>col</span><span class='op'>)</span><span class='op'>)</span>
+               
+<span class='va'>plotly_js</span> <span class='op'>&lt;-</span> <span class='st'>"https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"</span>
+<span class='fu'><a href='https://rdrr.io/pkg/htmltools/man/browsable.html'>browsable</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/htmltools/man/tag.html'>tagList</a></span><span class='op'>(</span>
+  <span class='fu'>reactR</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/reactR/man/html_dependency_react.html'>html_dependency_react</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='fu'>htmltools</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/htmltools/man/builder.html'>tags</a></span><span class='op'>$</span><span class='fu'>script</span><span class='op'>(</span>src<span class='op'>=</span><span class='st'>"https://cdn.plot.ly/plotly-latest.min.js"</span><span class='op'>)</span>,
+  <span class='fu'>htmltools</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/htmltools/man/builder.html'>tags</a></span><span class='op'>$</span><span class='fu'>script</span><span class='op'>(</span>src<span class='op'>=</span><span class='va'>plotly_js</span><span class='op'>)</span>,
+  <span class='va'>p</span>
+<span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
