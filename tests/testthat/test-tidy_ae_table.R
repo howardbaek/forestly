@@ -16,7 +16,7 @@ test_that("tidy_observation's 2 variables:'population_from', 'observation_from',
                              population_where = "ITTFL=='Y'",
                              observation_where = NULL,
                              treatment_var = "TRTA",
-                             treatment_order = unique(population_from[[treatment_var]]),
+                             treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                              ae_var = "AEDECOD",
                              stratum_var = NULL,
                              listing_var = names(observation_from)), "argument \"observation_from\" is missing")
