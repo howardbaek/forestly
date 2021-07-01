@@ -1,0 +1,38 @@
+---
+title: "test-render"
+output: 
+  html_document:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(forestly)
+library(reactable)
+library(htmltools)
+```
+
+```{r}
+js <- forestly:::sparkline_point_js(iris, "Sepal.Length")
+```
+
+<script src='https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js'></script>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+```{r}
+col <- colDef(html = TRUE, cell = JS(js), width = 150,
+              style="font-size: 0px; padding: 0px; margin: 0px;")
+p <- reactable(data = iris[,1:2],
+               theme = reactableTheme(cellPadding = "0px 8px"),
+               borderless = TRUE,
+               highlight = TRUE,
+               resizable = TRUE,
+               columns = list(Sepal.Length = col))
+```
+```{r}
+p
+```
+

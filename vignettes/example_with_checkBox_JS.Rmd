@@ -1,6 +1,8 @@
 ---
 title: "Example with Checkbox with JS"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    self_contained: false
 vignette: >
   %\VignetteIndexEntry{Example with Checkbox with JS}
   %\VignetteEngine{knitr::rmarkdown}
