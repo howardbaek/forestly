@@ -1,4 +1,4 @@
-#' tidy_ae_table2
+#' tidy_ae_table2            
 #'
 #' Define analysis data with multiple AE structure, 
 #' i.e., we have check box:

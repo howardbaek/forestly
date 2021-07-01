@@ -1,8 +1,8 @@
 ---
-title: "Example with Checkbox"
+title: "Example with Checkbox with JS"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example with Checkbox}
+  %\VignetteIndexEntry{Example with Checkbox with JS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

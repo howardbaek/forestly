@@ -1,4 +1,4 @@
-#' tidy_ae_table1
+#' tidy_ae_table1    
 #'
 #' Define analysis data with ONE AE structure, 
 #' for example, the only AE structure is AESER (serious events) 
