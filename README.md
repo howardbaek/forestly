@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/elong0527/forestly/workflows/R-CMD-check/badge.svg)](https://github.com/elong0527/forestly/actions)
 <!-- badges: end -->
 
 The goal of forestly is to …
