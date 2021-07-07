@@ -1,29 +1,20 @@
 library(testthat)
+library(htmlwidgets)
+library(plotly)
+devtools::load_all()
 
-#' est <- c(0,1,2)
-#' lower <- c(-1, -2, -1)
-#' upper <- c(3, 5, 5)
-#' color <- c("red", "blue", "gold")
+ggsave_png<-function(code,width=4, hright=4){
+  path<-tempfile(fileext = ".png")
+  ggsave(path,plot=code)
+  path
+}
 
-test_that("sparkline_errorbar's 4 variables:'est', 'lower', 'upper' and 'color', must have input data.",{
-  expect_error(sparkline_errorbar(est = c(0,1,2),
-                                lower = c(-1, -2, -1),
-                                upper  = c(3, 5, 5)))
-  expect_error(sparkline_errorbar(est = c(0,1,2),
-                                lower = c(-1, -2, -1),
-                                color  = c("red", "blue", "gold")))
-  expect_error(sparkline_errorbar(est = c(0,1,2),
-                                upper = c(3, 5, 5),
-                                color  = c("red", "blue", "gold")))
-  expect_error(sparkline_errorbar(lower=c(-1, -2, -1),
-                                upper = c(3, 5, 5),
-                                color  = c("red", "blue", "gold")))
-})
+test_that("sparkline_errorbar",{
+  est <- c(0,1,2)
+  lower <- c(-1, -2, -1)
+  upper <- c(3, 5, 5)
+  color <- c("red", "blue", "gold")
+  temp1<-sparkline_errorbar(est,lower,upper,color)
 
-test_that("sparkline_errorbar can generate error bars", {
-
-  expect_s3_class(tidy_observation(est = c(0,1,2),
-                                   lower = c(-1, -2, -1),
-                                   upper  = c(3, 5, 5),
-                                   color  = c("red", "blue", "gold")))
+  expect_snapshot_file(ggsave_png(temp1$x),"sparkline_errorbar1.png")
 })
