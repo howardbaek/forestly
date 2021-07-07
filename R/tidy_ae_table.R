@@ -51,7 +51,7 @@ tidy_ae_table <- function(population_from,
                          treatment_order  = treatment_order)
 
   db[["ae"]] <- db[[ae_var]]
-  db <- subset(db, USUBJID %in% pop$USUBJID)
+  db <- db %>% filter(.data$USUBJID %in% pop$USUBJID)
 
   # Yilong: will remove dplyr, tiyer dependency
   db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
