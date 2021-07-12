@@ -1,8 +1,10 @@
 ---
-title: "Example with Checkbox with JS"
+title: "Example with Checkbox and Java Script Render"
 output: 
   html_document:
     self_contained: false
+    number_sections: true
+    code_folding: hide
 vignette: >
   %\VignetteIndexEntry{Example with Checkbox with JS}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,13 +14,52 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE
 )
 ```
 
-This vignette introduces the construction of interactive forest plot.
+This vignette introduces the construction of interactive forest plot. 
+We will generate several reactables with check boxes as Adverse Events (AE) filters. 
+The AE filters considered in this vignette including 
 
-# 1. Load Required Package 
+- Serious AE: `adae$AESER`;
+- Drug related AE: `adae$AEREL`;
+- AE result in death: `adae$AEOUT`.
+
+For example, 
+
+- if you click `AESER`, then only the serious AEs will be displayed in the forest plot;
+- if you click `AEREL`, then only the drug related AEs will be displayed in the forest plot, including PROBABLE/POSSIBLE/REMOTE drug realted AEs;
+- if you click `NONE`, then none filters applied to the AEs and all AEs will be displayed in the forest plot.
+
+
+**This week:**
+
+- Applied `AESER`/`AEREL`/`NONE` filters to the forest plot to select serious/drug-related/all AEs.
+- Expedite the code by Java Script render.
+
+**Discussion:**
+
+- How to set up flag for `adae$AEOUT`?
+```{r}
+devtools::load_all()
+unique(adae$AEOUT)
+```
+
+- The forest plot is subject-count based? (See the VISION BLURRED in example.html) 
+- The interactive label disappeared after I applied the Jave Script render.
+- How to make check box into radio button?
+
+**To Do List:**
+
+- Add some logic to not dispaly error bar when 0% vs. 0%, but only show the difference. 
+- Encapsulate the long Rmd file into several functions for SP to validate.
+- Transform check box into radio button.
+- ...
+
+# Load Required Package 
 ```{r setup}
 library(DescTools)      # Compare risk difference (Obtain confidence interval)
 library(plotly)         # Interactive figure 
@@ -31,88 +72,69 @@ devtools::load_all()
 ```
 
 
-# 2. Data Prepartion
+# Data Prepartion
 
-## 2.1 Read data
+## Read data
 ```{r}
 head(adsl)
 head(adae)
 ```
 
-## 2.2 Define analysis data
+## Define analysis data
 ```{r}
 # tidy_ae_table is defined in R/ folder with same name 
 # obtain AE information ready for visualization
-db <- tidy_ae_table1(population_from  = adsl %>% rename(TRTA = TRT01A), 
+
+db <- tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
                      observation_from = adae,
-                     population_where = NULL, 
+                     population_where = NULL,
                      observation_where = NULL,
-                     treatment_var = "TRTA",  #sometimes it is "ACTLARM",
+                     treatment_var = "TRTA",
                      treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                      ae_var = "AEDECOD",
-                     ae_interested = "AESER",
+                     ae_interested = c("AESER", "AEREL", "AEOUT"),
                      listing_var = c("SITEID", "USUBJID", "RACE", "SEX", 
                                      "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
-
-head(db)
-# db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
-#                     observation_from = adae,
-#                     treatment_var = "TRTA",
-#                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-#                     listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX", 
-#                                     "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
 ```
 
-## 2.3 Calculate propotion test using M&N method
+## Calculate propotion test using M&N method
 ```{r}
 # Calculate test using M&N method 
 tb <- cbind(db$table,
             with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
 
 t_display <- tb %>% mutate(fig_prop = NA, fig_diff = est, 
-                           ae = tools::toTitleCase(tolower(ae))) %>% 
-                    select(ae, ae_substructure, stratum, 
-                           fig_prop, fig_diff, n_1, pct_1, n_2, pct_2)
-
-head(t_display)
+                           ae = tools::toTitleCase(tolower(ae)),
+                           pct_lower_dist = fig_diff - lower,
+                           pct_upper_dist = upper - fig_diff) %>% 
+                    select(ae, ae_label, stratum, 
+                           fig_prop, fig_diff, n_1, pct_1, n_2, pct_2,
+                           pct_lower_dist, pct_upper_dist)
 ```
 
-## 2.4 Contruct the table containg all the details
+## Contruct the table containg all the details
 ```{r}
 # Listing of subjects
 # Require proper format for the header. 
 t_detail <- db$listing
 ```
 
-## 2.5 Set the color of the two propotion in the forest plot
+## Set the color of the two propotion in the forest plot
 ```{r}
 color <- c("gold", "purple")
 ```
 
-# 3. Construct Interactive Froest Plot
+# Construct Interactive Froest Plot
 
-## 3.1 Define auxilliary functions for the interactive plot
+## Define auxilliary functions for the interactive plot
 ```{r}
 # function to create proportion of subjects figure
-
-js_fig_prop_cell <- sparkline_point_js(tbl = tb,
+js_fig_prop_cell <- sparkline_point_js2(tbl = tb,
                                        x = c("pct_1","pct_2"),
                                        y = c(1, 1),
                                        xlim = round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) ),
                                        color = color,
                                        height = 30)
-
-# fig_prop_cell <- function(value, index){
-# 
-#   tmp <- tb[index, ] %>% pivot_longer(cols = starts_with("pct"))
-#   xlim <- round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) )
-# 
-#   sparkline_point(x = tmp$value,
-#                   y = tmp$ae,
-#                   xlim = xlim,
-#                   color = color,
-#                   height = 30)
-# }
 
 # function to create Axis 
 fig_prop_footer <- function(value){
@@ -122,22 +144,35 @@ fig_prop_footer <- function(value){
   sparkline_draw_axis(color = color, 
                       label = levels(db$listing$treatment), 
                       xlim = xlim)
-  
 }
 
+
+
 # function to create proportion difference figure
-fig_diff_cell <- function(value, index){
-  
-  tmp <- tb[index, ] 
-  xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
-  
-  sparkline_errorbar(tmp$est, 
-                     tmp$lower, 
-                     tmp$upper, 
-                     xlim = xlim, 
-                     color = "black")
-  
-}
+
+temp_tbl <-  tb %>% mutate(fig_diff = pct_1 - pct_2, 
+                           pct_lower_dist = fig_diff - lower, 
+                           pct_upper_dist = upper - fig_diff) 
+
+js_fig_diff_cell <- sparkline_point_js2(tbl = temp_tbl, 
+                                       x = "fig_diff", 
+                                       x_lower = "pct_lower_dist", 
+                                       x_upper = "pct_upper_dist",
+                                       xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51)),
+                                       color = "black")
+
+
+# fig_diff_cell <- function(value, index){
+#   
+#   tmp <- tb[index, ] 
+#   xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
+#   
+#   sparkline_errorbar(tmp$est, 
+#                      tmp$lower, 
+#                      tmp$upper, 
+#                      xlim = xlim, 
+#                      color = "black")
+# }
 
 # function to create Axis 
 fig_diff_footer <- function(value){
@@ -147,8 +182,7 @@ fig_diff_footer <- function(value){
   sparkline_draw_axis(showlegend = FALSE, 
                       xlab = "MK9999 <- Favor -> Placebo", 
                       color = "black",
-                      xlim = xlim, height = 60, margin_bottom = 50)
-  
+                      xlim = xlim, height = 30, margin_bottom = 50)
 }
 
 # function to create check box
@@ -189,18 +223,21 @@ filter_checkbox_nobs <- function(id, label, sharedData, group, allLevels = FALSE
 }
 ```
 
-## 3.2 Make the data frame eligible for check box design
+## Make the data frame eligible for check box design
 ```{r}
 t_display1 <- SharedData$new(t_display)
 ```
 
+```{r}
+Sys.time()
+```
 
-## 3.3 Plot the interative forest plot
+## Plot the interative forest plot
 ```{r, message=FALSE}
 h3("Filter by:")
 
 tagList(
-  filter_checkbox_nobs("filter_AEcategory", "Serious Events", t_display1, ~ae_substructure, inline = TRUE),
+  filter_checkbox_nobs("filter_AEcategory", "Serious Events", t_display1, ~ae_label, inline = TRUE),
   br()
 )
 
@@ -221,7 +258,8 @@ p <- mk_reactable(
   theme = reactableTheme(cellPadding = "0px 8px"),
   
   # Default sort variable 
-  defaultSorted = c("fig_diff"),
+  defaultSorted = c("ae_label", "fig_diff"),
+  defaultSortOrder = c("desc", "asc"),
   
   # Define listing of subjects
   details = function(index){
@@ -235,30 +273,42 @@ p <- mk_reactable(
     colGroup(name = "Placebo (N = 86)", columns = c("n_2", "pct_2"))
   ),
   # 
-  column = list(
+  columns = list(
     ae = colDef(header = "Adverse Events", minWidth = 300, align = "right"),
 
     stratum = colDef(header = "Stratum", show = FALSE),
+    
+    ae_label = colDef(header = "Label"),
 
     fig_prop = colDef(header = "AE Proportion (%)",
                       minWidth = 300, align = "center",
                       cell = JS(js_fig_prop_cell), 
                       #cell = fig_prop_cell, 
                       footer = fig_prop_footer,
-                      html = TRUE
-    ),
+                      html = TRUE),
 
 
     fig_diff = colDef(header = "Risk Diff (%) + 95% CI",
                       defaultSortOrder = "desc",
                       minWidth = 200, align = "center",
-                      cell = fig_diff_cell, footer = fig_diff_footer,
-                      show = TRUE),
+                      #cell = fig_diff_cell, 
+                      cell = JS(js_fig_diff_cell),
+                      footer = fig_diff_footer,
+                      html = TRUE,
+                      style="font-size: 0px; padding: 0px; margin: 0px;"),
 
     n_1 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
     n_2 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
-    pct_1 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) ),
-    pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) )
+    
+    pct_1 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, 
+                   align = "center", format = colFormat(digits = 2) ),
+    pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, 
+                   align = "center", format = colFormat(digits = 2) ),
+    
+    pct_lower_dist = colDef(header = "Distance between Risk diff (%) and lower bound",
+                            format = colFormat(digits = 2), show = FALSE),
+    pct_upper_dist = colDef(header = "Distance between Risk diff (%) and upper bound",
+                            format = colFormat(digits = 2), show = FALSE)
   )
 
 )
@@ -271,5 +321,12 @@ browsable(tagList(
   p
 ))
 ```
+
+
+
+```{r}
+Sys.time()
+```
+
 
 

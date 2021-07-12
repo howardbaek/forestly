@@ -62,22 +62,59 @@ tidy_ae_table2 <- function(population_from,
 
   # count the sample size of each arm
   db_N <- dplyr::count(pop, treatment, stratum, name = "N")
-
-
-  res <- NULL
-  for (ae_idx in 1 : length(ae_interested)) {
-     res_new <- db %>% group_by(treatment, ae, eval(parse(text = paste0(ae_interested[ae_idx])))) %>%
+    
+  res <- db %>% group_by(treatment, ae) %>%
+    summarise(n = n()) %>%
+    mutate(ae_label = "NONE") %>%
+    left_join(db_N) %>%
+    mutate(pct = n / N * 100) %>%
+    ungroup() %>%
+    mutate(trtn = as.numeric(treatment)) %>%
+    select(- treatment) %>%
+    pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
+    mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  
+  for (ae_idx in seq_along(ae_interested)) {
+    
+    if(ae_interested[ae_idx] == "AESER"){
+      temp_ae_filter = "N"
+    }else if(ae_interested[ae_idx] == "AEREL"){
+      temp_ae_filter = "NONE"
+    }
+    
+    res_new <- db %>% subset(eval(parse(text = paste0(ae_interested[ae_idx]))) != temp_ae_filter) %>%
+      group_by(treatment, ae) %>%
       summarise(n = n()) %>%
-      rename(ae_substructure = `eval(parse(text = paste0(ae_interested[ae_idx])))`) %>%
-      mutate(ae_structure = ae_interested[ae_idx]) %>%
+      mutate(ae_label = ae_interested[ae_idx]) %>%
       left_join(db_N) %>%
       mutate(pct = n / N * 100) %>%
       ungroup() %>%
       mutate(trtn = as.numeric(treatment)) %>%
       select(- treatment) %>%
       pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
-      mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
-     res <- rbind(res, res_new)
+      mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x))) 
+    
+    # res_new <- db %>% group_by(treatment, ae, eval(parse(text = paste0(ae_interested[ae_idx])))) %>%
+    #   summarise(n = n()) %>%
+    #   mutate(ae_label = ae_interested[ae_idx]) %>%
+    #   rename(ae_sublabel = `eval(parse(text = paste0(ae_interested[ae_idx])))`) %>%
+    #   filter(ae_sublabel != temp_ae_filter) %>%
+    #   left_join(db_N) %>%
+    #   mutate(pct = n / N * 100) %>%
+    #   ungroup() %>%
+    #   mutate(trtn = as.numeric(treatment)) %>%
+    #   select(- treatment) %>%
+    #   pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
+    #   mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x))) 
+    
+    res <- union_all(res, res_new)
+    
+    res$N_1[is.na(res$N_1)] = db_N$N[as.numeric(db_N$treatment) == 1] 
+    res$N_2[is.na(res$N_2)] = db_N$N[as.numeric(db_N$treatment) == 2] 
+    res$n_1[is.na(res$n_1)] = 0
+    res$n_2[is.na(res$n_2)] = 0
+    res$pct_1[is.na(res$pct_1)] = 0
+    res$pct_2[is.na(res$pct_2)] = 0
   }
 
   # res <- db %>% group_by(treatment, ae) %>%
@@ -89,6 +126,7 @@ tidy_ae_table2 <- function(population_from,
   #   select(- treatment) %>%
   #   pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
   #   mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  
 
   listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
   list(table = res, listing = db[, listing_var])
