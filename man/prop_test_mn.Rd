@@ -4,7 +4,7 @@
 \alias{prop_test_mn}
 \title{Test of Equal Proportion Using Miettinen and Nurminen Method}
 \usage{
-prop_test_mn(x0, n0, x1, n1, delta = 0, sides = "two.sided", alpha = 0.05, ...)
+prop_test_mn(x0, n0, x1, n1, delta = 0, sides = "two.sided", alpha = 0.05)
 }
 \arguments{
 \item{x0}{number of successes for the first group.}

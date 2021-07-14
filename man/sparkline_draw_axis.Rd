@@ -15,11 +15,32 @@ sparkline_draw_axis(
   margin_bottom = ifelse(showlegend, 0, height)
 )
 }
+\arguments{
+\item{color}{A logical vector used to determine the color of the axis}
+
+\item{label}{A vector of names, when you layout the legend it will name the variables as what you put in label.}
+
+\item{xlim}{A vector to set the limits of x-axis}
+
+\item{xlab}{A label of the x-axis}
+
+\item{mode}{A vector of shapes. Add lines or markers in the legend}
+
+\item{showlegend}{Logical value to show legend.}
+
+\item{height}{A number of the distance to determine the height of x-axis}
+
+\item{margin_bottom}{Numeric value of bottom margin}
+}
+\value{
+A x-axis with annotation on the bottom
+}
 \description{
 sparkline_draw_axis
 }
 \examples{
-
+library(ggplot2)
+library(plotly)
 color <- c("red", "blue")
 label <- c("MK9999", "Placebo")
 xlim  <- c(-2, 2)
@@ -34,13 +55,13 @@ sparkline_draw_axis(color, label, xlim,
 sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     showlegend = FALSE, height = 60)
 
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     showlegend = TRUE, height = 100)
-                    
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     mode = "lines", showlegend = TRUE, height = 100)
-           
-sparkline_draw_axis(color, label, xlim, xlab = "Example", 
+
+sparkline_draw_axis(color, label, xlim, xlab = "Example",
                     mode = "markers+lines", showlegend = TRUE, height = 100)
 
 }

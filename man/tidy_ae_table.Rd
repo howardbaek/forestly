@@ -16,17 +16,39 @@ tidy_ae_table(
   listing_var = names(observation_from)
 )
 }
+\arguments{
+\item{population_from}{A data frame to obtain population level variables.Typically an 'adsl' dataset.}
+
+\item{observation_from}{A data frame to obtain observation level variables.}
+
+\item{population_where}{A character string to define the criteria to select analysis population.}
+
+\item{observation_where}{A character string to define the criteria to select analysis observation.}
+
+\item{treatment_var}{A character string to define the variable of new column called "treatment"}
+
+\item{treatment_order}{A character vector to define the treatment display order and label.}
+
+\item{ae_var}{A character string to define the variable of new column called ae"}
+
+\item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.}
+
+\item{listing_var}{A character string to define the criteria to select the column of the table}
+}
+\value{
+Return a standard adverse event data frame
+}
 \description{
-tidy_ae_table
+Define analysis data
+This function is used to obtain AE information ready for visualization
 }
 \examples{
-
 library(dplyr)
 library(tidyr)
-db <- adsl \%>\% rename(TRTA = TRT01A)
-tidy_ae_table(population_from  = db,
-              observation_from = adae,
-              treatment_var = "TRTA",
-              treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-
+db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
+                    observation_from = adae,
+                    treatment_var = "TRTA",
+                    treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                    listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX",
+                                    "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
 }

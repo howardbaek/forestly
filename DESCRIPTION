@@ -1,15 +1,11 @@
 Package: forestly
-Title: What the Package Does (One Line, Title Case)
+Title: Interactive Forest Plot
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Authors@R: c(
+    person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
+    )
+Description: Interactive Forest Plot.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -17,7 +13,9 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
-    plotly
+    plotly,
+    brew,
+    magrittr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
@@ -25,8 +23,10 @@ Suggests:
     dplyr,
     tidyr,
     haven,
-    devtools
-VignetteBuilder: knitr
+    devtools,
+    htmltools,
+    reactR,
+    ggplot2
 Depends: 
-    R (>= 2.10)
-Config/testthat/edition: 2
+    R (>= 3.6)
+Config/testthat/edition: 3
