@@ -1,3 +1,6 @@
+library(reactable)
+devtools::load_all()
+
 test_that("mk_reactable() handles errors correctly about missing data ", {
   expect_error(mk_reactable())
 })
