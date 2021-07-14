@@ -7,36 +7,16 @@ function(cell, state) {
  var x_range = [<%=js_x_range%>];
  var y_range = [<%=js_y_range%>];
  var vline = <%=js_vline%>;
- var text = <%=js_text%>;
+ var text = [<%=js_text%>];
  var height = <%=js_height%>;
  var width = <%=js_width%>;
  var color = [<%=js_color%>];
- var color_errorbar = <%=js_color_errorbar%>;
+ var color_errorbar = [<%=js_color_errorbar%>];
  var color_vline = <%=js_color_vline%>;
-
+ 
  return React.createElement(Plot, {
     data: [
-      {
-       "x": x,
-       "y": y,
-       "error_x": {
-          type: "data",
-          symmetric: false,
-          array: x_upper,
-          arrayminus: x_lower,
-          "color": color_errorbar
-       },
-       "text": text,
-       "hoverinfo": "text",
-       "mode": "markers",
-       "alpha_stroke": 1,
-       "sizes": [10, 100],
-       "spans": [1, 20],
-       "type": "scatter",
-       "marker": {
-            "color": color
-        }
-      }
+      <%=data_trace%>
     ],
   "layout": {
     "height": height,
