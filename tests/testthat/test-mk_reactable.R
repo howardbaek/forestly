@@ -1,5 +1,7 @@
 library(reactable)
 devtools::load_all()
+data(adsl)
+data(adae)
 
 test_that("mk_reactable() handles errors correctly about missing data ", {
   expect_error(mk_reactable())
