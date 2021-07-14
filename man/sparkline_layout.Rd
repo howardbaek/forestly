@@ -27,3 +27,4 @@ sparkline_layout(
 \description{
 This is the function which adding color to vertical line.
 }
+

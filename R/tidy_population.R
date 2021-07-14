@@ -9,8 +9,8 @@
 #'                        `population_where`, `treatment_var`, `stratum_var` and `covariate_var`.
 #' @param population_where A character string to define the criteria to select analysis population.
 #' @param treatment_var  A character string to define the variable of new column called "treatment".
-#' @param treatment_order A vector of character strings that tells the 
-#'                function which rows of the table should be select, 
+#' @param treatment_order A vector of character strings that tells the
+#'                function which rows of the table should be select,
 #'                only if the values in "treatment" is in this vector.
 #'                        It also provide the label names of the treatments after turning them into factors.
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.
@@ -25,6 +25,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' pop <- tidy_population(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'  population_where = "ITTFL=='Y'",
 #'  treatment_var    = "TRTA",
@@ -52,8 +53,8 @@ tidy_population <- function(population_from,
 
   # Define treatment group
   pop[["treatment"]] <- pop[[treatment_var]]
-  pop <- subset(pop, treatment %in% treatment_order)
-
+  pop <- pop[pop$treatment %in% treatment_order, ]
+  
   # Define treatment label
   if (!is.null(names(treatment_order))) {
     label_name = names(treatment_order)

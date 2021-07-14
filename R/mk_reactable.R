@@ -13,11 +13,18 @@
 #' @param borderless  A character string to remove inner borders from table.
 #' @param striped A character string to add zebra-striping to table rows.
 #' @param highlight A character string to highlight table rows on hover.
+#' @param ... Additional arguments transfered to reactable.
+#' 
 #' @return an interactive data table.
-#' @export
+#' 
 #' @examples
-#' mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, searchable = TRUE, defaultPageSize = 10,
+#' \dontrun{
+#' mk_reactable(iris[1:5, ], resizable = TRUE, filterable = TRUE, 
+#'              searchable = TRUE, defaultPageSize = 10,
 #'              borderless = TRUE, striped = TRUE, highlight = TRUE)
+#' }              
+#'
+#' @export
 mk_reactable <- function(data,
                          resizable = TRUE,
                          filterable = TRUE,
@@ -28,7 +35,7 @@ mk_reactable <- function(data,
                          highlight = TRUE,
                          ...){
 
-  reactable(data = data,
+  reactable::reactable(data = data,
             resizable  = resizable,
             filterable = filterable,
             searchable = searchable,

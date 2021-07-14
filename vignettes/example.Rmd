@@ -1,11 +1,20 @@
 ---
 title: "example"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+pkgdown:
+  as_is: true
 ---
+
+<style>
+    body .main-container {
+        max-width: 2000px;
+    }
+</style>
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(

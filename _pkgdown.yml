@@ -1,4 +1,6 @@
 destination: docs
+template:
+  package: forestly
 reference:
   - title: "Data Preparation"
     desc: "Prepare data ready for visualization"
