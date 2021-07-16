@@ -1,5 +1,5 @@
 library(reactable)
-devtools::load_all()
+library(forestly)
 data(adsl)
 data(adae)
 
