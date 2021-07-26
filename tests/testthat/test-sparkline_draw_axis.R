@@ -1,3 +1,6 @@
+library(plotly)
+library(forestly)
+
 plotly_snap <- function(p){
   p_js <- plotly::plotly_json(p, jsonedit = FALSE)
   p_lst <- jsonlite::fromJSON(p_js)

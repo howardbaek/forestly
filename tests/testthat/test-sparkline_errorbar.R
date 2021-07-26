@@ -1,7 +1,5 @@
-library(testthat)
-library(htmlwidgets)
 library(plotly)
-devtools::load_all()
+library(forestly)
 
 plotly_snap <- function(p){
   p_js <- plotly::plotly_json(p, jsonedit = FALSE)
