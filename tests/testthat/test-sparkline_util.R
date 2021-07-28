@@ -12,7 +12,7 @@ plotly_snap <- function(p){
 
 test_that("add_vline",{
   
-  p1 <- plot_ly(cars, x = ~speed, y = ~dist)
+  p1 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp1<-add_vline(p1, x = 7.5)
   
   
@@ -24,7 +24,7 @@ test_that("add_vline",{
 
 test_that("sparkline_legend",{
   
-  p2 <- plot_ly(cars, x = ~speed, y = ~dist)
+  p2 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp2<-sparkline_legend(p2, title = "cars plot")
   
   
@@ -36,7 +36,7 @@ test_that("sparkline_legend",{
 
 test_that("sparkline_layout",{
   
-  p3 <- plot_ly(cars, x = ~speed, y = ~dist)
+  p3 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp3<-sparkline_layout(p3, color='red')
   
   
