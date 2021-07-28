@@ -14,9 +14,21 @@
 #'                  upper: the upper value of the error bar
 #' @param fig_prop_range a numerical vector of length 2 to indicate 
 #'                      the range to plot the two ae proportion, ex., c(-0.05, 0.65)
+#' @param fig_prop_label a character vector of length 2, 
+#'                       with the first entry indicating the label of the treatment arm, 
+#'                       and the second entry indicating the label of the control arm.
+#'                       The default value is c("treatment", "control")
+#' @param fig_prop_color a character vector of length 2, 
+#'                       with the first entry indicating the color of ae proportion in the treatment arm, 
+#'                       and the second entry indicating the color of ae proportion in the control arm.
+#'                       The default value is c("gold", "purple")
 #' @param fig_diff_range a numerical vector of length 2 to indicate 
 #'                      the range to plot the difference between two ae proportion, ex., c(-0.5, 0.5)
-#'
+#' @param fig_diff_label a string to indicate the x-label of the error.
+#'                       The default value is "treatment <- Favor -> control"
+#' @param fig_diff_color a string to indicate the color the error.
+#'                       The default value is "black"
+#'                       
 #' @return a list contain the plotting details, including
 #'         design_prop_cell: the Java Script to plot the two ae proportions;
 #'         design_diff_cell: the Jave Script to plot the difference of the two ae proportions;
@@ -31,11 +43,11 @@
 #'                 n_2 = c(4, 5, 3, 7, 3, 3, 5),
 #'                 N_1 = rep(50, 7),
 #'                 N_2 = rep(50, 7))
-#' tb = tb %>% mutate(pct_1 = n_1/N_1,
-#'                    pct_2 = n_2/N_2,
-#'                    fig_diff = pct_1 - pct_2,
-#'                    lower = fig_diff - 0.05,
-#'                    upper = fig_diff + 0.05)
+#' tb = tb %>% dplyr::mutate(pct_1 = n_1/N_1,
+#'                           pct_2 = n_2/N_2,
+#'                           fig_diff = pct_1 - pct_2,
+#'                           lower = fig_diff - 0.05,
+#'                           upper = fig_diff + 0.05)
 #' 
 #' plot_design(tb, color = c("blue", "green"), 
 #'             fig_prop_range = c(0, 0.8), fig_diff_range = c(-0.5, 0.9))

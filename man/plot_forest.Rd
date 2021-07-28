@@ -51,7 +51,7 @@ tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "h
                  N_1 = rep(20, 7),
                  N_2 = rep(20, 7),
                  stratum = rep("NULL", 7))
-tb <- tb \%>\% mutate(pct_1 = n_1/N_1, pct_2 = n_2/N_2)
+tb <- tb \%>\% dplyr::mutate(pct_1 = n_1/N_1, pct_2 = n_2/N_2)
 db <- list(table = tb, listing = tb)
 plot_forest(db, N = c(20, 20))
 plot_forest(db, N = c(20, 20), fig_prop_color = c("red", "green"), fig_diff_color = "blue")
