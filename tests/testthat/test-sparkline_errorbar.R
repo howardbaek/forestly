@@ -10,7 +10,6 @@ plotly_snap <- function(p){
 }
 
 test_that("sparkline_errorbar",{
-  local_edition(3) # avoid Error: `expect_snapshot_output()` requires the 3rd edition.
   est <- c(0,1,2)
   lower <- c(-1, -2, -1)
   upper <- c(3, 5, 5)
