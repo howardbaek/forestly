@@ -10,7 +10,6 @@ plotly_snap <- function(p){
 }
 
 test_that("sparkline_deaw_axis",{
-  local_edition(3) # avoid Error: `expect_snapshot_output()` requires the 3rd edition.
   color <- c("red", "blue")
   label <- c("MK9999", "Placebo")
   xlim  <- c(-2, 2)
