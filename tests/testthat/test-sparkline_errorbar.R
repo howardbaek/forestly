@@ -1,0 +1,20 @@
+library(plotly)
+library(forestly)
+
+plotly_snap <- function(p){
+  p_js <- plotly::plotly_json(p, jsonedit = FALSE)
+  p_lst <- jsonlite::fromJSON(p_js)
+
+  gsub(names(p_lst$visdat), "0000", as.character(p_lst))
+
+}
+
+test_that("sparkline_errorbar",{
+  est <- c(0,1,2)
+  lower <- c(-1, -2, -1)
+  upper <- c(3, 5, 5)
+  color <- c("red", "blue", "gold")
+  temp1<-sparkline_errorbar(est,lower,upper,color)
+
+  expect_snapshot_output(plotly_snap(temp1))
+})
