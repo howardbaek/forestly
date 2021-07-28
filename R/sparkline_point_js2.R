@@ -2,8 +2,8 @@
 #'
 #' @param tbl A data frame
 #' @param x A vector of variable names in `tbl` for value.
-#' @param x_lower A vector of variable names in `tbl` for abs(lower error difference) = risk difference - lower bound.
-#' @param x_upper A vector of variable names in `tbl` for abs(upper error difference) = upper bound - risk difference. 
+#' @param x_lower A vector of variable names in `tbl` for the value of the left point in CI.
+#' @param x_upper A vector of variable names in `tbl` for the value of the right point in CI.
 #'                Default is the same as `x_lower`.
 #' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
 #' @param y Numeric vector of y-axis value.
@@ -20,15 +20,16 @@
 #' library(reactable)
 #' library(htmltools)
 #' 
-#' -------------------------------------
+#' #-------------------------------------
 #' Examples to generate two points 
-#' -------------------------------------
-#' js <- sparkline_point_js(iris, "Sepal.Length")
-#' js <- sparkline_point_js(iris, "Sepal.Length", text = "x")
-#' js <- sparkline_point_js(iris, "Sepal.Length", text = "'count:' + x")
-#' js <- sparkline_point_js(iris, "Sepal.Length", vline = 6)
-#' 
-#' js <- sparkline_point_js(iris, 
+#' #-------------------------------------
+#' js <- sparkline_point_js2(iris, "Sepal.Length")
+#' js <- sparkline_point_js2(iris, "Sepal.Length", vline = 6)
+#' js <- sparkline_point_js2(iris, "Sepal.Length", text = "x")
+#' js <- sparkline_point_js2(iris, "Sepal.Length", text = "'count:' + x")
+#' js <- sparkline_point_js2(iris, "Sepal.Length", x_lower = "Sepal.Width", 
+#'                          text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'" )
+#' js <- sparkline_point_js2(iris, 
 #'                          x = c("Sepal.Length", "Sepal.Width"), 
 #'                          x_lower = "Sepal.Width",
 #'                          y = c(1,2),
@@ -55,17 +56,17 @@
 #' 
 #' }
 #' 
-#' -------------------------------------
+#' # -------------------------------------
 #' Example to generate the error bar
-#' -------------------------------------
+#' # -------------------------------------
 #' xx = seq(1,10)
 #' test_dataframe = data.frame(my_x = xx, 
-#'                             my_lower = seq(0.5, 5, 0.5),
-#'                             my_upper = seq(5, 0.5, -0.5))
-#' js <- sparkline_point_js(tbl = test_dataframe, 
+#'                             my_lower = xx - seq(0.5, 5, 0.5),
+#'                             my_upper = xx + seq(5, 0.5, -0.5))
+#' js <- sparkline_point_js2(tbl = test_dataframe, 
 #'                          x = "my_x", 
 #'                          x_lower = "my_lower", x_upper = "my_upper",
-#'                          xlim = round(range(c(test_dataframe$my_x - test_dataframe$my_lower, test_dataframe$my_x - test_dataframe$my_upper)) + c(-1, 1)))
+#'                          xlim = round(range(c(test_dataframe$my_lower, test_dataframe$my_upper)) + c(-1, 1)))
 #' 
 #' col <- colDef(html = TRUE, cell = JS(js), width = 200,
 #'               style="font-size: 0px; padding: 0px; margin: 0px;")
@@ -150,8 +151,10 @@ sparkline_point_js2 <- function(tbl,
     x_u <- x_v
     color_errorbar <- "#FFFFFF00"
   }else{
-    x_l <- x_v - tbl[,x_lower]
-    x_u <- x_v + tbl[,x_upper]
+    #x_l <- x_v - tbl[, x_lower]
+    #x_u <- x_v + tbl[, x_upper]
+    x_l <- tbl[, x_lower]
+    x_u <- tbl[, x_upper]
     js_x_lower <- paste(paste0('cell.row["', x_lower, '"]'), collapse = ", ")
     js_x_upper <- paste(paste0('cell.row["', x_upper, '"]'), collapse = ", ")
   }
@@ -201,8 +204,8 @@ sparkline_point_js2 <- function(tbl,
    "error_x": {
       type: "data",
       symmetric: false,
-      array: [x_upper[i]],
-      arrayminus: [x_lower[i]],
+      array: [x_upper[i] - x[i]],
+      arrayminus: [x[i] - x_lower[i]],
       "color": color_errorbar[i]
     },
     "text": text[i],

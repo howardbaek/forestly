@@ -1,0 +1,147 @@
+---
+title: "Example with Checkbox and Java Script Render"
+output: 
+  html_document:
+    self_contained: false
+    number_sections: true
+    code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{Example with Checkbox with JS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE
+)
+```
+
+This vignette introduces the construction of interactive forest plot. 
+We will generate several reactables with check boxes as Adverse Events (AE) filters. 
+The AE filters considered in this vignette including 
+
+- Serious AE: `adae$AESER`;
+- Drug related AE: `adae$AEREL`;
+- AE result in death: `adae$AESDTH`.
+
+For example, 
+
+- if you click `AESER`, then only the serious AEs will be displayed in the forest plot;
+- if you click `AEREL`, then only the drug related AEs will be displayed in the forest plot, including PROBABLE/POSSIBLE/REMOTE drug related AEs;
+- if you click `NONE`, then none filters applied to the AEs and all AEs will be displayed in the forest plot.
+
+
+**Done:**
+
+- _July 14:_
+  
+  - Applied `AESER`/`AEREL`/`NONE` filters to the forest plot to select serious/drug-related/all AEs.
+  - Expedite the code by Java Script render.
+
+- _July 28:_
+
+  - Transform check box into a select list. There is no radio buttom in crosstalk.
+  - Impute `adae$ATOXGR`, `adae$AEACN` and `Grade3To5Flag`. 
+  - Add `adae$AESDTH`,  `adae$adae$Grade3To5Flag` as the filter label.
+  - Change the event-count to subject-count. See issue https://github.com/elong0527/forestly/issues/37 and `VISION BLURRED` is an example to check.
+  - Add text labels for the error bar (Thanks Yilong)
+  - Encapsulate the long Rmd file into several functions for SP to validate.
+
+**Discussion:**
+  
+  - Two layer logit is very difficult to apply after reviewing all the examples provided by crosstalk and discussing with Nan
+  - What is the name for the Grade3To5Flag?
+  - Anything to included expect AESER, AEREL,AEACN, Grade3To5Flag?
+  - When sample size is small (e.g. 4?), add logic to not display error bar. 
+  - The arguments for users to decided in the packed functions.
+  - The reactable generates all labels first and the select list only filters the generated label. Although the labels can be hid, all labels will be displayed when nothing is chosen in the select list.
+  
+**To Do List:**
+  - ...
+
+# Load Required Package 
+```{r setup}
+library(DescTools)      # Compare risk difference (Obtain confidence interval)
+library(plotly)         # Interactive figure 
+library(reactable)      # Interactive table 
+library(dplyr)          
+library(tidyr)
+library(crosstalk)
+library(htmltools)
+devtools::load_all()
+```
+
+
+# Data Prepartion
+
+## Impute data
+In this section, we would like to 
+
+- Impute `adae$ATOXGR`: if `adae$AESDTH='Y'` then `adae$ATOXGR='5'`, and random assign toxicity grade for other AE records;
+
+```{r}
+temp_fun <- function(x) {
+    
+  if(x == "Y"){
+    return("5")
+    }else{
+    return(as.character(sample(1:4,size = 1, replace = TRUE)))
+  }
+}
+adae <- adae %>% mutate(ATOXGR = unlist(adae$AESDTH %>% purrr:::map(temp_fun)))
+```
+
+- Generate `Grade3To5Flag` from `adae$ATOXGR`: `Grade3To5Flag` = "Y" if `adae$ATOXGR`>=3, otherwise `Grade3To5Flag` = "N". [create check box for 1,2,3,4,5? (Difficult to implement now, maybe left for future work).
+```{r}
+adae <- adae %>% mutate(Grade3To5Flag = ifelse(ATOXGR %in% c("3", "4", "5"), "Y", "N"))
+```
+
+- Impute `adae$AEACN`: `adae$AEACN` = `"DOSE NOT CHANGED"` or `"DRUG INTERRUPTED"` or `"DRUG WITHDRAWN"`. Here we impute 5% pts who discontinue drug (`DRUG WITHDRAWN`) and select the latest AE as `"DRUG WITHDRAWN"`.
+```{r}
+adae$AEACN = sample(c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN"), 
+                    size = length(adae$AEACN), prob = c(0.7, 0.25, 0.05), replace = TRUE)
+```
+
+
+
+
+## Define analysis data
+```{r}
+# tidy_ae_table is defined in R/ folder with same name 
+# obtain AE information ready for visualization
+
+db <- tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
+                     observation_from = adae,
+                     population_where = NULL,
+                     observation_where = NULL,
+                     treatment_var = "TRTA",
+                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                     ae_var = "AEDECOD",
+                     ae_interested = c("AESER", "AEREL", "Grade3To5Flag", "AEACN"),
+                     listing_var = c("SITEID", "USUBJID", "RACE", "SEX", 
+                                     "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
+
+head(db)
+```
+
+
+
+
+# Construct Interactive Froest Plot
+
+```{r}
+plot_forest(db, N = c(84, 86),
+            fig_prop_color= c("gold", "purple"), 
+            fig_prop_label = c("MK9979", "Placebo"), 
+            fig_diff_color = "black", 
+            fig_diff_label = "MK9999 <- Favor -> Placebo")
+```
+
+
+
+
+

@@ -26,38 +26,38 @@ The AE filters considered in this vignette including
 
 - Serious AE: `adae$AESER`;
 - Drug related AE: `adae$AEREL`;
-- AE result in death: `adae$AEOUT`.
+- AE result in death: `adae$AESDTH`.
 
 For example, 
 
 - if you click `AESER`, then only the serious AEs will be displayed in the forest plot;
-- if you click `AEREL`, then only the drug related AEs will be displayed in the forest plot, including PROBABLE/POSSIBLE/REMOTE drug realted AEs;
+- if you click `AEREL`, then only the drug related AEs will be displayed in the forest plot, including PROBABLE/POSSIBLE/REMOTE drug related AEs;
 - if you click `NONE`, then none filters applied to the AEs and all AEs will be displayed in the forest plot.
 
 
-**This week:**
+**Done:**
 
-- Applied `AESER`/`AEREL`/`NONE` filters to the forest plot to select serious/drug-related/all AEs.
-- Expedite the code by Java Script render.
+- _July 14:_
+  
+  - Applied `AESER`/`AEREL`/`NONE` filters to the forest plot to select serious/drug-related/all AEs.
+  - Expedite the code by Java Script render.
+
+- _July 28:_
+
+  - Transform check box into a select list.
+  - Impute `adae$ATOXGR`, `adae$AEACN` and `Grade3To5Flag`. 
+  - Add `adae$AESDTH`,  `adae$adae$Grade3To5Flag` as the filter label.
+  - Change the event-count to subject-count. See issue https://github.com/elong0527/forestly/issues/37 and `VISION BLURRED` is an example to check.
+  - Add text labels for the error bar (Thanks Yilong)
 
 **Discussion:**
 
-- How to set up flag for `adae$AEOUT`?
-```{r}
-devtools::load_all()
-unique(adae$AEOUT)
-```
-
-- The forest plot is subject-count based? (See the VISION BLURRED in example.html) 
-- The interactive label disappeared after I applied the Jave Script render.
-- How to make check box into radio button?
 
 **To Do List:**
 
-- Add some logic to not dispaly error bar when 0% vs. 0%, but only show the difference. 
-- Encapsulate the long Rmd file into several functions for SP to validate.
-- Transform check box into radio button.
-- ...
+  - Add some logic to not display error bar when ~0% vs. ~0%, but only show the difference. 
+  - Encapsulate the long Rmd file into several functions for SP to validate.
+  - ...
 
 # Load Required Package 
 ```{r setup}
@@ -74,11 +74,36 @@ devtools::load_all()
 
 # Data Prepartion
 
-## Read data
+## Impute data
+In this section, we would like to 
+
+- Impute `adae$ATOXGR`: if `adae$AESDTH='Y'` then `adae$ATOXGR='5'`, and random assign toxicity grade for other AE records;
+
 ```{r}
-head(adsl)
-head(adae)
+temp_fun <- function(x) {
+    
+  if(x == "Y"){
+    return("5")
+    }else{
+    return(as.character(sample(1:4,size = 1, replace = TRUE)))
+  }
+}
+adae <- adae %>% mutate(ATOXGR = unlist(adae$AESDTH %>% purrr:::map(temp_fun)))
 ```
+
+- Generate `Grade3To5Flag` from `adae$ATOXGR`: `Grade3To5Flag` = "Y" if `adae$ATOXGR`>=3, otherwise `Grade3To5Flag` = "N". [create check box for 1,2,3,4,5? (Difficult to implement now, maybe left for future work).
+```{r}
+adae <- adae %>% mutate(Grade3To5Flag = ifelse(ATOXGR %in% c("3", "4", "5"), "Y", "N"))
+```
+
+- Impute `adae$AEACN`: `adae$AEACN` = `"DOSE NOT CHANGED"` or `"DRUG INTERRUPTED"` or `"DRUG WITHDRAWN"`. Here we impute 5% pts who discontinue drug (`DRUG WITHDRAWN`) and select the latest AE as `"DRUG WITHDRAWN"`.
+```{r}
+adae$AEACN = sample(c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN"), 
+                    size = length(adae$AEACN), prob = c(0.7, 0.25, 0.05), replace = TRUE)
+```
+
+
+
 
 ## Define analysis data
 ```{r}
@@ -92,7 +117,7 @@ db <- tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
                      treatment_var = "TRTA",
                      treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                      ae_var = "AEDECOD",
-                     ae_interested = c("AESER", "AEREL", "AEOUT"),
+                     ae_interested = c("AESER", "AEREL", "Grade3To5Flag", "AEACN"),
                      listing_var = c("SITEID", "USUBJID", "RACE", "SEX", 
                                      "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
 ```
@@ -103,13 +128,18 @@ db <- tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
 tb <- cbind(db$table,
             with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
 
-t_display <- tb %>% mutate(fig_prop = NA, fig_diff = est, 
-                           ae = tools::toTitleCase(tolower(ae)),
-                           pct_lower_dist = fig_diff - lower,
-                           pct_upper_dist = upper - fig_diff) %>% 
+tb$pct_1 = round(tb$pct_1, 2)
+tb$pct_2 = round(tb$pct_2, 2)
+tb$lower = round(tb$lower, 2)
+tb$upper = round(tb$upper, 2)
+
+t_display <- tb %>% mutate(fig_prop = NA, 
+                           fig_diff = round(est, 2), 
+                           ae = tools::toTitleCase(tolower(ae))) %>% 
                     select(ae, ae_label, stratum, 
-                           fig_prop, fig_diff, n_1, pct_1, n_2, pct_2,
-                           pct_lower_dist, pct_upper_dist)
+                           fig_prop, fig_diff, 
+                           lower, upper, 
+                           n_1, pct_1, n_2, pct_2)
 ```
 
 ## Contruct the table containg all the details
@@ -129,12 +159,13 @@ color <- c("gold", "purple")
 ## Define auxilliary functions for the interactive plot
 ```{r}
 # function to create proportion of subjects figure
-js_fig_prop_cell <- sparkline_point_js2(tbl = tb,
-                                       x = c("pct_1","pct_2"),
-                                       y = c(1, 1),
-                                       xlim = round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) ),
-                                       color = color,
-                                       height = 30)
+js_fig_prop_cell <- sparkline_point_js2(tbl = t_display,
+                                        x = c("pct_1","pct_2"),
+                                        y = c(1, 1),
+                                        xlim = round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) ),
+                                        color = color,
+                                        height = 30,
+                                        text = c("x[0]", "x[1]"))
 
 # function to create Axis 
 fig_prop_footer <- function(value){
@@ -146,33 +177,14 @@ fig_prop_footer <- function(value){
                       xlim = xlim)
 }
 
-
-
 # function to create proportion difference figure
-
-temp_tbl <-  tb %>% mutate(fig_diff = pct_1 - pct_2, 
-                           pct_lower_dist = fig_diff - lower, 
-                           pct_upper_dist = upper - fig_diff) 
-
-js_fig_diff_cell <- sparkline_point_js2(tbl = temp_tbl, 
-                                       x = "fig_diff", 
-                                       x_lower = "pct_lower_dist", 
-                                       x_upper = "pct_upper_dist",
-                                       xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51)),
-                                       color = "black")
-
-
-# fig_diff_cell <- function(value, index){
-#   
-#   tmp <- tb[index, ] 
-#   xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
-#   
-#   sparkline_errorbar(tmp$est, 
-#                      tmp$lower, 
-#                      tmp$upper, 
-#                      xlim = xlim, 
-#                      color = "black")
-# }
+js_fig_diff_cell <- sparkline_point_js2(tbl = t_display, 
+                                        x = "fig_diff", 
+                                        x_lower = "lower", 
+                                        x_upper = "upper",
+                                        xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51)),
+                                        text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
+                                        color = "black")
 
 # function to create Axis 
 fig_diff_footer <- function(value){
@@ -185,42 +197,7 @@ fig_diff_footer <- function(value){
                       xlim = xlim, height = 30, margin_bottom = 50)
 }
 
-# function to create check box
-filter_checkbox_nobs <- function(id, label, sharedData, group, allLevels = FALSE, inline = FALSE, columns = 1) {
-  options <- crosstalk:::makeGroupOptions(sharedData, group, allLevels)
-  labels <- options$items$label
-  values <- options$items$value
-  options$items <- NULL
-  makeCheckbox <- if (inline) {
-    crosstalk:::inlineCheckbox
-  } else {
-    crosstalk:::blockCheckbox
-  }
-  htmltools::browsable(attachDependencies(
-    tags$div(
-      id = id,
-      class = "form-group crosstalk-input-checkboxgroup crosstalk-input",
-      tags$label(
-        class = "control-label", `for` = id,
-        style = "font-weight: 600;",
-        label
-      ), tags$div(
-        class = "crosstalk-options-group",
-        crosstalk:::columnize(
-          columns,
-          mapply(labels, values, FUN = function(label, value) {
-            makeCheckbox(id, value, label)
-          }, SIMPLIFY = FALSE, USE.NAMES = FALSE)
-        )
-      ), tags$script(
-        type = "application/json",
-        `data-for` = id,
-        jsonlite::toJSON(options, dataframe = "columns", pretty = TRUE)
-      )
-    ),
-    c(list(crosstalk:::jqueryLib()), crosstalkLibs())
-  ))
-}
+
 ```
 
 ## Make the data frame eligible for check box design
@@ -237,7 +214,7 @@ Sys.time()
 h3("Filter by:")
 
 tagList(
-  filter_checkbox_nobs("filter_AEcategory", "Serious Events", t_display1, ~ae_label, inline = TRUE),
+  crosstalk::filter_select("filter_AEcategory", "AE filters", t_display1, ~ae_label, multiple = FALSE),
   br()
 )
 
@@ -283,15 +260,12 @@ p <- mk_reactable(
     fig_prop = colDef(header = "AE Proportion (%)",
                       minWidth = 300, align = "center",
                       cell = JS(js_fig_prop_cell), 
-                      #cell = fig_prop_cell, 
                       footer = fig_prop_footer,
                       html = TRUE),
-
 
     fig_diff = colDef(header = "Risk Diff (%) + 95% CI",
                       defaultSortOrder = "desc",
                       minWidth = 200, align = "center",
-                      #cell = fig_diff_cell, 
                       cell = JS(js_fig_diff_cell),
                       footer = fig_diff_footer,
                       html = TRUE,
@@ -305,10 +279,8 @@ p <- mk_reactable(
     pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, 
                    align = "center", format = colFormat(digits = 2) ),
     
-    pct_lower_dist = colDef(header = "Distance between Risk diff (%) and lower bound",
-                            format = colFormat(digits = 2), show = FALSE),
-    pct_upper_dist = colDef(header = "Distance between Risk diff (%) and upper bound",
-                            format = colFormat(digits = 2), show = FALSE)
+    lower = colDef(header = "lower CI", show = FALSE),
+    upper = colDef(header = "upper CI", show = FALSE)
   )
 
 )
@@ -327,6 +299,8 @@ browsable(tagList(
 ```{r}
 Sys.time()
 ```
+
+
 
 
 
