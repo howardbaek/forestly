@@ -1,9 +1,32 @@
 # sparkline_deaw_axis
 
-    [1] "list(`0000` = list(x = 0, y = 10, mode = \"markers\", color = list(\"MK9999\", \"Placebo\"), colors = list(\"red\", \"blue\"), alpha_stroke = 1, sizes = list(10, 100), spans = list(1, 20), type = \"scatter\"))"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    [2] "list(height = 30, margin = list(b = 30, l = 0, t = 0, r = 0, pad = 0), xaxis = list(domain = list(0, 1), automargin = TRUE, title = list(text = list(), standoff = 0), range = list(-2, 2), zeroline = FALSE, fixedrange = TRUE, showline = TRUE, ticks = \"outside\"), yaxis = list(domain = list(0, 1), automargin = TRUE, title = \"\", showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, fixedrange = TRUE, range = list(0, 1)), shapes = list(list(type = \"line\", y0 = 0, y1 = 1, yref = \"paper\", x0 = list(), \n    x1 = list(), line = list(color = \"#00000050\"))), plot_bgcolor = \"rgba(0, 0, 0, 0)\", paper_bgcolor = \"rgba(0, 0, 0, 0)\", hoverlabel = list(bgcolor = \"lightgray\"), showlegend = FALSE, hovermode = \"closest\")"                                                                                                                         
-    [3] "A"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    [4] "list(showSendToCloud = FALSE, displayModeBar = FALSE)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-    [5] "list(list(x = list(0), y = list(10), mode = \"markers\", type = \"scatter\", name = \"MK9999\", marker = list(color = \"rgba(255,0,0,1)\", line = list(color = \"rgba(255,0,0,1)\")), textfont = list(color = \"rgba(255,0,0,1)\"), error_y = list(color = \"rgba(255,0,0,1)\"), error_x = list(color = \"rgba(255,0,0,1)\"), line = list(color = \"rgba(255,0,0,1)\"), xaxis = \"x\", yaxis = \"y\", frame = NULL, hoverinfo = \"none\"), list(x = list(0), y = list(10), mode = \"markers\", type = \"scatter\", name = \"Placebo\", marker = list(\n    color = \"rgba(0,0,255,1)\", line = list(color = \"rgba(0,0,255,1)\")), textfont = list(color = \"rgba(0,0,255,1)\"), error_y = list(color = \"rgba(0,0,255,1)\"), error_x = list(color = \"rgba(0,0,255,1)\"), line = list(color = \"rgba(0,0,255,1)\"), xaxis = \"x\", yaxis = \"y\", frame = NULL, hoverinfo = \"none\"))"
-    [6] "list(on = \"plotly_click\", persistent = FALSE, dynamic = FALSE, selectize = FALSE, opacityDim = 0.2, selected = list(opacity = 1), debounce = 0)"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+    $x
+    [1] 0
+    
+    $y
+    [1] 10
+    
+    $mode
+    [1] "markers"
+    
+    $color
+    [1] "MK9999"  "Placebo"
+    
+    $colors
+    [1] "red"  "blue"
+    
+    $alpha_stroke
+    [1] 1
+    
+    $sizes
+    [1]  10 100
+    
+    $spans
+    [1]  1 20
+    
+    $type
+    [1] "scatter"
+    
+    attr(,"class")
+    [1] "plotly_eval"
 
