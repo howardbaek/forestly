@@ -6,7 +6,8 @@ test_that("add_vline",{
   p1 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp1<-add_vline(p1, x = 7.5)
   
-  expect_snapshot_output(plotly_snap(temp1))
+  expect_equal(temp1$x$layoutAttrs[[1]]$shapes[[1]]$x0, 7.5)
+  expect_equal(temp1$x$layoutAttrs[[1]]$shapes[[1]]$x1, 7.5)
   
 })
 
@@ -16,8 +17,8 @@ test_that("sparkline_legend",{
   p2 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp2<-sparkline_legend(p2, title = "cars plot")
   
-  expect_snapshot_output(plotly_snap(temp2))
-  
+  expect_equal(temp2$x$layoutAttrs[[1]]$legend$title$text, "cars plot")
+
 })
 
 
@@ -26,6 +27,6 @@ test_that("sparkline_layout",{
   p3 <- plot_ly(cars, x = ~speed, y = ~dist, type = "scatter", mode = 'markers')
   temp3<-sparkline_layout(p3, color='red')
   
-  expect_snapshot_output(plotly_snap(temp3))
+  expect_equal(temp3$x$layoutAttrs[[1]]$shapes[[1]]$line$color, "red")
   
 })

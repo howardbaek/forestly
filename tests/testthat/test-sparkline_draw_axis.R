@@ -8,5 +8,5 @@ test_that("sparkline_deaw_axis",{
   xlab  <- "Example"
   temp1<-sparkline_draw_axis(color, label, xlim,showlegend = FALSE, height = 30)
   
-  expect_snapshot_output(plotly_snap(temp1))
+  expect_snapshot_output(temp1$x$attrs[[1]])
 })

@@ -8,5 +8,5 @@ test_that("sparkline_errorbar",{
   color <- c("red", "blue", "gold")
   temp1<-sparkline_errorbar(est,lower,upper,color)
 
-  expect_snapshot_output(plotly_snap(temp1))
+  expect_snapshot_output(temp1$x$attrs[[1]])
 })
