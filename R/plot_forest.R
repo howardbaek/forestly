@@ -64,13 +64,13 @@ plot_forest <- function(db, N = NULL,
   fig_diff_range = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
   
   # Sort the data frame to display in the reactable
-  t_display <- tb %>% mutate(fig_prop = NA, 
-                             fig_diff = round(est, 2), 
-                             ae = tools::toTitleCase(tolower(ae))) %>% 
-                      select(ae, ae_label, stratum, 
-                             fig_prop, fig_diff, 
-                             lower, upper, 
-                             n_1, pct_1, n_2, pct_2)
+  t_display <- tb %>% dplyr::mutate(fig_prop = NA, 
+                                    fig_diff = round(est, 2), 
+                                    ae = tools::toTitleCase(tolower(ae))) %>% 
+                      dplyr::select(ae, ae_label, stratum, 
+                                    fig_prop, fig_diff, 
+                                    lower, upper, 
+                                    n_1, pct_1, n_2, pct_2)
   
   # Make the data frame eligible for check box design
   t_display1 <- SharedData$new(t_display)
