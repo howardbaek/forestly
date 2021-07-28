@@ -15,7 +15,8 @@ Imports:
     reactable,
     plotly,
     brew,
-    magrittr
+    magrittr,
+    jsonlite
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
