@@ -1,6 +1,6 @@
 Package: forestly
 Title: Interactive Forest Plot
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
     )
@@ -15,7 +15,8 @@ Imports:
     reactable,
     plotly,
     brew,
-    magrittr
+    magrittr,
+    jsonlite
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

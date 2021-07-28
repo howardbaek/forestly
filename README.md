@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/elong0527/forestly/workflows/R-CMD-check/badge.svg)](https://github.com/elong0527/forestly/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/elong0527/forestly/branch/master/graph/badge.svg)](https://codecov.io/gh/elong0527/forestly?branch=master)
 <!-- badges: end -->
 
 The goal of forestly is to …
