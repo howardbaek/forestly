@@ -1,14 +1,6 @@
 library(plotly)
 library(forestly)
 
-plotly_snap <- function(p){
-  p_js <- plotly::plotly_json(p, jsonedit = FALSE)
-  p_lst <- jsonlite::fromJSON(p_js, simplifyVector = FALSE)
-
-  gsub(names(p_lst$visdat), "0000", as.character(p_lst))
-
-}
-
 test_that("sparkline_errorbar",{
   est <- c(0,1,2)
   lower <- c(-1, -2, -1)
