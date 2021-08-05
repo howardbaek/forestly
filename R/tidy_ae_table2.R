@@ -79,8 +79,9 @@ tidy_ae_table2 <- function(population_from,
   res22['trtn'] <- as.numeric(res22$treatment)
   
   #  select(- .data$treatment) %>%
+  res22 <- res22[, !names(res22) %in% c("treatment")] 
+  
   #  pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
-  res22 <- res22[,-1]
   res222 <- reshape(data = res22, direction = "wide",
                      timevar = "trtn",
                      idvar = "ae",
