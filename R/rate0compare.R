@@ -1,4 +1,4 @@
-#' stratified  MH TEST
+#' Unstratified and Stratified  Miettinen and Nurminen Test
 #' @param Treatment treament indicator
 #' @param Response response indicator, 1 for responsder, 0 for non-responder
 #' @param TRT_ord treatment order. The first one is control arm and the second one is experiment arm. Default is NULL
