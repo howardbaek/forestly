@@ -1,5 +1,5 @@
 ---
-title: 'Miettinen and Nurminen method without or with stratification'
+title: 'Unstratified and Stratified  Miettinen and Nurminen Test'
 author: "Xuan Deng"
 date: '`r Sys.Date()`'
 output:
@@ -99,7 +99,7 @@ The p-value can be calculated as stated above.
 ```{r message=FALSE}
 library(dplyr)
 library(tidyr)
-source("rate0compare.R",local = knitr::knit_global())
+source("rate_compare.R",local = knitr::knit_global())
 ```
 
 # Data Simulation
@@ -113,7 +113,7 @@ stratum <- c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
 The function computes the risk difference, Z-statistic, p-value given the type of test, and two-sided $100(1-\alpha)$% confidence interval of difference between two rates. 
 
 ```{r}
-rate0compare(response~treatment,delta = 0, bisection= 100, eps=1e-06, test = "one.sided",alpha=0.05)
+rate_compare(response~treatment,delta = 0, bisection= 100, eps=1e-06, test = "one.sided",alpha=0.05)
 ```
 
 To compare with SAS standard macro results, the macro was run on the same dataset with the unstratified MN method. The estimated risk difference and confidence interval are on percentile level from SAS output:
@@ -164,7 +164,7 @@ run;
 # Stratified Analysis
 The sample size weighting is often used in the clinical trial. Below is the function to conduct stratified MN analysis with sample size weights.
 ```{r,engine='R'}
-rate0compare(formula=response~treatment+strata(stratum),
+rate_compare(formula=response~treatment+strata(stratum),
                          delta = 0, weight_schema="ss",bisection= 100, eps=1e-06,
                          test = "one.sided",alpha=0.05)
 ```
