@@ -74,23 +74,24 @@
 #' @export
 #'
 #' @examples
-#' db <- tidy_observation(observation_from = adae,
-#'  observation_where = NULL,
-#'  treatment_var    = "TRTA",
-#'  treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
-#'
-#'
+#' db <- tidy_observation(
+#'   observation_from = adae,
+#'   observation_where = NULL,
+#'   treatment_var = "TRTA",
+#'   treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")
+#' )
 tidy_observation <- function(observation_from,
                              observation_where,
-                             treatment_var    = treatment_var,
-                             treatment_order  = treatment_order
-){
+                             treatment_var = treatment_var,
+                             treatment_order = treatment_order) {
 
   ##################################
   # End of Input Checking
   ##################################
 
-  if(is.null(observation_where)){ observation_where <- TRUE}
+  if (is.null(observation_where)) {
+    observation_where <- TRUE
+  }
 
   # Select the Desired Population
   db <- eval(parse(text = paste0("subset(observation_from,", observation_where, ")")))
@@ -101,8 +102,10 @@ tidy_observation <- function(observation_from,
 
   # Define treatment label
   if (!is.null(names(treatment_order))) {
-    label_name = names(treatment_order)
-  } else {label_name = treatment_order}
+    label_name <- names(treatment_order)
+  } else {
+    label_name <- treatment_order
+  }
 
   db[["treatment"]] <- factor(db[["treatment"]], levels = treatment_order, labels = label_name)
 

@@ -15,45 +15,51 @@
 #' @param color_vline Character vector of vertical reference line color name
 #' @examples
 #' \dontrun{
-#'  
+#'
 #' library(reactable)
 #' library(htmltools)
 #'
 #' js <- sparkline_point_js(iris, "Sepal.Length")
 #' js <- sparkline_point_js(iris, "Sepal.Length", text = "x")
 #' js <- sparkline_point_js(iris, "Sepal.Length", text = "'count:' + x")
-#' js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width", 
-#'                          text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'" )
+#' js <- sparkline_point_js(iris, "Sepal.Length",
+#'   x_lower = "Sepal.Width",
+#'   text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'"
+#' )
 #' js <- sparkline_point_js(iris, "Sepal.Length", x_lower = "Sepal.Width")
 #' js <- sparkline_point_js(iris, "Sepal.Length", vline = 6)
-#' 
-#' js <- sparkline_point_js(iris, 
-#'                          x = c("Sepal.Length", "Sepal.Width"), 
-#'                          x_lower = "Sepal.Width",
-#'                          y = c(1,2),
-#'                          text = c("x[0]", "x[1]"),
-#'                          color = c("gold", "purple") )
+#'
+#' js <- sparkline_point_js(iris,
+#'   x = c("Sepal.Length", "Sepal.Width"),
+#'   x_lower = "Sepal.Width",
+#'   y = c(1, 2),
+#'   text = c("x[0]", "x[1]"),
+#'   color = c("gold", "purple")
+#' )
 #' cat(js)
-#' 
-#' col <- colDef(html = TRUE, cell = JS(js), width = 150,
-#'               style="font-size: 0px; padding: 0px; margin: 0px;")
-#' p <- reactable(data = iris[,1:2],
-#'                theme = reactableTheme(cellPadding = "0px 8px"),
-#'                borderless = TRUE,
-#'                highlight = TRUE,
-#'                resizable = TRUE,
-#'                columns = list(Sepal.Length = col))
-#'                
+#'
+#' col <- colDef(
+#'   html = TRUE, cell = JS(js), width = 150,
+#'   style = "font-size: 0px; padding: 0px; margin: 0px;"
+#' )
+#' p <- reactable(
+#'   data = iris[, 1:2],
+#'   theme = reactableTheme(cellPadding = "0px 8px"),
+#'   borderless = TRUE,
+#'   highlight = TRUE,
+#'   resizable = TRUE,
+#'   columns = list(Sepal.Length = col)
+#' )
+#'
 #' plotly_js <- "https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"
 #' browsable(tagList(
 #'   reactR::html_dependency_react(),
-#'   htmltools::tags$script(src="https://cdn.plot.ly/plotly-latest.min.js"),
-#'   htmltools::tags$script(src=plotly_js),
+#'   htmltools::tags$script(src = "https://cdn.plot.ly/plotly-latest.min.js"),
+#'   htmltools::tags$script(src = plotly_js),
 #'   p
 #' ))
-#' 
 #' }
-#' 
+#'
 #' @export
 sparkline_point_js <- function(tbl,
                                x,
@@ -67,12 +73,12 @@ sparkline_point_js <- function(tbl,
                                width = 150,
                                color = "gold",
                                color_errorbar = color,
-                               color_vline = "#00000050"){
+                               color_vline = "#00000050") {
 
   # Input Checking
   stopifnot(x %in% names(tbl))
 
-  if(! is.null(x_lower)){
+  if (!is.null(x_lower)) {
     stopifnot(x_lower %in% names(tbl))
     stopifnot(x_upper %in% names(tbl))
   }
@@ -83,22 +89,22 @@ sparkline_point_js <- function(tbl,
   stopifnot(length(height) == 1)
   stopifnot(length(width) == 1)
 
-  stopifnot(length(color) %in% c(1, length(x)) )
-  stopifnot(length(color_errorbar) %in% c(1, length(x)) )
-  stopifnot(length(color_vline) %in% 1 )
+  stopifnot(length(color) %in% c(1, length(x)))
+  stopifnot(length(color_errorbar) %in% c(1, length(x)))
+  stopifnot(length(color_vline) %in% 1)
 
-  if(is.null(text)){
+  if (is.null(text)) {
     text <- '""'
   }
-  
-  # Vectorize input 
+
+  # Vectorize input
   meta <- data.frame(x, y, text, color, color_errorbar)
-  
-  if(! is.null(x_lower)){
-    meta$x_lower <- x_lower 
-    meta$x_upper <- x_upper 
+
+  if (!is.null(x_lower)) {
+    meta$x_lower <- x_lower
+    meta$x_upper <- x_upper
   }
-  
+
   x <- meta$x
   x_lower <- meta$x_lower
   x_upper <- meta$x_upper
@@ -106,20 +112,20 @@ sparkline_point_js <- function(tbl,
   text <- meta$text
   color <- meta$color
   color_errorbar <- meta$color_errorbar
-  
+
   # Convert x and error bar
-  x_v <- tbl[ ,x]
+  x_v <- tbl[, x]
   js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
 
-  if(is.null(x_lower)){
+  if (is.null(x_lower)) {
     js_x_lower <- 0
     js_x_upper <- 0
     x_l <- x_v
     x_u <- x_v
     color_errorbar <- "#FFFFFF00"
-  }else{
-    x_l <- x_v - tbl[,x_lower]
-    x_u <- x_v + tbl[,x_upper]
+  } else {
+    x_l <- x_v - tbl[, x_lower]
+    x_u <- x_v + tbl[, x_upper]
     js_x_lower <- paste(paste0('cell.row["', x_lower, '"]'), collapse = ", ")
     js_x_upper <- paste(paste0('cell.row["', x_upper, '"]'), collapse = ", ")
   }
@@ -128,21 +134,21 @@ sparkline_point_js <- function(tbl,
   js_y <- paste(y, collapse = ", ")
 
   # Convert axis range
-  if(is.null(xlim)){
+  if (is.null(xlim)) {
     xlim <- range(c(x_v, x_l, x_u)) + c(-0.5, 0.5)
   }
   js_x_range <- paste(xlim, collapse = ", ")
   js_y_range <- paste(c(0, length(x) + 1), collapse = ", ")
 
   # Convert text
-  if(is.null(text)){
+  if (is.null(text)) {
     js_text <- '""'
-  }else{
+  } else {
     js_text <- paste(text, collapse = ", ")
   }
 
   # Convert v_line
-  if(is.null(vline)) vline <- "[]"
+  if (is.null(vline)) vline <- "[]"
   js_vline <- as.character(vline)
 
   # Convert shape
@@ -150,18 +156,17 @@ sparkline_point_js <- function(tbl,
   js_width <- as.character(width)
 
   # Convert color
-  foo <- function(x){
+  foo <- function(x) {
     rgba <- grDevices::col2rgb(x, alpha = TRUE)
     rgba[4, ] <- rgba[4, ] / 255
-    paste( paste0('"rgba(', apply( rgba, 2, paste, collapse = ", " ), ')"'), collapse = ", ")
+    paste(paste0('"rgba(', apply(rgba, 2, paste, collapse = ", "), ')"'), collapse = ", ")
   }
   js_color <- foo(color)
   js_color_errorbar <- foo(color_errorbar)
   js_color_vline <- foo(color_vline)
 
   # data trace template
-  data_trace_js <- function(n){
-    
+  data_trace_js <- function(n) {
     template <- '
   {
     "x": [x[i]],
@@ -184,12 +189,11 @@ sparkline_point_js <- function(tbl,
       "color": [color[i]]
     }
   }'
-    
-    js <- lapply(1:n - 1, function(x) gsub("[i]", paste0("[",x,"]"), template, fixed = TRUE) )
+
+    js <- lapply(1:n - 1, function(x) gsub("[i]", paste0("[", x, "]"), template, fixed = TRUE))
     js <- paste(js, collapse = ",")
-    
   }
-  
+
   data_trace <- data_trace_js(length(x))
   # Brew
 
@@ -199,6 +203,4 @@ sparkline_point_js <- function(tbl,
   js <- paste(readLines(plotly_file), collapse = "\n")
 
   js
-
 }
-
