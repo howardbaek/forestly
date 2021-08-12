@@ -51,20 +51,58 @@ tidy_ae_table <- function(population_from,
                          treatment_order  = treatment_order)
 
   db[["ae"]] <- db[[ae_var]]
-  db <- db %>% filter(.data$USUBJID %in% pop$USUBJID)
-
+  db <- subset(db, USUBJID %in% pop$USUBJID)
+  
   # Yilong: will remove dplyr, tiyer dependency
-  db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
-
-  res <- db %>% group_by(.data$treatment, .data$ae) %>%
-    summarise(n = n()) %>%
-    left_join(db_N) %>%
-    mutate(pct = n / .data$N * 100) %>%
-    ungroup() %>%
-    mutate(trtn = as.numeric(.data$treatment)) %>%
-    select(- .data$treatment) %>%
-    pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
-    mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  #db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
+  db_N <- aggregate(formula = USUBJID ~ treatment + stratum,
+                    data = pop,
+                    FUN=length)
+  names(db_N)[names(db_N)=="USUBJID"] <- 'N'
+  
+  #res <- db %>% group_by(.data$treatment, .data$ae) %>%
+  #  summarise(n = n_distinct(USUBJID)) %>%
+  res <- aggregate(formula = USUBJID ~ treatment + ae, 
+                   data = db, 
+                   FUN = function(x) length(unique(x)))
+  res <- res[order(res$treatment),]
+  names(res)[names(res)=="USUBJID"] <- 'n'
+  
+  #  left_join(db_N) %>%
+  res <- merge(x=res,y=db_N,by='treatment',all.x = TRUE)
+  
+  #  mutate(pct = n / .data$N * 100) %>%
+  res['pct'] <- res$n / res$N * 100
+  
+  #  ungroup() %>%
+  #  mutate(trtn = as.numeric(.data$treatment)) %>%
+  res['trtn'] <- as.numeric(res$treatment)
+  
+  #  select(- .data$treatment) %>%
+  res <- res[, !names(res) %in% c("treatment")] 
+  
+  #  pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
+  res <- reshape(data = res, direction = "wide",
+                 timevar = "trtn",
+                 idvar = "ae",
+                 v.names = c("n", "N", "pct"))
+  res[is.na(res)]<-0
+  res <- res[,c('ae', 'stratum', 'n.1', 'n.2', 'N.1', 'N.2', 'pct.1', 'pct.2')]
+  
+  #  mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  res$N.1[res$N.1==0] <- max(res$N.1)
+  res$N.2[res$N.2==0] <- max(res$N.2)
+  
+  attr(res$ae,'label') <- c("Dictionary-Derived Term")
+  
+  names(res)[names(res)=='n.1'] <- 'n_1'
+  names(res)[names(res)=='n.2'] <- 'n_2'
+  names(res)[names(res)=='N.1'] <- 'N_1'
+  names(res)[names(res)=='N.2'] <- 'N_2'
+  names(res)[names(res)=='pct.1'] <- 'pct_1'
+  names(res)[names(res)=='pct.2'] <- 'pct_2'
+  
+  rownames(res) <- NULL
 
   listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
   list(table = res, listing = db[, listing_var])
