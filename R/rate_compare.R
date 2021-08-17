@@ -1,4 +1,5 @@
 #' Unstratified and Stratified  Miettinen and Nurminen Test
+#' 
 #' @param formula a symbolic description of the model to be fitted, which has the form \code{response ~ treament}, where \code{response} is the numeric vector with values of 0 or 1 and \code{treatment} is the group information.
 #' @param data an optional data frame, list or environment containing the variables in the model. If not found in data, the variables are taken from \code{environment (formula)}, typically the environment from which \code{rate_compare} is called.
 #' @param delta a numeric value to set the difference of two group under the null.
@@ -8,16 +9,25 @@
 #' @param eps the level of precision. Default is eps=1e-06.
 #' @param alpha pre-difined alpha level for Confidence Interval
 #' @references Miettinen, O. and Nurminen, M, \emph{Comparative Analysis of Two Rates}. STATISTICS IN MEDICINE, 4:213-226, 1985.
-#' @export
+#' 
 #' @examples
 #' ##To conduct the stratified MN analysis with sample size weights:
-#' treatment <- c(rep(0,100),rep(1,100))
-#' response <- c(rep(0,80),rep(1,20),rep(0,40),rep(1,60))
-#' stratum <- c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
-#' rate_compare(formula=response~treatment+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
+#' ana <- data.frame(
+#'   treatment = c(rep(0,100),rep(1,100)),
+#'   response  = c(rep(0,80),rep(1,20),rep(0,40),rep(1,60)),
+#'   stratum   = c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
+#' )
+#' rate_compare(response~treatment, data = ana)
+#' @export
 
-rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','cmh'),
-                         test = c('one.sided','two.sided'),bisection= 100, eps=1e-06,alpha=0.05)
+rate_compare <- function(formula, 
+                         data,
+                         delta = 0, 
+                         weight_schema=c('ss','equal','cmh'),
+                         test = c('one.sided','two.sided'),
+                         bisection= 100, 
+                         eps=1e-06,
+                         alpha=0.05)
 {
   test <- match.arg(test)
   mf <- match.call(expand.dots = FALSE)
@@ -260,7 +270,10 @@ rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','
     CI<-CI[(abs(CI)<1)]
   }
   
-  as.data.frame(test_stat%>% dplyr::mutate(lower=CI[1],upper=CI[2]))
+  res <- as.data.frame(test_stat%>% dplyr::mutate(lower=CI[1],upper=CI[2]))
+  names(res) <- tolower(res)
+  
+  res
 }
 
 
