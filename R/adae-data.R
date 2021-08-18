@@ -61,5 +61,7 @@
 #'   \item{CQ01NAM}{Customized Query 01 Name}
 #'   \item{AOCC01FL}{1st Occurrence 01 Flag for CQ01}
 #' }
-#' @source \url{https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-project/browse/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/analysis/adam/datasets}
+#' @source \url{https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-
+#' project/browse/updated-pilot-submission-package/900172/m5/datasets/
+#' cdiscpilot01/analysis/adam/datasets}
 "adae"

@@ -1,7 +1,8 @@
 #' sparkline_draw_axis
 #'
 #' @param color A logical vector used to determine the color of the axis
-#' @param label A vector of names, when you layout the legend it will name the variables as what you put in label.
+#' @param label A vector of names, when you layout the legend it will name the
+#'              variables as what you put in label.
 #' @param xlim A vector to set the limits of x-axis
 #' @param xlab A label of the x-axis
 #' @param mode A vector of shapes. Add lines or markers in the legend
@@ -45,13 +46,13 @@ sparkline_draw_axis <- function(color,
                                 mode = "markers",
                                 showlegend = TRUE,
                                 height = ifelse(showlegend, 60, 30),
-                                margin_bottom = ifelse(showlegend, 0, height) ){
+                                margin_bottom = ifelse(showlegend, 0, height)) {
 
   p <- plotly::plot_ly(x = 0,
                y = 10,
                color = label,
                colors = color,
-               type = 'scatter',
+               type = "scatter",
                mode = mode,
                height = height)
 
@@ -59,15 +60,16 @@ sparkline_draw_axis <- function(color,
   b <- margin_bottom
 
   p <- p %>%
-    sparkline_layout(margin = list(l = 0, r = 0, t = 0, b = b, pad = 0), xlim = xlim) %>%
+    sparkline_layout(margin = list(l = 0, r = 0, t = 0, b = b, pad = 0),
+                     xlim = xlim) %>%
     plotly::layout(xaxis = list(title = list(text = xlab, standoff = 0),
-                        showline=TRUE, ticks = "outside"),
+                        showline = TRUE, ticks = "outside"),
            yaxis = list(range = c(0, 1))) %>%
-    plotly::style(hoverinfo = 'none')
+    plotly::style(hoverinfo = "none")
 
   p
 
-  if(showlegend){
+  if (showlegend) {
     p <- sparkline_legend(p, pos = -2)
   }
 

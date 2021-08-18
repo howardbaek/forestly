@@ -54,5 +54,7 @@
 #'   \item{DCREASCD}{Reason for Discontinuation}
 #'   \item{MMSETOT}{MMSE Total}
 #' }
-#' @source \url{https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-project/browse/updated-pilot-submission-package/900172/m5/datasets/cdiscpilot01/analysis/adam/datasets}
+#' @source \url{https://bitbucket.cdisc.org/projects/CED/repos/sdtm-adam-pilot-
+#' project/browse/updated-pilot-submission-package/900172/m5/datasets/
+#' cdiscpilot01/analysis/adam/datasets}
 "adsl"

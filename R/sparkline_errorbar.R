@@ -8,7 +8,8 @@
 #' @param color A vector of colors you want your bar to be
 #' @param height A variable determines the distance between your bars
 #' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
-#' @param vline Numeric value for the location to draw the vertical reference line.
+#' @param vline Numeric value for the location to draw the vertical
+#'              reference line.
 #' @param margin Numeric vector of figure margin
 #' @param ... Additional arguments transfer to `sparkline_layout`
 #'
@@ -33,8 +34,9 @@ sparkline_errorbar <- function(est,
                                height = 30,
                                xlim = NULL,
                                vline = NULL,
-                               margin = list(l = 0, r = 0, b = 0, t = 0, pad = 0),
-                               ...){
+                               margin = list(l = 0, r = 0, b = 0, t = 0,
+                                             pad = 0),
+                               ...) {
 
   db <- data.frame(est = est,
                    lower = lower,
@@ -47,7 +49,7 @@ sparkline_errorbar <- function(est,
   db$lower1 <- formatC(db$lower, digits = 2, format = "f")
   db$upper1 <- formatC(db$upper, digits = 2, format = "f")
 
-  hover_text <- with(db, paste0(est1, " (",lower1, ", ", upper1, ")") )
+  hover_text <- with(db, paste0(est1, " (", lower1, ", ", upper1, ")"))
   color <- factor(color, levels = color)
 
 
@@ -57,15 +59,15 @@ sparkline_errorbar <- function(est,
                color = color,
                colors = as.character(color),
                text = hover_text,
-               hoverinfo = 'text',
-               type = 'scatter',
-               mode = 'markers',
+               hoverinfo = "text",
+               type = "scatter",
+               mode = "markers",
                height = height)
 
   p <- p %>% plotly::add_trace(x = ~ mid,
                        alpha = 0,
                        text = hover_text,
-                       hoverinfo = 'text',
+                       hoverinfo = "text",
                        error_x =  ~list(array = sd, color = color))
 
   p %>% sparkline_layout(xlim = xlim,

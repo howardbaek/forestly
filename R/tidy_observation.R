@@ -1,17 +1,24 @@
 #' tidy_observation
 #'
-#' This function is used to prepare the observation datasets for the use in function `tidy_ae_table()`.
-#' The function filter the `adae` dataset, and define proper treatment order in the dataset.
+#' This function is used to prepare the observation datasets for the use in
+#' function `tidy_ae_table()`.
+#' The function filter the `adae` dataset, and define proper treatment order
+#' in the dataset.
 #'
 #'
 #' @param observation_from A data frame to obtain observation level variables.
 #'                         Typically an `adae` dataset for time-to-event analysis.
 #'                         It is the source of variables mentioned in
 #'                         `observation_where`, `start_date_var`, `end_date_var`, `censor_var`.
-#' @param observation_where A character string to define the criteria to select analysis observation.
-#' @param treatment_var A character string to define the variable of new column called "treatment".
-#' @param treatment_order A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
-#'                        It also provide the label names of the treatments after turning them into factors.
+#' @param observation_where A character string to define the criteria to select
+#'                          analysis observation.
+#' @param treatment_var A character string to define the variable of new column
+#'                     called "treatment".
+#' @param treatment_order A vector of character strings that tells the function
+#'                       which rows of the table should be select, only if the
+#'                       values in "treatment" is in this vector. It also
+#'                       provide the label names of the treatments after turning
+#'                       them into factors.
 #'
 #' @return an output data frame of observation information.
 #'         STUDYID: Study identifier.
@@ -77,20 +84,23 @@
 #' db <- tidy_observation(observation_from = adae,
 #'  observation_where = NULL,
 #'  treatment_var    = "TRTA",
-#'  treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
+#'  treatment_order  = c("MK9999" = "Xanomeline High Dose",
+#'                       "Placebo" = "Placebo"))
 #'
 #'
 tidy_observation <- function(observation_from,
                              observation_where,
                              treatment_var    = treatment_var,
                              treatment_order  = treatment_order
-){
+) {
 
   ##################################
   # End of Input Checking
   ##################################
 
-  if(is.null(observation_where)){ observation_where <- TRUE}
+  if (is.null(observation_where)) {
+    observation_where <- TRUE
+    }
 
   # Select the Desired Population
   db <- eval(parse(text = paste0("subset(observation_from,", observation_where, ")")))
@@ -101,10 +111,12 @@ tidy_observation <- function(observation_from,
 
   # Define treatment label
   if (!is.null(names(treatment_order))) {
-    label_name = names(treatment_order)
-  } else {label_name = treatment_order}
-
-  db[["treatment"]] <- factor(db[["treatment"]], levels = treatment_order, labels = label_name)
+    label_name <- names(treatment_order)
+  } else {
+    label_name <- treatment_order
+    }
+  db[["treatment"]] <- factor(db[["treatment"]], levels = treatment_order,
+                              labels = label_name)
 
   db
 }
