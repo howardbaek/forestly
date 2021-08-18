@@ -57,6 +57,7 @@
 #' @export
 sparkline_point_js <- function(tbl,
                                x,
+                               type = c("cell", "footer", "header"),
                                x_lower = NULL,
                                x_upper = x_lower,
                                xlim = NULL,
@@ -67,7 +68,8 @@ sparkline_point_js <- function(tbl,
                                width = 150,
                                color = "gold",
                                color_errorbar = color,
-                               color_vline = "#00000050"){
+                               color_vline = "#00000050", 
+                               margin = rep(0, 5)){
 
   # Input Checking
   stopifnot(x %in% names(tbl))
@@ -91,6 +93,8 @@ sparkline_point_js <- function(tbl,
     text <- '""'
   }
   
+  type <- match.arg(type)
+  
   # Vectorize input 
   meta <- data.frame(x, y, text, color, color_errorbar)
   
@@ -109,9 +113,14 @@ sparkline_point_js <- function(tbl,
   
   # Convert x and error bar
   x_v <- tbl[ ,x]
-  js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
+  
+  if(type == "cell"){
+    js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
+  }else{
+    js_x <- 1
+  }
 
-  if(is.null(x_lower)){
+  if(is.null(x_lower) | type %in% c("footer", "header")){
     js_x_lower <- 0
     js_x_upper <- 0
     x_l <- x_v
@@ -159,6 +168,9 @@ sparkline_point_js <- function(tbl,
   js_color_errorbar <- foo(color_errorbar)
   js_color_vline <- foo(color_vline)
 
+  # Convert margin
+  js_margin <- paste(margin, collapse = ", ")
+  
   # data trace template
   data_trace_js <- function(n){
     

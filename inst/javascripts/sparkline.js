@@ -13,6 +13,7 @@ function(cell, state) {
  var color = [<%=js_color%>];
  var color_errorbar = [<%=js_color_errorbar%>];
  var color_vline = <%=js_color_vline%>;
+ var margin = [<%=js_margin%>];
  
  return React.createElement(Plot, {
     data: [
@@ -22,11 +23,11 @@ function(cell, state) {
     "height": height,
     "width": width,
     "margin": {
-      "b": 0,
-      "l": 0,
-      "t": 0,
-      "r": 0,
-      "pad": 0
+      "b": margin[0],
+      "l": margin[1],
+      "t": margin[2],
+      "r": margin[3],
+      "pad": margin[4]
     },
     "xaxis": {
       "domain": [0,1],
