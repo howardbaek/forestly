@@ -47,7 +47,7 @@ test_that("tidy_ae_table can tidy the data", {
     db_N <- count(pop, treatment, stratum, name = "N")
     
     res <- db %>% group_by(treatment, ae) %>%
-      summarise(n = n()) %>%
+      summarise(n = n_distinct(USUBJID)) %>%
       left_join(db_N) %>%
       mutate(pct = n / N * 100) %>%
       ungroup() %>%
