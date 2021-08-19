@@ -16,8 +16,14 @@
 #' rate_compare(formula=response~factor(treatment,levels=c('pbo','exp'))+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
 #' @export
 
-rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','cmh'),
-                         test = c('one.sided','two.sided'),bisection= 100, eps=1e-06,alpha=0.05)
+rate_compare <- function(formula, 
+                         data,
+                         delta = 0, 
+                         weight_schema=c('ss','equal','cmh'),
+                         test = c('one.sided','two.sided'),
+                         bisection= 100, 
+                         eps=1e-06,
+                         alpha=0.05)
 {
   test <- match.arg(test)
   mf <- match.call(expand.dots = FALSE)
@@ -42,10 +48,10 @@ rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','
     str <- sapply(strsplit(names(ntrt),"_"),"[",1)
     trt <- sapply(strsplit(names(ntrt),"_"),"[",2)
   }
-  n0 <- ntrt[trt==trt[1]]
-  n1 <- ntrt[trt==trt[2]]
-  s0 <- strt[trt==trt[1]]
-  s1 <- strt[trt==trt[2]]
+  n0 <- ntrt[trt==names(table(treatment))[1]]
+  n1 <- ntrt[trt==names(table(treatment))[2]]
+  s0 <- strt[trt==names(table(treatment))[1]]
+  s1 <- strt[trt==names(table(treatment))[2]]
   n <- n0+n1
   c <- s0+s1
   r1 <- s1/n1
@@ -170,6 +176,5 @@ rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','
   z <- data.frame(r_diff,z_score, pval, ci[1],ci[2])
   names(z)[c(4,5)] <- c("lower.limit","upper.limit")
   z
+
 }
-
-
