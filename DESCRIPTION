@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
     person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
     )
-Description: Interactive Forest Plot.
+Description: Interactive Forest Plot using `reactable` and `plotly`.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
