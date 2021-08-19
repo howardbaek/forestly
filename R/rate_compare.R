@@ -6,7 +6,7 @@
 #' @param test a character string specifying the side of p-value, must be one of \code{"one.sided"}, or \code{"two.sided"}.
 #' @param bisection the number of sections in the interval used in Bisection Method. Default is 100.
 #' @param eps the level of precision. Default is eps=1e-06.
-#' @param alpha pre-difined alpha level for Confidence Interval
+#' @param alpha pre-defined alpha level for Confidence Interval
 #' @references Miettinen, O. and Nurminen, M, \emph{Comparative Analysis of Two Rates}. STATISTICS IN MEDICINE, 4:213-226, 1985.
 #' @examples
 #' ##To conduct the stratified MN analysis with sample size weights:
