@@ -27,6 +27,8 @@ sparkline_point_js(
 
 \item{x}{A vector of variable names in \code{tbl} for value.}
 
+\item{type}{A character for the typoe of reactable component.}
+
 \item{x_lower}{A vector of variable names in \code{tbl} for lower error difference.}
 
 \item{x_upper}{A vector of variable names in \code{tbl} for upper error difference. Default is the same as \code{x_lower}.}

@@ -2,6 +2,7 @@
 #'
 #' @param tbl A data frame
 #' @param x A vector of variable names in `tbl` for value.
+#' @param type A character for the typoe of reactable component. 
 #' @param x_lower A vector of variable names in `tbl` for lower error difference.
 #' @param x_upper A vector of variable names in `tbl` for upper error difference. Default is the same as `x_lower`.
 #' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
