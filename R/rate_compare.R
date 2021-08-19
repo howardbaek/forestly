@@ -1,5 +1,5 @@
 #' Unstratified and Stratified  Miettinen and Nurminen Test
-#' @param formula a symbolic description of the model to be fitted, which has the form \code{response ~ treament}, where \code{response} is the numeric vector with values of 0 or 1 and \code{treatment} is the group information.
+#' @param formula a symbolic description of the model to be fitted, which has the form \code{y ~ x} for unstratified MN test, and the form \code{y ~ x + strata(s)} for stratified MN test, where \code{y} is the numeric vector with values of 0 or 1, \code{x} is the group information, and \code{s} is the stratum information.
 #' @param data an optional data frame, list or environment containing the variables in the model. If not found in data, the variables are taken from \code{environment (formula)}, typically the environment from which \code{rate_compare} is called.
 #' @param delta a numeric value to set the difference of two group under the null.
 #' @param weight_schema weighting schema used in stratified MN method. \code{"equal"} for equal weighting, \code{"ss"} for sample size weighting, \code{"cmh"} for Cochran Mantel-Haenszel's weights. Default is "ss". 
@@ -8,13 +8,13 @@
 #' @param eps the level of precision. Default is eps=1e-06.
 #' @param alpha pre-difined alpha level for Confidence Interval
 #' @references Miettinen, O. and Nurminen, M, \emph{Comparative Analysis of Two Rates}. STATISTICS IN MEDICINE, 4:213-226, 1985.
-#' @export
 #' @examples
 #' ##To conduct the stratified MN analysis with sample size weights:
-#' treatment <- c(rep(0,100),rep(1,100))
+#' treatment <- c(rep('pbo',100),rep('exp',100))
 #' response <- c(rep(0,80),rep(1,20),rep(0,40),rep(1,60))
 #' stratum <- c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
-#' rate_compare(formula=response~treatment+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
+#' rate_compare(formula=response~factor(treatment,levels=c('pbo','exp'))+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
+#' @export
 
 rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','cmh'),
                          test = c('one.sided','two.sided'),bisection= 100, eps=1e-06,alpha=0.05)
@@ -23,128 +23,74 @@ rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
   mf <- mf[c(1L, m)]
-  mf$drop.unused.levels <- TRUE
-  mf[[1L]] <- quote(stats::model.frame)
-  mf <- eval(mf, parent.frame())
+  mf <- model.frame(mf, drop.unused.levels=TRUE)
   response <- model.response(mf, "numeric")
-  stratum_var <- untangle.specials(terms(formula,specials="strata"),"strata",1)$vars
-  treatment <- mf[,2L]
+  stratum <- mf[,attr(terms(formula,specials="strata"),"specials")$strata]
   
   # Count the event
-  if (identical(stratum_var,character(0))){
-    rs_data <- cbind.data.frame(treatment,response)
-    count_data_long <- rs_data %>%dplyr::group_by(treatment) %>%
-      dplyr::summarise(N = n(),
-                       S = sum(response,na.rm =TRUE),.groups='drop') 
-    # Reconstruct the data
-    count_data <- count_data_long %>% select(-S) %>%
-      pivot_wider(values_from = N, names_from = treatment,names_glue="N{c(0,1)}")  %>%
-      cbind(
-        count_data_long %>% select(-N) %>%
-          pivot_wider(values_from = S,names_from = treatment,names_glue="S{c(0,1)}")
-      ) %>% ungroup() %>%
-      dplyr::mutate(N = N1+N0,
-                    C = S1+S0,
-                    R1 = S1/N1,
-                    R0 = S0/N0
-      )
-  }else { 
-    stratum <- mf[stratum_var]
-    names(stratum)<-"stratum"
-    rs_data <- cbind.data.frame(treatment,response,stratum)
-    weight_schema <- match.arg(weight_schema)
-    count_data_long <- rs_data %>% dplyr::group_by(stratum, treatment) %>%
-      dplyr::summarise(N = n(),
-                       S = sum(response,na.rm=TRUE),.groups='drop') 
-    # Reconstruct the data by strata
-    count_data <- count_data_long %>% select(-S) %>%
-      pivot_wider(values_from = N, names_from = treatment,names_glue="N{c(0,1)}") %>%
-      full_join(
-        count_data_long %>% select(-N) %>%
-          pivot_wider(values_from = S, names_from = treatment,names_glue="S{c(0,1)}"),by='stratum'
-      ) %>% ungroup() %>%
-      dplyr::mutate(N = N1+N0,
-                    C = S1+S0,
-                    w = ifelse(rep(weight_schema=='equal',length(stratum)),1,ifelse(rep(weight_schema=='ss',length(stratum)),N/sum(N),(N0*N1/N)/sum(N0*N1/N))),
-                    R1 = S1/N1,
-                    R0 = S0/N0
-      )
+  if (length(stratum)==0){
+    treatment <- mf[,2L]
+    strt <- sapply(split(response,treatment),sum)
+    ntrt <- sapply(split(response,treatment),length)
+    rtrt <- strt/ntrt
+    trt <- names(ntrt)
   }
-  
+  if (length(stratum)!=0) { 
+    treatment <- mf[,-attr(terms(formula,specials="strata"),"specials")$strata][,2L]
+    strt <- sapply(split(response,paste(t(stratum),treatment,sep="_")),sum)
+    ntrt <- sapply(split(response,paste(t(stratum),treatment,sep="_")),length)
+    str <- sapply(strsplit(names(ntrt),"_"),"[",1)
+    trt <- sapply(strsplit(names(ntrt),"_"),"[",2)
+  }
+  n0 <- ntrt[trt==trt[1]]
+  n1 <- ntrt[trt==trt[2]]
+  s0 <- strt[trt==trt[1]]
+  s1 <- strt[trt==trt[2]]
+  n <- n0+n1
+  c <- s0+s1
+  r1 <- s1/n1
+  r0 <- s0/n0
   
   # start the analysis
-  if (identical(stratum_var,character(0))){
-    test_stat <- count_data %>%       
-      dplyr::mutate(
-        L3 = N,
-        L2 = (N1+2*N0)*delta-N-C,
-        L1 = (N0*delta-N-2*S0)*delta+C,
-        L0 = S0*delta*(1-delta),
-        
-        q  = (L2/(3*L3))^3-L1*L2/(6*L3^2)+L0/(2*L3),
-        sign = ifelse(q>0,1, -1),
-        p  = sqrt((L2/(3*L3))^2 - L1/(3*L3))*sign,
-        
-        # calcualte R tilter
-        temp =  q/(p^3),
-        # to limit this temo within (-1,1)
-        temp = pmax(pmin(temp, 1),-1),
-        a  = (pi+acos(temp))/3,
-        
-        # Start to calculate R tilter
-        R0t  = 2*p*cos(a)-L2/(3*L3),
-        R1t  = R0t + delta,
-        Vart = (R1t*(1-R1t)/N1+ R0t*(1-R0t)/N0)*(N/(N-1)),
-      )%>% dplyr::summarise(
-        R_diff = (S1/N1 - S0/N0),
-        Z_score = (R_diff - delta) / sqrt(Vart)
-      ) %>% {
-        if(test == 'one.sided' ){
-          dplyr::mutate(., Pval = ifelse(delta<=0, 1 - pnorm(Z_score), pnorm(Z_score)))
-        } else if(test == "two.sided"){
-          dplyr::mutate(., Pval = 1 - pchisq(Z_score^2,1))
-        }
-      }
-  }else{
-    test_stat <- count_data %>%  dplyr::mutate(
-      L3 = N,
-      L2 = (N1+2*N0)*delta-N-C,
-      L1 = (N0*delta-N-2*S0)*delta+C,
-      L0 = S0*delta*(1-delta),
-      
-      q  = (L2/(3*L3))^3-L1*L2/(6*L3^2)+L0/(2*L3),
-      sign = ifelse(q>0,1, -1),
-      p  = sqrt((L2/(3*L3))^2 - L1/(3*L3))*sign,
-      
-      # calcualte R tilter
-      temp =  q/(p^3),
-      # to limit this temo within (-1,1)
-      temp = pmax(pmin(temp, 1),-1),
-      a  = (pi+acos(temp))/3,
-      
-      # Start to calculate R tilter
-      R0t  = 2*p*cos(a)-L2/(3*L3),
-      R1t  = R0t + delta,
-      Vart = (R1t*(1-R1t)/N1+ R0t*(1-R0t)/N0)*(N/(N-1)),
-      # Start to calculate the chi-square
-      R1_w = R1*w,
-      R0_w = R0*w,
-      Var_w = w^2*Vart
-    ) %>% dplyr::summarise(
-      # R1S = sum(R1_w),
-      # R2S = sum(R0_w),
-      R_diff = (sum(R1_w) - sum(R0_w)),
-      Z_score = (R_diff - delta)/sqrt(sum(Var_w))
-    ) %>% {
-      if(test == 'one.sided'){
-        dplyr::mutate(., Pval =ifelse(delta<=0, 1 - pnorm(Z_score),1-pnorm(Z_score)))
-      } else if(test == "two.sided"){
-        dplyr::mutate(., Pval = 1 - pchisq(Z_score^2,1))
-      }
-    }
+  l3 <- n
+  l2 <- (n1+2*n0)*delta-n-c
+  l1 <- (n0*delta-n-2*s0)*delta+c
+  l0 <- s0*delta*(1-delta)
+  
+  q  <- (l2/(3*l3))^3-l1*l2/(6*l3^2)+l0/(2*l3)
+  sign <- ifelse(q>0,1, -1)
+  p  <- sqrt((l2/(3*l3))^2 - l1/(3*l3))*sign
+  
+  # calcualte R tilter
+  temp <-  q/(p^3)
+  # to limit this temo within (-1,1)
+  temp <- pmax(pmin(temp, 1),-1)
+  a  <- (pi+acos(temp))/3
+  
+  # Start to calculate R tilter
+  r0t  <- 2*p*cos(a)-l2/(3*l3)
+  r1t  <- r0t + delta
+  vart <- (r1t*(1-r1t)/n1+ r0t*(1-r0t)/n0)*(n/(n-1))
+  
+  if (length(stratum)==0){
+    r_diff <- (r1 - r0)
+    z_score <- (r_diff - delta) / sqrt(vart)
+    pval <- switch(test,one.sided=ifelse(delta<=0, 1 - pnorm(z_score), pnorm(z_score)),two.sided=1 - pchisq(z_score^2,1))
   }
+  if (length(stratum)!=0) {
+    # Start to calculate the chi-square
+    w <- switch (weight_schema,equal=rep(1,length(str)),ss=n/sum(n),cmh=(n0*n1/n)/sum(n0*n1/n))
+    r1_w <- r1*w
+    r0_w <- r0*w
+    var_w <- w^2*vart
+    r_diff <- (sum(r1_w) - sum(r0_w))
+    z_score <- (r_diff - delta)/sqrt(sum(var_w))
+    pval <- switch(test,one.sided=ifelse(delta<=0, 1 - pnorm(z_score), pnorm(z_score)),two.sided=1 - pchisq(z_score^2,1))
+  }
+  
   # bisection function to find the roots
-  BIroot<- function (f, a, b)
+  # f is the function for which the root is sought, a and b are minimum and maximum of the interval which contains the root from Bisection Method
+  biroot<- function (f, a, b)
   {
     h = abs(b - a)/bisection
     i = 0
@@ -174,94 +120,56 @@ rate_compare <- function(formula, data,delta = 0, weight_schema=c('ss','equal','
   }
   
   # # Start to calculate the Confidence Interval
-  if (identical(stratum_var,character(0))){
-    func_D<-function(D) {test<-count_data %>%
-      dplyr::mutate(
-        L3= N,
-        L2 = (N1+2*N0)*D-N-C,
-        L1 = (N0*D-N-2*S0)*D+C,
-        L0 = S0*D*(1-D),
-        
-        q  = (L2/(3*L3))^3-L1*L2/(6*L3^2)+L0/(2*L3),
-        sign = ifelse(q>0,1, -1),
-        p  = sqrt((L2/(3*L3))^2 - L1/(3*L3))*sign,
-        # Adjust p
-        p = ifelse(p>(-1e-20) & p<0,
-                   p-1e-16,
-                   ifelse(
-                     p>=0 & p<(1e-20),
-                     p+1e-16,
-                     p
-                   )
-        ),
-        # calculate R tilter
-        temp =  q/(p^3),
-        # to limit this temo within (-1,1)
-        temp = pmax(pmin(temp, 1),-1),
-        a  = (pi+acos(temp))/3,
-        # Start to calculate R tilter
-        R0t  = 2*p*cos(a)-L2/(3*L3),
-        R1t  = R0t + D,
-        Vart = (R1t*(1-R1t)/N1+ R0t*(1-R0t)/N0)*(N/(N-1)),
-      ) %>%
-      dplyr::summarise(
-        R_diff = (S1/N1 - S0/N0),
-        Chisq_obs = (R_diff - D)^2/Vart
-      ) 
-    return(test$Chisq_obs-qchisq(1-alpha,1))}
+  func_d <- function(d) {
+    l3= n
+    l2 = (n1+2*n0)*d-n-c
+    l1 = (n0*d-n-2*s0)*d+c
+    l0 = s0*d*(1-d)
     
-    CI<-BIroot(f=func_D,a=-0.99,b=0.99)
-    CI<-CI[(abs(CI)<1)]
-  }else{
-    func_D<-function(D) {test<-count_data %>%
-      dplyr::mutate(
-        L3= N,
-        L2 = (N1+2*N0)*D-N-C,
-        L1 = (N0*D-N-2*S0)*D+C,
-        L0 = S0*D*(1-D),
-        
-        q  = (L2/(3*L3))^3-L1*L2/(6*L3^2)+L0/(2*L3),
-        sign = ifelse(q>0,1, -1),
-        p  = sqrt((L2/(3*L3))^2 - L1/(3*L3))*sign,
-        # Adust p
-        p = ifelse(p>(-1e-20) & p<0,
-                   p-1e-16,
-                   ifelse(
-                     p>=0 & p<(1e-20),
-                     p+1e-16,
-                     p
-                   )
-        ),
-        # calculate R tilter
-        temp =  q/(p^3),
-        # to limit this temp within (-1,1)
-        temp = pmax(pmin(temp, 1),-1),
-        a  = (pi+acos(temp))/3,
-        # Start to calculate R tilter
-        R0t  = 2*p*cos(a)-L2/(3*L3),
-        R1t  = R0t + D,
-        Vart = (R1t*(1-R1t)/N1+ R0t*(1-R0t)/N0)*(N/(N-1)),
-        # Start to calculate the chi-square
-        R1_w = R1*w,
-        R0_w = R0*w,
-        Var_w = w^2*Vart
-      ) %>%
-      dplyr::summarise(
-        R1S = sum(R1_w),
-        R2S = sum(R0_w),
-        Vs  =sum(Var_w)
-      ) %>%  dplyr::mutate(
-        R_diff = R1S - R2S,
-        Chisq_obs = (R_diff - D)^2/Vs
-      )
-    return(test$Chisq_obs-qchisq(1-alpha,1))}
-    
-    CI<-BIroot(f=func_D,a=-0.99,b=0.99)
-    CI<-CI[(abs(CI)<1)]
+    q  = (l2/(3*l3))^3-l1*l2/(6*l3^2)+l0/(2*l3)
+    sign = ifelse(q>0,1, -1)
+    p  = sqrt((l2/(3*l3))^2 - l1/(3*l3))*sign
+    # Adust p
+    p = ifelse(p>(-1e-20) & p<0,
+               p-1e-16,
+               ifelse(
+                 p>=0 & p<(1e-20),
+                 p+1e-16,
+                 p
+               )
+    )
+    # calculate R tilter
+    temp =  q/(p^3)
+    # to limit this temp within (-1,1)
+    temp = pmax(pmin(temp, 1),-1)
+    a  = (pi+acos(temp))/3
+    # Start to calculate R tilter
+    r0t  = 2*p*cos(a)-l2/(3*l3)
+    r1t  = r0t + d
+    vart = (r1t*(1-r1t)/n1+ r0t*(1-r0t)/n0)*(n/(n-1))
+    if (length(stratum)==0){        
+      r_diff = (s1/n1 - s0/n0)
+      chisq_obs = (r_diff - d)^2/vart
+    }
+    if (length(stratum)!=0){
+      # Start to calculate the chi-square
+      r1_w = r1*w
+      r0_w = r0*w
+      var_w = w^2*vart
+      vs  =sum(var_w)
+      
+      r_diff = sum(r1_w) - sum(r0_w)
+      chisq_obs = (r_diff - d)^2/vs
+    }
+    return(chisq_obs-qchisq(1-alpha,1))
   }
   
-  as.data.frame(test_stat%>% dplyr::mutate(lower=CI[1],upper=CI[2]))
+  ci <- biroot(f=func_d,a=-0.999,b=0.999)
+  ci <- ci[(abs(ci)<1)]
+  
+  z <- data.frame(r_diff,z_score, pval, ci[1],ci[2])
+  names(z)[c(4,5)] <- c("lower.limit","upper.limit")
+  z
 }
-
 
 

@@ -86,7 +86,7 @@ The p-value can be calculated as stated above.
 # Paramters in Function
 | Parameters | Description                | Default | 
 |:-----------|:---------------------------|:---------|
-|formula    |A symolic description of the model to be fitted, which has the form \code{response ~ treament}, where \code{response} is the numeric vector with values of 0 or 1 and \code{treatment} is the group information.   |       |
+|formula    |a symbolic description of the model to be fitted, which has the form \code{y ~ x} for unstratified MN test, and the form \code{y ~ x + strata(s)} for stratified MN test, where \code{y} is the numeric vector with values of 0 or 1, \code{x} is the group information, and \code{s} is the stratum information.   |       |
 |data      |an optional data frame, list or environment containing the variables in the model. | |
 |delta      |A numeric value to set the difference of two group under the null.|0       |
 |weight_schema      |Weighting schema used in stratified MN method. "equal", "ss" and "cmh". |ss       |

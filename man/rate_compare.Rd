@@ -16,7 +16,7 @@ rate_compare(
 )
 }
 \arguments{
-\item{formula}{a symbolic description of the model to be fitted, which has the form \code{response ~ treament}, where \code{response} is the numeric vector with values of 0 or 1 and \code{treatment} is the group information.}
+\item{formula}{a symbolic description of the model to be fitted, which has the form \code{y ~ x} for unstratified MN test, and the form \code{y ~ x + strata(s)} for stratified MN test, where \code{y} is the numeric vector with values of 0 or 1, \code{x} is the group information, and \code{s} is the stratum information.}
 
 \item{data}{an optional data frame, list or environment containing the variables in the model. If not found in data, the variables are taken from \code{environment (formula)}, typically the environment from which \code{rate_compare} is called.}
 
@@ -37,10 +37,10 @@ Unstratified and Stratified  Miettinen and Nurminen Test
 }
 \examples{
 ##To conduct the stratified MN analysis with sample size weights:
-treatment <- c(rep(0,100),rep(1,100))
+treatment <- c(rep('pbo',100),rep('exp',100))
 response <- c(rep(0,80),rep(1,20),rep(0,40),rep(1,60))
 stratum <- c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
-rate_compare(formula=response~treatment+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
+rate_compare(formula=response~factor(treatment,levels=c('pbo','exp'))+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
 }
 \references{
 Miettinen, O. and Nurminen, M, \emph{Comparative Analysis of Two Rates}. STATISTICS IN MEDICINE, 4:213-226, 1985.
