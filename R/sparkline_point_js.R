@@ -13,6 +13,7 @@
 #' @param color Character vector of point color name
 #' @param color_errorbar Character vector of errorbar color name
 #' @param color_vline Character vector of vertical reference line color name
+#' @param margin A vector of length 5 for figure margin at bottom, left, top, right and padding.
 #' @examples
 #' \dontrun{
 #'  

@@ -7,6 +7,7 @@
 sparkline_point_js(
   tbl,
   x,
+  type = c("cell", "footer", "header"),
   x_lower = NULL,
   x_upper = x_lower,
   xlim = NULL,
@@ -17,7 +18,8 @@ sparkline_point_js(
   width = 150,
   color = "gold",
   color_errorbar = color,
-  color_vline = "#00000050"
+  color_vline = "#00000050",
+  margin = rep(0, 5)
 )
 }
 \arguments{
@@ -46,6 +48,8 @@ sparkline_point_js(
 \item{color_errorbar}{Character vector of errorbar color name}
 
 \item{color_vline}{Character vector of vertical reference line color name}
+
+\item{margin}{A vector of length 5 for figure margin at bottom, left, top, right and padding.}
 }
 \description{
 Sparkline Point Figure Javascript Render Using Plotly
