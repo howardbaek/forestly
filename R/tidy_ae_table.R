@@ -84,16 +84,17 @@ tidy_ae_table <- function(population_from,
   #  pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
   res <- reshape(data = res, direction = "wide",
                  timevar = "trtn",
-                 idvar = "ae",
+                 idvar = c("ae", "stratum"),
                  v.names = c("n", "N", "pct"))
   res[is.na(res)]<-0
   res <- res[,c('ae', 'stratum', 'n.1', 'n.2', 'N.1', 'N.2', 'pct.1', 'pct.2')]
   
   #  mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
-  res$N.1[res$N.1==0] <- max(res$N.1)
-  res$N.2[res$N.2==0] <- max(res$N.2)
+  res$N.1 <- max(res$N.1)
+  res$N.2 <- max(res$N.2)
   
-  attr(res$ae,'label') <- c("Dictionary-Derived Term")
+  attr(res$ae,'label') <- attr(db$ae,'label')
+  attr(res$stratum,'label') <- attr(pop$stratum,'label')
   
   names(res)[names(res)=='n.1'] <- 'n_1'
   names(res)[names(res)=='n.2'] <- 'n_2'
