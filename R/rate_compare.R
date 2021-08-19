@@ -29,7 +29,9 @@ rate_compare <- function(formula,
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data"), names(mf), 0L)
   mf <- mf[c(1L, m)]
-  mf <- model.frame(mf, drop.unused.levels=TRUE)
+  mf$drop.unused.levels <- TRUE
+  mf[[1L]] <- quote(stats::model.frame)
+  mf <- eval(mf, parent.frame())
   response <- model.response(mf, "numeric")
   stratum <- mf[,attr(terms(formula,specials="strata"),"specials")$strata]
   
