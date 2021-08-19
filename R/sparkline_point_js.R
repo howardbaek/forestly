@@ -110,46 +110,24 @@ sparkline_point_js <- function(tbl,
 
   # Convert x and error bar
   x_v <- tbl[, x]
-  js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
 
   if (is.null(x_lower)) {
-    js_x_lower <- 0
-    js_x_upper <- 0
     x_l <- x_v
     x_u <- x_v
     color_errorbar <- "#FFFFFF00"
   }else{
     x_l <- x_v - tbl[, x_lower]
     x_u <- x_v + tbl[, x_upper]
-    js_x_lower <- paste(paste0('cell.row["', x_lower, '"]'), collapse = ", ")
-    js_x_upper <- paste(paste0('cell.row["', x_upper, '"]'), collapse = ", ")
   }
-
-  # Convert y
-  js_y <- paste(y, collapse = ", ")
 
   # Convert axis range
   if (is.null(xlim)) {
     xlim <- range(c(x_v, x_l, x_u)) + c(-0.5, 0.5)
   }
-  js_x_range <- paste(xlim, collapse = ", ")
-  js_y_range <- paste(c(0, length(x) + 1), collapse = ", ")
 
-  # Convert text
-  if (is.null(text)) {
-    js_text <- '""'
-  }else{
-    js_text <- paste(text, collapse = ", ")
-  }
 
   # Convert v_line
   if (is.null(vline)) vline <- "[]"
-  js_vline <- as.character(vline)
-
-  # Convert shape
-  js_height <- as.character(height)
-  js_width <- as.character(width)
-
   # Convert color
   foo <- function(x) {
     rgba <- grDevices::col2rgb(x, alpha = TRUE)
@@ -157,9 +135,6 @@ sparkline_point_js <- function(tbl,
     paste(paste0('"rgba(', apply(rgba, 2, paste, collapse = ", "), ')"'),
            collapse = ", ")
   }
-  js_color <- foo(color)
-  js_color_errorbar <- foo(color_errorbar)
-  js_color_vline <- foo(color_vline)
 
   # data trace template
   data_trace_js <- function(n) {
@@ -189,7 +164,6 @@ sparkline_point_js <- function(tbl,
                                            fixed = TRUE))
     js <- paste(js, collapse = ",")
   }
-  data_trace <- data_trace_js(length(x))
   # Brew
 
   plotly_file <- tempfile(fileext = ".js")

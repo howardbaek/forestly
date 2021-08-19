@@ -49,7 +49,7 @@ sparkline_errorbar <- function(est,
   db$lower1 <- formatC(db$lower, digits = 2, format = "f")
   db$upper1 <- formatC(db$upper, digits = 2, format = "f")
 
-  hover_text <- with(db, paste0(est1, " (", lower1, ", ", upper1, ")"))
+  hover_text <- with(db, paste0(db$est1, " (", db$lower1, ", ", db$upper1, ")"))
   color <- factor(color, levels = color)
 
 
