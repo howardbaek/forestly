@@ -43,7 +43,9 @@ Define analysis data
 This function is used to obtain AE information ready for visualization
 }
 \examples{
-db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
+pop <- adsl 
+colnames(pop)[which(names(pop) == "TRT01A")] <- "TRTA"
+db <- tidy_ae_table(population_from  = pop,
                     observation_from = adae,
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
