@@ -21,6 +21,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
 #'                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
@@ -36,6 +37,7 @@
 #' 
 #' plot_forest(db)
 #' plot_forest(db, fig_prop_color = c("red", "green"), fig_diff_color = "blue")
+#' }
 
 
 plot_forest <- function(db, 
@@ -146,38 +148,38 @@ plot_forest <- function(db,
       
       # List of column definitions
       columns = list(
-        ae = colDef(header = "Adverse Events", minWidth = 150, align = "right"),
+        ae = reactable::colDef(header = "Adverse Events", minWidth = 150, align = "right"),
         
-        stratum = colDef(header = "Stratum", show = FALSE),
+        stratum = reactable::colDef(header = "Stratum", show = FALSE),
         
-        ae_label = colDef(header = "Label", show = FALSE),
+        ae_label = reactable::colDef(header = "Label", show = FALSE),
         
-        fig_prop = colDef(header = "AE Proportion (%)",
-                          width = 300, align = "center",
-                          cell = JS(design_details$design_prop_cell),
-                          footer = JS(design_details$design_prop_footer),
-                          html = TRUE,
-                          style = "font-size: 0px; padding: 0px; margin: 0px;",
-                          footerStyle = "font-size: 0px; padding: 0px; margin: 0px;"),
+        fig_prop = reactable::colDef(header = "AE Proportion (%)",
+                                     width = 300, align = "center",
+                                     cell = reactable::JS(design_details$design_prop_cell),
+                                     footer = reactable::JS(design_details$design_prop_footer),
+                                     html = TRUE,
+                                     style = "font-size: 0px; padding: 0px; margin: 0px;",
+                                     footerStyle = "font-size: 0px; padding: 0px; margin: 0px;"),
         
-        fig_diff = colDef(header = "Risk Diff (%) + 95% CI",
-                          defaultSortOrder = "desc",
-                          width = 300, align = "center",
-                          cell = JS(design_details$design_diff_cell),
-                          footer = JS(design_details$design_diff_footer),
-                          html = TRUE,
-                          style = "font-size: 0px; padding: 0px; margin: 0px;"),
+        fig_diff = reactable::colDef(header = "Risk Diff (%) + 95% CI",
+                                     defaultSortOrder = "desc",
+                                     width = 300, align = "center",
+                                     cell = reactable::JS(design_details$design_diff_cell),
+                                     footer = reactable::JS(design_details$design_diff_footer),
+                                     html = TRUE,
+                                     style = "font-size: 0px; padding: 0px; margin: 0px;"),
         
-        n_1 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
-        n_2 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
+        n_1 = reactable::colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
+        n_2 = reactable::colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
         
-        pct_1 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
-                       align = "center", format = colFormat(digits = 2) ),
-        pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
-                       align = "center", format = colFormat(digits = 2) ),
+        pct_1 = reactable::colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
+                                  align = "center", format = reactable::colFormat(digits = 2) ),
+        pct_2 =reactable:: colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
+                                  align = "center", format = reactable::colFormat(digits = 2) ),
         
-        lower = colDef(header = "lower CI", show = FALSE),
-        upper = colDef(header = "upper CI", show = FALSE)
+        lower = reactable::colDef(header = "lower CI", show = FALSE),
+        upper = reactable::colDef(header = "upper CI", show = FALSE)
       )
     ),
     crosstool::crosstool(t_display1,

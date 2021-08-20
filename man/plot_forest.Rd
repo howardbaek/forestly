@@ -44,6 +44,7 @@ a reactable with a select list
 Generate interactive forest plot with a select list as filter
 }
 \examples{
+\dontrun{
 library(dplyr)
 tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
@@ -59,4 +60,5 @@ db <- list(table = tb, listing = tb \%>\% rename(AE = ae),
 
 plot_forest(db)
 plot_forest(db, fig_prop_color = c("red", "green"), fig_diff_color = "blue")
+}
 }
