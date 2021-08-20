@@ -49,9 +49,10 @@ i.e., we have two boxes, depending on the number of sub-structure of AESER:
 This function is used to obtain AE information ready for visualization
 }
 \examples{
-db <- tidy_ae_table1(population_from  = adsl_mk1293,
+\dontrun{
+db <- tidy_ae_table1(population_from  = adsl,
                     population_where = NULL,
-                    observation_from = adae_mk1293,
+                    observation_from = adae,
                     observation_where = NULL,
                     treatment_var = "ACTLARM",
                     treatment_order = c("MK1293" = "MK-1293", "Placebo" = "Lantus"),
@@ -59,4 +60,5 @@ db <- tidy_ae_table1(population_from  = adsl_mk1293,
                     ae_interested = "AESER",
                     listing_var = c("SITEID", "USUBJID", "RACE", "SEX", "AESER", "AEREL", "AEACN", "AEOUT",
                                     "AESLIFE", "AESDTH", "AESOD", "AESMIE") )
+}
 }
