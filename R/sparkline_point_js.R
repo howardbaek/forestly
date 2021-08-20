@@ -63,6 +63,7 @@ sparkline_point_js <- function(tbl,
                                x_lower = NULL,
                                x_upper = x_lower,
                                xlim = NULL,
+                               xlab = "",
                                y = seq_along(x),
                                vline = NULL,
                                text = NULL,
@@ -71,6 +72,11 @@ sparkline_point_js <- function(tbl,
                                color = "gold",
                                color_errorbar = color,
                                color_vline = "#00000050", 
+                               label = NULL,
+                               legend = FALSE,
+                               legend_title = "",
+                               legend_position = 0,
+                               legend_type = c("point", "line", "point+line"),
                                margin = rep(0, 5)){
 
   # Input Checking
@@ -91,11 +97,14 @@ sparkline_point_js <- function(tbl,
   stopifnot(length(color_errorbar) %in% c(1, length(x)) )
   stopifnot(length(color_vline) %in% 1 )
 
+  stopifnot(length(label) %in% c(0, length(x)) )
+  
   if(is.null(text)){
     text <- '""'
   }
   
   type <- match.arg(type)
+  legend_type <- match.arg(legend_type)
   
   # Vectorize input 
   meta <- data.frame(x, y, text, color, color_errorbar)
@@ -119,7 +128,7 @@ sparkline_point_js <- function(tbl,
   if(type == "cell"){
     js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
   }else{
-    js_x <- 1
+    js_x <- paste(seq_along(color), collapse = ", ")
   }
 
   if(is.null(x_lower) | type %in% c("footer", "header")){
@@ -170,6 +179,21 @@ sparkline_point_js <- function(tbl,
   js_color_errorbar <- foo(color_errorbar)
   js_color_vline <- foo(color_vline)
 
+  # Convert x-axis label 
+  js_xlab <- xlab
+  
+  # Convert legend 
+  js_showlegend <- ifelse(legend, "true", "false")
+  js_legend_title <- legend_title
+  js_legend_position <- legend_position
+  js_legend_type <- as.character(factor(legend_type, 
+                                        levels = c("point", "line", "point+line"), 
+                                        labels = c("markers", "lines", "markers+lines")))
+  
+  # Convert legend label 
+  js_label <- paste(paste0('"', label,'"'), collapse = ", ")
+  
+  
   # Convert margin
   js_margin <- paste(margin, collapse = ", ")
   
@@ -189,16 +213,24 @@ sparkline_point_js <- function(tbl,
     },
     "text": text[i],
     "hoverinfo": "text",
-    "mode": "markers",
+    "mode": "<%=js_legend_type%>",
     "alpha_stroke": 1,
     "sizes": [10, 100],
     "spans": [1, 20],
     "type": "scatter",
+    "name": label[i],
     "marker": {
-      "color": [color[i]]
+      "color": [color[i]],
+      "line": {
+          "color": color[i]
+      }
+    },
+    "line": {
+        "color": color[i]
     }
   }'
-    
+  
+    template <- gsub("<%=js_legend_type%>", js_legend_type, template, fixed = TRUE)
     js <- lapply(1:n - 1, function(x) gsub("[i]", paste0("[",x,"]"), template, fixed = TRUE) )
     js <- paste(js, collapse = ",")
     
