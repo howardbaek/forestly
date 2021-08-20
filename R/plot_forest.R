@@ -92,7 +92,7 @@ plot_forest <- function(db,
   t_display$upper[(t_display$n_1 <= small_sample[1] & t_display$n_2 <= small_sample[2])] = 0
   
   # Make the data frame eligible for check box design
-  t_display1 <- SharedData$new(t_display)
+  t_display1 <- crosstalk::SharedData$new(t_display)
   
   # Store the design details in a object
   design_details = plot_design(t_display, 
