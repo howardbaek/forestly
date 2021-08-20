@@ -52,7 +52,7 @@ rbind(ALL listed AE, server AE, drug-related AE...)
 This function is used to obtain AE information ready for visualization
 }
 \examples{
-
+library(dplyr)
 db <- tidy_ae_table2(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                      observation_from = adae,
                      population_where = NULL,
