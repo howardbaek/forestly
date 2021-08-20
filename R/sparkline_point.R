@@ -45,7 +45,7 @@ sparkline_point <- function(
                height = height,
                width = width)
 
-  p %>% plotly::sparkline_layout(xlim = xlim,
+  p %>% sparkline_layout(xlim = xlim,
                          vline = vline,
                          margin = margin,
                          ...)

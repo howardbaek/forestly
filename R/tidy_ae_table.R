@@ -16,6 +16,7 @@
 #'
 #' @return Return a standard adverse event data frame
 #' @export
+#' @importFrom rlang .data
 #' @examples
 #' library(dplyr)
 #' library(tidyr)
@@ -50,19 +51,19 @@ tidy_ae_table <- function(population_from,
                          treatment_order  = treatment_order)
 
   db[["ae"]] <- db[[ae_var]]
-  db <- subset(db, USUBJID %in% pop$USUBJID)
+  db <- db %>% filter(.data$USUBJID %in% pop$USUBJID)
 
   # Yilong: will remove dplyr, tiyer dependency
-  db_N <- count(pop, treatment, stratum, name = "N")
+  db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
 
-  res <- db %>% group_by(treatment, ae) %>%
+  res <- db %>% group_by(.data$treatment, .data$ae) %>%
     summarise(n = n()) %>%
     left_join(db_N) %>%
-    mutate(pct = n / N * 100) %>%
+    mutate(pct = n / .data$N * 100) %>%
     ungroup() %>%
-    mutate(trtn = as.numeric(treatment)) %>%
-    select(- treatment) %>%
-    pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
+    mutate(trtn = as.numeric(.data$treatment)) %>%
+    select(- .data$treatment) %>%
+    pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
     mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
 
   listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
