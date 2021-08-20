@@ -27,17 +27,21 @@
 #'                                          labels = treatment_order), 
 #'                       N = c(3, 2))
 #' 
-#' tidy_multi_ae_label(db, db_N, ae_interested = c("AESER", "AEREL"))
+#' tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
+#'                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
+
+
 
 
 tidy_multi_ae_label <- function(db, db_N, ae_interested){
   
+  interested_ae_criterion <- ae_interested$interested_ae_criterion
+  interested_ae_label <- ae_interested$interested_ae_label
+  
   ## Start with all AE
   res <- db %>% group_by(treatment, ae) %>%
-    # summarise(n = n()) %>%
-    summarise(n = n_distinct(USUBJID)) %>%
-    # give a label to the AE without filter
-    mutate(ae_label = "NONE") %>%              
+    summarise(n = n_distinct(USUBJID)) %>%  # summarise(n = n()) %>%
+    mutate(ae_label = "All") %>%           # give a label to the AE without filter   
     left_join(db_N) %>%
     mutate(pct = n / N * 100) %>%
     ungroup() %>%
@@ -47,28 +51,17 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested){
     mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
   
   ## For each interested AE, iteration once and rbind them together
-  for (ae_idx in seq_along(ae_interested)) {
+  for (ae_idx in seq_along(interested_ae_criterion)) {
     
     ## Decide the filer according to the interested AE
-    if(ae_interested[ae_idx] == "AESER"){
-      temp_ae_filter = "N"
-    }else if(ae_interested[ae_idx] == "AEREL"){
-      temp_ae_filter = "NONE"
-    }else if(ae_interested[ae_idx] == "Grade3To5Flag"){
-      temp_ae_filter = "Y"
-    }else if(ae_interested[ae_idx] == "AEACN"){
-      temp_ae_filter = "DRUG WITHDRAWN"
-    }else{
-      stop("This is not a commonly interested AE structure, please enter AE structure from the candidates c(AESER, AEREL, AEACN, Grade3To5Flag)")
-    }
+    temp_ae_criterion <- interested_ae_criterion[ae_idx]
+    temp_ae_label <- interested_ae_label[ae_idx]
     
     ## Filter the interested AE
-    res_new <- db %>% subset(eval(parse(text = paste0(ae_interested[ae_idx]))) != temp_ae_filter) %>%
-      group_by(treatment, ae) %>%
-      # summarise(n = n()) %>%
-      summarise(n = n_distinct(USUBJID)) %>%
-      # give a label to the AE without filter
-      mutate(ae_label = ae_interested[ae_idx]) %>%
+    res_new <- eval(parse(text = paste0("subset(db,", temp_ae_criterion, ")")))
+    res_new <- res_new %>% group_by(treatment, ae) %>%
+      summarise(n = n_distinct(USUBJID)) %>%  # summarise(n = n()) %>%
+      mutate(ae_label = temp_ae_label) %>%    # give a label to the AE without filter
       left_join(db_N) %>%
       mutate(pct = n / N * 100) %>%
       ungroup() %>%
@@ -86,9 +79,10 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested){
     res$N_2[is.na(res$N_2)] = db_N$N[as.numeric(db_N$treatment) == 2] 
     res$n_1[is.na(res$n_1)] = 0
     res$n_2[is.na(res$n_2)] = 0
-    res$pct_1[is.na(res$pct_1)] = 0
-    res$pct_2[is.na(res$pct_2)] = 0
+    res$pct_1[is.na(res$pct_1)] = 0.0000
+    res$pct_2[is.na(res$pct_2)] = 0.0000
   }
   
+  res <- res %>% mutate(across(pct_1 : pct_2, ~ round(.x, digits = 4)))
   return(res)
 }

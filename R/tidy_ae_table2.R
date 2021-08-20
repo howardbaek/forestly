@@ -23,16 +23,21 @@
 #' @export
 #' @examples
 #' 
-#' tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
-#'                observation_from = adae,
-#'                population_where = NULL,
-#'                observation_where = NULL,
-#'                treatment_var = "TRTA",
-#'                treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-#'                ae_var = "AEDECOD",
-#'                ae_interested = c("AESER", "AEREL"),
-#'                listing_var = c("SITEID", "USUBJID", "RACE", "SEX", "AETERM", "AESER", "AEREL") )
-#' 
+#' db <- tidy_ae_table2(population_from  = adsl %>% rename(TRTA = TRT01A),
+#'                      observation_from = adae,
+#'                      population_where = NULL,
+#'                      observation_where = NULL,
+#'                      treatment_var = "TRTA",
+#'                      treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+#'                      ae_var = "AEDECOD",
+#'                      ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"', 
+#'                                                                     'Grade3To5Flag == "Y"', 'AEACN == "DRUG WITHDRAWN"'),
+#'                                                    ae_label = c("with serious adverse events",
+#'                                                                 "with drug-related adverse events",
+#'                                                                 "with toxicity grade 3-5 adverse events",
+#'                                                                 "discontinued due to an adverse event")),
+#'                      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
+
 tidy_ae_table2 <- function(population_from,
                            observation_from,
                            population_where = "ITTFL=='Y'",
@@ -57,18 +62,27 @@ tidy_ae_table2 <- function(population_from,
                          observation_where = observation_where,
                          treatment_var    = treatment_var,
                          treatment_order  = treatment_order)
-
+  
   # select the overlap pop(adsl) and db(adae)
-  db[["ae"]] <- db[[ae_var]]
+  db[["ae"]] <- tools::toTitleCase(tolower(db[[ae_var]])) 
   db <- subset(db, USUBJID %in% pop$USUBJID)
-
+  
+  # Select the variables to be listed in the detailed listing
+  db_listing <- tidy_listing(db, listing_var)
+  
   # count the sample size of each arm
   db_N <- dplyr::count(pop, treatment, stratum, name = "N")
   
   # rbind the data with interested AE labels
   res <- tidy_multi_ae_label(db, db_N, ae_interested)
   
+  # Title Case the cell values
+  res$ae <- tools::toTitleCase(tolower(res$ae))
+  
   # sort the output returns
-  listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
-  list(table = res, listing = db[, listing_var])
+  #listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
+  list(table = res, 
+       listing = db_listing, #listing = db[, listing_var],
+       sample_size = db_N,
+       treatment_order = treatment_order)
 }

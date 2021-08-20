@@ -53,14 +53,18 @@ This function is used to obtain AE information ready for visualization
 }
 \examples{
 
-tidy_ae_table2(population_from  = adsl \%>\% rename(TRTA = TRT01A),
-               observation_from = adae,
-               population_where = NULL,
-               observation_where = NULL,
-               treatment_var = "TRTA",
-               treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-               ae_var = "AEDECOD",
-               ae_interested = c("AESER", "AEREL"),
-               listing_var = c("SITEID", "USUBJID", "RACE", "SEX", "AETERM", "AESER", "AEREL") )
-
+db <- tidy_ae_table2(population_from  = adsl \%>\% rename(TRTA = TRT01A),
+                     observation_from = adae,
+                     population_where = NULL,
+                     observation_where = NULL,
+                     treatment_var = "TRTA",
+                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                     ae_var = "AEDECOD",
+                     ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"', 
+                                                                    'Grade3To5Flag == "Y"', 'AEACN == "DRUG WITHDRAWN"'),
+                                                   ae_label = c("with serious adverse events",
+                                                                "with drug-related adverse events",
+                                                                "with toxicity grade 3-5 adverse events",
+                                                                "discontinued due to an adverse event")),
+                     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
 }

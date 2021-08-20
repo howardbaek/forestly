@@ -44,13 +44,12 @@ This function is used to prepare the observation datasets for the use in functio
 The function filter the \code{adsl} dataset, and define proper treatment order in the dataset.
 }
 \examples{
-pop <- tidy_population(population_from  = adsl \%>\% rename(TRTA = TRT01A),
- population_where = "ITTFL=='Y'",
- treatment_var    = "TRTA",
- treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
- stratum_var      = NULL,
- baseline_var     = NULL)
-
-tidy_population(population_from = adsl)
-tidy_population(population_from = adsl, stratum_var = "RACE")
+pop1 <- tidy_population(population_from = adsl)
+pop2 <- tidy_population(population_from = adsl, stratum_var = "RACE")
+pop3 <- tidy_population(population_from  = adsl \%>\% rename(TRTA = TRT01A),
+                        population_where = "ITTFL=='Y'",
+                        treatment_var    = "TRTA",
+                        treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                        stratum_var      = NULL,
+                        baseline_var     = NULL)
 }

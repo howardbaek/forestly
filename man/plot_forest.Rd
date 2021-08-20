@@ -6,20 +6,17 @@
 \usage{
 plot_forest(
   db,
-  N = NULL,
-  fig_prop_color = c("gold", "purple"),
-  fig_prop_label = c("treatment", "control"),
+  fig_prop_color = c("#00857C", "#66203A"),
+  fig_prop_label = NULL,
   fig_diff_color = "black",
-  fig_diff_label = "treatment <- Favor -> contorl"
+  fig_diff_label = NULL,
+  small_sample = NULL
 )
 }
 \arguments{
 \item{db}{a list of two components:
 (1) db$table: ae data frame rbinded by interested ae labels
 (2) db$listing: a standard adverse event data frame with select columns}
-
-\item{N}{a numerical vector of length 2, with the first entry as the sample size in the treatment arm,
-and second entry as the sample size in the control arm.}
 
 \item{fig_prop_color}{a character vector of length two to specify the colors to plot the two proportions.
 The first entry refers to the color of the AE proportion in the treatment arm.
@@ -35,7 +32,10 @@ The default value is  c("treatment", "control")}
 The default value is "black".}
 
 \item{fig_diff_label}{a string to specify the x-axis legend of the error bar.
-The default value is "treatment <- Favor -> contorl".}
+The default value is "treatment <- Favor -> control".}
+
+\item{small_sample}{a integral vector of length 2. The first element is for treatment group and
+the second element is for control group. The default value is c(4, 4).}
 }
 \value{
 a reactable with a select list
@@ -46,15 +46,16 @@ Generate interactive forest plot with a select list as filter
 \examples{
 tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
-                 n_1 = c(2, 3, 1, 5, 1, 1, 3),
-                 n_2 = c(4, 5, 3, 7, 3, 3, 5),
-                 N_1 = rep(20, 7),
-                 N_2 = rep(20, 7),
+                 n_1 = c(40, 50, 30, 50, 30, 30, 50),
+                 n_2 = c(20, 30, 10, 50, 10, 10, 30),
+                 N_1 = rep(60, 7),
+                 N_2 = rep(60, 7),
                  stratum = rep("NULL", 7))
-tb <- tb \%>\% dplyr::mutate(pct_1 = n_1/N_1, pct_2 = n_2/N_2)
-db <- list(table = tb, listing = tb)
-plot_forest(db, N = c(20, 20))
-plot_forest(db, N = c(20, 20), fig_prop_color = c("red", "green"), fig_diff_color = "blue")
-plot_forest(db, N = c(20, 20), fig_prop_label = c("treatment", "control"), 
-            fig_diff_label = "TRT <-> COL")
+tb <- tb \%>\% dplyr::mutate(pct_1 = n_1/N_1 * 100, pct_2 = n_2/N_2 * 100)
+db <- list(table = tb, listing = tb \%>\% rename(AE = ae),
+           sample_size = tibble::tibble(treatment = c("treatment", "control"), N = c(60, 60)),
+           treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
+
+plot_forest(db)
+plot_forest(db, fig_prop_color = c("red", "green"), fig_diff_color = "blue")
 }

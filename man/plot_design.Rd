@@ -8,7 +8,7 @@ plot_design(
   t_display,
   fig_prop_range,
   fig_prop_label = c("treatment", "control"),
-  fig_prop_color = c("gold", "purple"),
+  fig_prop_color = c("#00857C", "#66203A"),
   fig_diff_range,
   fig_diff_label = "treatment <- Favor -> control",
   fig_diff_color = "black"
@@ -73,10 +73,10 @@ tb = tb \%>\% dplyr::mutate(pct_1 = n_1/N_1,
                           lower = fig_diff - 0.05,
                           upper = fig_diff + 0.05)
 
-plot_design(tb, 
-            fig_prop_range = c(0, 0.8),
-            fig_prop_color = c("blue", "green"), 
-            fig_diff_range = c(-0.5, 0.9),
-            fig_diff_label = "treatment <- Favor -> control",
-            fig_diff_color = "blue")
+a <- plot_design(tb,
+                 fig_prop_range = c(0, 0.8),
+                 fig_prop_color = c("blue", "green"),
+                 fig_diff_range = c(-0.5, 0.9),
+                 fig_diff_label = "treatment <- Favor -> control",
+                 fig_diff_color = "blue")
 }
