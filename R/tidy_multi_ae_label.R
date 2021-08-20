@@ -11,6 +11,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 #' 
@@ -30,7 +31,7 @@
 #' 
 #' tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
 #'                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
-#'
+#'}
 
 tidy_multi_ae_label <- function(db, db_N, ae_interested){
   
@@ -40,7 +41,7 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested){
   ## Start with all AE
   res <- db %>% group_by(treatment, ae) %>%
     summarise(n = n_distinct(USUBJID)) %>%  # summarise(n = n()) %>%
-    mutate(ae_label = "All") %>%           # give a label to the AE without filter   
+    mutate(ae_label = "All") %>%            # give a label to the AE without filter   
     left_join(db_N) %>%
     mutate(pct = n / N * 100) %>%
     ungroup() %>%
