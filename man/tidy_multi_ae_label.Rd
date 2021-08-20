@@ -23,7 +23,6 @@ a data frame which rbind data together according to the interested ae labels
 This is a function to rbind data together according to the interested ae labels
 }
 \examples{
-\dontrun{
 library(dplyr)
 library(tibble)
 treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
@@ -44,5 +43,4 @@ db_N = tibble(treatment = factor(c("Xanomeline", "Placebo"),
 
 tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
-}
 }
