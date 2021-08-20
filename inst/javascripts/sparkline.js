@@ -18,7 +18,7 @@ function(cell, state) {
  var showlegend = <%=js_showlegend%>;
  var legend_title = "<%=js_legend_title%>";
  var legend_position = <%=js_legend_position%>;
- var label = [<%=js_label%>];
+ var legend_label = [<%=js_legend_label%>];
  
  return React.createElement(Plot, {
     data: [

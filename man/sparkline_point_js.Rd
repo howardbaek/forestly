@@ -11,6 +11,7 @@ sparkline_point_js(
   x_lower = NULL,
   x_upper = x_lower,
   xlim = NULL,
+  xlab = "",
   y = seq_along(x),
   vline = NULL,
   text = NULL,
@@ -19,6 +20,11 @@ sparkline_point_js(
   color = "gold",
   color_errorbar = color,
   color_vline = "#00000050",
+  legend = FALSE,
+  legend_label = NULL,
+  legend_title = "",
+  legend_position = 0,
+  legend_type = c("point", "line", "point+line"),
   margin = rep(0, 5)
 )
 }
@@ -27,13 +33,15 @@ sparkline_point_js(
 
 \item{x}{A vector of variable names in \code{tbl} for value.}
 
-\item{type}{A character for the typoe of reactable component.}
+\item{type}{A character for the type of reactable component.}
 
 \item{x_lower}{A vector of variable names in \code{tbl} for lower error difference.}
 
 \item{x_upper}{A vector of variable names in \code{tbl} for upper error difference. Default is the same as \code{x_lower}.}
 
 \item{xlim}{Numeric vectors of length 2, giving the x coordinates ranges.}
+
+\item{xlab}{A character for the x-axis label.}
 
 \item{y}{Numeric vector of y-axis value.}
 
@@ -50,6 +58,16 @@ sparkline_point_js(
 \item{color_errorbar}{Character vector of errorbar color name}
 
 \item{color_vline}{Character vector of vertical reference line color name}
+
+\item{legend}{A logical value to display legend.}
+
+\item{legend_label}{A character vector for legend label.}
+
+\item{legend_title}{A character value for legend title.}
+
+\item{legend_position}{A numeric value for legend vertical position.}
+
+\item{legend_type}{A character value for legend type.}
 
 \item{margin}{A vector of length 5 for figure margin at bottom, left, top, right and padding.}
 }

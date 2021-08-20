@@ -2,9 +2,10 @@
 #'
 #' @param tbl A data frame
 #' @param x A vector of variable names in `tbl` for value.
-#' @param type A character for the typoe of reactable component. 
+#' @param type A character for the type of reactable component. 
 #' @param x_lower A vector of variable names in `tbl` for lower error difference.
 #' @param x_upper A vector of variable names in `tbl` for upper error difference. Default is the same as `x_lower`.
+#' @param xlab A character for the x-axis label. 
 #' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
 #' @param y Numeric vector of y-axis value.
 #' @param vline Numeric value for the location to draw the vertical reference line.
@@ -15,6 +16,11 @@
 #' @param color_errorbar Character vector of errorbar color name
 #' @param color_vline Character vector of vertical reference line color name
 #' @param margin A vector of length 5 for figure margin at bottom, left, top, right and padding.
+#' @param legend A logical value to display legend.
+#' @param legend_label A character vector for legend label.
+#' @param legend_title A character value for legend title.
+#' @param legend_position A numeric value for legend vertical position.
+#' @param legend_type A character value for legend type. 
 #' @examples
 #' \dontrun{
 #'  
@@ -72,8 +78,8 @@ sparkline_point_js <- function(tbl,
                                color = "gold",
                                color_errorbar = color,
                                color_vline = "#00000050", 
-                               label = NULL,
                                legend = FALSE,
+                               legend_label = NULL,
                                legend_title = "",
                                legend_position = 0,
                                legend_type = c("point", "line", "point+line"),
@@ -97,7 +103,7 @@ sparkline_point_js <- function(tbl,
   stopifnot(length(color_errorbar) %in% c(1, length(x)) )
   stopifnot(length(color_vline) %in% 1 )
 
-  stopifnot(length(label) %in% c(0, length(x)) )
+  stopifnot(length(legend_label) %in% c(0, length(x)) )
   
   if(is.null(text)){
     text <- '""'
@@ -189,11 +195,8 @@ sparkline_point_js <- function(tbl,
   js_legend_type <- as.character(factor(legend_type, 
                                         levels = c("point", "line", "point+line"), 
                                         labels = c("markers", "lines", "markers+lines")))
-  
-  # Convert legend label 
-  js_label <- paste(paste0('"', label,'"'), collapse = ", ")
-  
-  
+  js_legend_label <- paste(paste0('"', legend_label,'"'), collapse = ", ")
+
   # Convert margin
   js_margin <- paste(margin, collapse = ", ")
   
@@ -218,7 +221,7 @@ sparkline_point_js <- function(tbl,
     "sizes": [10, 100],
     "spans": [1, 20],
     "type": "scatter",
-    "name": label[i],
+    "name": legend_label[i],
     "marker": {
       "color": [color[i]],
       "line": {

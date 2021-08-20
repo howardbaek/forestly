@@ -18,8 +18,7 @@ Imports:
     dplyr,
     tidyr,
     rlang,
-    magrittr,
-    jsonlite
+    magrittr
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
@@ -28,7 +27,8 @@ Suggests:
     devtools,
     htmltools,
     reactR,
-    ggplot2
+    ggplot2,
+    jsonlite
 Depends: 
     R (>= 3.6)
 Config/testthat/edition: 3
