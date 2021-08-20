@@ -21,6 +21,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
 #'                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
 #'                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
