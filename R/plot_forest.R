@@ -104,7 +104,7 @@ plot_forest <- function(db,
                                fig_diff_color = fig_diff_color)
   
   # Make a reactable with a select list
-  p <- bscols(
+  p <- crosstalk::bscols(
     # Width of the select list and reactable
     widths = c(1.5, 10.5),
     # Make a select list
@@ -180,21 +180,22 @@ plot_forest <- function(db,
         upper = colDef(header = "upper CI", show = FALSE)
       )
     ),
-    crosstool(t_display1,
-              # transceiver widgets are more like normal crosstalk widgets.
-              class = "transceiver",
-              # set the initial value
-              init = which(t_display$ae_label == "All"),
-              # channel set to "filter" to use the crosstalk filter handle
-              channel = "filter",
-              # reset optional vector of crosstalk group keys;
-              # use with init when data == relay (one crosstalk group) to reset the initial filter/select handle.
-              reset = rownames(t_display))
+    crosstool::crosstool(t_display1,
+                         # transceiver widgets are more like normal crosstalk widgets.
+                         class = "transceiver",
+                         # set the initial value
+                         init = which(t_display$ae_label == "All"),
+                         # channel set to "filter" to use the crosstalk filter handle
+                         channel = "filter",
+                         # reset optional vector of crosstalk group keys;
+                         # use with init when data == relay (one crosstalk group) to 
+                         # reset the initial filter/select handle.
+                         reset = rownames(t_display))
   )
   
   
   plotly_js <- "https://unpkg.com/react-plotly.js@1.0.2/dist/create-plotly-component.js"
-  browsable(tagList(
+  htmltools::browsable(htmltools::tagList(
     reactR::html_dependency_react(),
     htmltools::tags$script(src = "https://cdn.plot.ly/plotly-latest.min.js"),
     htmltools::tags$script(src = plotly_js),
