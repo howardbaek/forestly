@@ -91,7 +91,7 @@ browsable(tagList(
   p
 ))
 
-}
+
 
 # -------------------------------------
 Example to generate the error bar
@@ -122,6 +122,6 @@ browsable(tagList(
   p
 ))
 
-
+}
 
 }

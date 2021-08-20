@@ -54,7 +54,7 @@
 #'   p
 #' ))
 #' 
-#' }
+#' 
 #' 
 #' # -------------------------------------
 #' Example to generate the error bar
@@ -85,7 +85,7 @@
 #'   p
 #' ))
 #' 
-#' 
+#' }
 #' 
 #' @export
 sparkline_point_js2 <- function(tbl,
