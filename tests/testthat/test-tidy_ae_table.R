@@ -1,4 +1,3 @@
-library(usethis)
 library(devtools)
 library(dplyr)
 library(tidyr)
