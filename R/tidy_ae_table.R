@@ -17,9 +17,8 @@
 #' @return Return a standard adverse event data frame
 #' @export
 #' @importFrom rlang .data
+#' @importFrom stats aggregate reshape
 #' @examples
-#' library(dplyr)
-#' library(tidyr)
 #' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                     observation_from = adae,
 #'                     treatment_var = "TRTA",
@@ -51,7 +50,7 @@ tidy_ae_table <- function(population_from,
                          treatment_order  = treatment_order)
 
   db[["ae"]] <- db[[ae_var]]
-  db <- subset(db, USUBJID %in% pop$USUBJID)
+  db <- subset(db, db$USUBJID %in% pop$USUBJID)
   
   # Yilong: will remove dplyr, tiyer dependency
   #db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
@@ -104,6 +103,7 @@ tidy_ae_table <- function(population_from,
   names(res)[names(res)=='pct.2'] <- 'pct_2'
   
   rownames(res) <- NULL
+  class(res) <- NULL
 
   listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
   list(table = res, listing = db[, listing_var])

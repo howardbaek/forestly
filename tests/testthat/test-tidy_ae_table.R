@@ -43,7 +43,6 @@ test_that("tidy_ae_table can tidy the data", {
     db[["ae"]] <- db[[ae_var]]
     db <- subset(db, USUBJID %in% pop$USUBJID)
     
-    # Yilong: will remove dplyr, tiyer dependency
     db_N <- count(pop, treatment, stratum, name = "N")
     
     res <- db %>% group_by(treatment, ae) %>%
@@ -56,6 +55,7 @@ test_that("tidy_ae_table can tidy the data", {
       pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
       mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
     
+    class(res) <- NULL
     listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
     list(table = res, listing = db[, listing_var])
   }
