@@ -16,6 +16,7 @@
 #' @export
 #'
 #' @examples 
+#' \dontrun{
 #' tbl <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
 #'                   ae_label = c("All", "All", "All", "All", "AESER", "AEREL", "AEREL"),
 #'                   n_1 = c(2, 3, 1, 5, 1, 1, 3),
@@ -29,7 +30,7 @@
 #' 
 #' db <- list(table = tbl, treatment_order = treatment_order)
 #' download_ae(db, ae_label_download = c("AESER", "AEREL"))
-
+#' }
 
 download_ae <- function(db, ae_label_download, 
                         source = NULL, footnote = NULL){
