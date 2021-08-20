@@ -22,7 +22,8 @@ Imports:
     tidyr,
     rlang,
     magrittr,
-    jsonlite
+    jsonlite,
+    tibble
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
