@@ -13,6 +13,11 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
+    r2rtf,
+    downloadthis,
+    crosstool,
+    crosstalk,
+    htmltools,
     plotly,
     brew,
     dplyr,
