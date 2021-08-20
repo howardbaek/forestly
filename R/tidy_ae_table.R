@@ -17,10 +17,11 @@
 #' @return Return a standard adverse event data frame
 #' @export
 #' @importFrom rlang .data
+#' @importFrom stats aggregate reshape
 #' @examples
-#' library(dplyr)
-#' library(tidyr)
-#' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
+#' pop <- adsl 
+#' colnames(pop)[which(names(pop) == "TRT01A")] <- "TRTA"
+#' db <- tidy_ae_table(population_from  = pop,
 #'                     observation_from = adae,
 #'                     treatment_var = "TRTA",
 #'                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
@@ -51,20 +52,49 @@ tidy_ae_table <- function(population_from,
                          treatment_order  = treatment_order)
 
   db[["ae"]] <- db[[ae_var]]
-  db <- db %>% filter(.data$USUBJID %in% pop$USUBJID)
-
-  # Yilong: will remove dplyr, tiyer dependency
-  db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
-
-  res <- db %>% group_by(.data$treatment, .data$ae) %>%
-    summarise(n = n()) %>%
-    left_join(db_N) %>%
-    mutate(pct = n / .data$N * 100) %>%
-    ungroup() %>%
-    mutate(trtn = as.numeric(.data$treatment)) %>%
-    select(- .data$treatment) %>%
-    pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
-    mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  db <- subset(db, db$USUBJID %in% pop$USUBJID)
+  
+  db_N <- aggregate(formula = USUBJID ~ treatment + stratum,
+                    data = pop,
+                    FUN=length)
+  names(db_N)[names(db_N)=="USUBJID"] <- 'N'
+  
+  res <- aggregate(formula = USUBJID ~ treatment + ae, 
+                   data = db, 
+                   FUN = function(x) length(unique(x)))
+  res <- res[order(res$treatment),]
+  names(res)[names(res)=="USUBJID"] <- 'n'
+  
+  res <- merge(x=res,y=db_N,by='treatment',all.x = TRUE)
+  
+  res['pct'] <- res$n / res$N * 100
+  
+  res['trtn'] <- as.numeric(res$treatment)
+  
+  res <- res[, !names(res) %in% c("treatment")] 
+  
+  res <- reshape(data = res, direction = "wide",
+                 timevar = "trtn",
+                 idvar = c("ae", "stratum"),
+                 v.names = c("n", "N", "pct"))
+  res[is.na(res)]<-0
+  res <- res[,c('ae', 'stratum', 'n.1', 'n.2', 'N.1', 'N.2', 'pct.1', 'pct.2')]
+  
+  res$N.1 <- max(res$N.1)
+  res$N.2 <- max(res$N.2)
+  
+  attr(res$ae,'label') <- attr(db$ae,'label')
+  attr(res$stratum,'label') <- attr(pop$stratum,'label')
+  
+  names(res)[names(res)=='n.1'] <- 'n_1'
+  names(res)[names(res)=='n.2'] <- 'n_2'
+  names(res)[names(res)=='N.1'] <- 'N_1'
+  names(res)[names(res)=='N.2'] <- 'N_2'
+  names(res)[names(res)=='pct.1'] <- 'pct_1'
+  names(res)[names(res)=='pct.2'] <- 'pct_2'
+  
+  rownames(res) <- NULL
+  class(res) <- NULL
 
   listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
   list(table = res, listing = db[, listing_var])
