@@ -11,6 +11,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 #' 
 #' db = tibble::tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
@@ -29,9 +30,7 @@
 #' 
 #' tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
 #'                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
-
-
-
+#'
 
 tidy_multi_ae_label <- function(db, db_N, ae_interested){
   
