@@ -19,6 +19,7 @@
 #' @importFrom rlang .data
 #' @importFrom stats aggregate reshape
 #' @examples
+#' library(dplyr)
 #' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                     observation_from = adae,
 #'                     treatment_var = "TRTA",
@@ -52,35 +53,25 @@ tidy_ae_table <- function(population_from,
   db[["ae"]] <- db[[ae_var]]
   db <- subset(db, db$USUBJID %in% pop$USUBJID)
   
-  # Yilong: will remove dplyr, tiyer dependency
-  #db_N <- count(pop, .data$treatment, .data$stratum, name = "N")
   db_N <- aggregate(formula = USUBJID ~ treatment + stratum,
                     data = pop,
                     FUN=length)
   names(db_N)[names(db_N)=="USUBJID"] <- 'N'
   
-  #res <- db %>% group_by(.data$treatment, .data$ae) %>%
-  #  summarise(n = n_distinct(USUBJID)) %>%
   res <- aggregate(formula = USUBJID ~ treatment + ae, 
                    data = db, 
                    FUN = function(x) length(unique(x)))
   res <- res[order(res$treatment),]
   names(res)[names(res)=="USUBJID"] <- 'n'
   
-  #  left_join(db_N) %>%
   res <- merge(x=res,y=db_N,by='treatment',all.x = TRUE)
   
-  #  mutate(pct = n / .data$N * 100) %>%
   res['pct'] <- res$n / res$N * 100
   
-  #  ungroup() %>%
-  #  mutate(trtn = as.numeric(.data$treatment)) %>%
   res['trtn'] <- as.numeric(res$treatment)
   
-  #  select(- .data$treatment) %>%
   res <- res[, !names(res) %in% c("treatment")] 
   
-  #  pivot_wider(names_from = .data$trtn, values_from = c(n, .data$N, .data$pct), values_fill = 0) %>%
   res <- reshape(data = res, direction = "wide",
                  timevar = "trtn",
                  idvar = c("ae", "stratum"),
@@ -88,7 +79,6 @@ tidy_ae_table <- function(population_from,
   res[is.na(res)]<-0
   res <- res[,c('ae', 'stratum', 'n.1', 'n.2', 'N.1', 'N.2', 'pct.1', 'pct.2')]
   
-  #  mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
   res$N.1 <- max(res$N.1)
   res$N.2 <- max(res$N.2)
   
