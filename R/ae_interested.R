@@ -18,7 +18,7 @@
 #' @examples 
 #' ae_interested(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
 #' ae_interested(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-#'               ae_label = c("with serious adverse events", "with drug-related adverse events")
+#'               ae_label = c("with serious adverse events", "with drug-related adverse events"))
 #' 
 ae_interested <- function(ae_criterion = NULL,
                           ae_label = NULL){

@@ -33,6 +33,6 @@ to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE
 \examples{
 ae_interested(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
 ae_interested(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-              ae_label = c("with serious adverse events", "with drug-related adverse events")
+              ae_label = c("with serious adverse events", "with drug-related adverse events"))
 
 }
