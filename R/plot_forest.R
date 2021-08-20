@@ -23,6 +23,7 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
+#' library(tibble)
 #' tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
 #'                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
 #'                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
@@ -30,9 +31,9 @@
 #'                  N_1 = rep(60, 7),
 #'                  N_2 = rep(60, 7),
 #'                  stratum = rep("NULL", 7))
-#' tb <- tb %>% dplyr::mutate(pct_1 = n_1/N_1 * 100, pct_2 = n_2/N_2 * 100)
+#' tb <- tb %>% mutate(pct_1 = n_1/N_1 * 100, pct_2 = n_2/N_2 * 100)
 #' db <- list(table = tb, listing = tb %>% rename(AE = ae),
-#'            sample_size = tibble::tibble(treatment = c("treatment", "control"), N = c(60, 60)),
+#'            sample_size = tibble(treatment = c("treatment", "control"), N = c(60, 60)),
 #'            treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
 #' 
 #' plot_forest(db)
@@ -175,24 +176,24 @@ plot_forest <- function(db,
         
         pct_1 = reactable::colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
                                   align = "center", format = reactable::colFormat(digits = 2) ),
-        pct_2 =reactable:: colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
-                                  align = "center", format = reactable::colFormat(digits = 2) ),
+        pct_2 = reactable:: colDef(header = "(%)", defaultSortOrder = "desc", width = 80,
+                                   align = "center", format = reactable::colFormat(digits = 2) ),
         
         lower = reactable::colDef(header = "lower CI", show = FALSE),
         upper = reactable::colDef(header = "upper CI", show = FALSE)
       )
     ),
-    crosstool::crosstool(t_display1,
-                         # transceiver widgets are more like normal crosstalk widgets.
-                         class = "transceiver",
-                         # set the initial value
-                         init = which(t_display$ae_label == "All"),
-                         # channel set to "filter" to use the crosstalk filter handle
-                         channel = "filter",
-                         # reset optional vector of crosstalk group keys;
-                         # use with init when data == relay (one crosstalk group) to 
-                         # reset the initial filter/select handle.
-                         reset = rownames(t_display))
+    crosstool(t_display1,
+              # transceiver widgets are more like normal crosstalk widgets.
+              class = "transceiver",
+              # set the initial value
+              init = which(t_display$ae_label == "All"),
+              # channel set to "filter" to use the crosstalk filter handle
+              channel = "filter",
+              # reset optional vector of crosstalk group keys;
+              # use with init when data == relay (one crosstalk group) to 
+              # reset the initial filter/select handle.
+              reset = rownames(t_display))
   )
   
   

@@ -25,9 +25,10 @@ This is a function to rbind data together according to the interested ae labels
 \examples{
 \dontrun{
 library(dplyr)
+library(tibble)
 treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 
-db = tibble::tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
+db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
                     treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo", 
                                           "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"), 
                                        levels = treatment_order, labels = treatment_order),
@@ -36,7 +37,7 @@ db = tibble::tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", 
                     AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
                     AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"))
                     
-db_N = tibble::tibble(treatment = factor(c("Xanomeline", "Placebo"), 
+db_N = tibble(treatment = factor(c("Xanomeline", "Placebo"), 
                                          levels = treatment_order, 
                                          labels = treatment_order), 
                       N = c(3, 2))

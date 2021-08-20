@@ -18,25 +18,26 @@ a data frame with selected/renamed variables
 Output a data frame with the listed details in the reactable
 }
 \examples{
+library(tibble)
 treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
-db = tibble::tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
-                    SITEID = c("a1", "a1", "b2", "c3", "c3", "c3", "d4", "d4", "e5"),
-                    SEX = c("F", "F", "M", "F", "F", "F", "M", "M", "F"),
-                    AGE = c(65, 65, 30, 22, 22, 22, 70, 70, 53),
-                    RACE = c("Asian", "Asian", "Latino or Hispanic", "WHITE", "WHITE", "WHITE",
-                             "BLACK OR AFRICAN AMERICAN", "BLACK OR AFRICAN AMERICAN", "AMERICAN INDIAN OR ALASKA NATIVE"),
-                    treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo",
-                                         "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"),
-                                       levels = treatment_order, labels = treatment_order),
-                    ae = c("headache", "pain", "headache", "fever", "running nose",
-                           "pain", "headache", "fever", "headache"),
-                    ADURN = c(11, 3, 4, 5, 7, 20, 90, 34, 58),
-                    ADURU = rep("minutes", 9),
-                    AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
-                    AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
-                    AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"),
-                    AEACN = c(rep("DOSE NOT CHANGED", 3),  rep("DRUG INTERRUPTED", 3), rep("DRUG WITHDRAWN", 3)),
-                    AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), rep("RECOVERED/RESOLVED", 3), rep("FATAL", 3))
+db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
+            SITEID = c("a1", "a1", "b2", "c3", "c3", "c3", "d4", "d4", "e5"),
+            SEX = c("F", "F", "M", "F", "F", "F", "M", "M", "F"),
+            AGE = c(65, 65, 30, 22, 22, 22, 70, 70, 53),
+            RACE = c("Asian", "Asian", "Latino or Hispanic", "WHITE", "WHITE", "WHITE",
+                     "BLACK OR AFRICAN AMERICAN", "BLACK OR AFRICAN AMERICAN", "AMERICAN INDIAN OR ALASKA NATIVE"),
+            treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo",
+                                 "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"),
+                               levels = treatment_order, labels = treatment_order),
+            ae = c("headache", "pain", "headache", "fever", "running nose",
+                   "pain", "headache", "fever", "headache"),
+            ADURN = c(11, 3, 4, 5, 7, 20, 90, 34, 58),
+            ADURU = rep("minutes", 9),
+            AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
+            AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
+            AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"),
+            AEACN = c(rep("DOSE NOT CHANGED", 3),  rep("DRUG INTERRUPTED", 3), rep("DRUG WITHDRAWN", 3)),
+            AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), rep("RECOVERED/RESOLVED", 3), rep("FATAL", 3))
 )
 
 detail1 <- tidy_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))

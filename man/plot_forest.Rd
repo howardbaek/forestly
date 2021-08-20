@@ -46,6 +46,7 @@ Generate interactive forest plot with a select list as filter
 \examples{
 \dontrun{
 library(dplyr)
+library(tibble)
 tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
@@ -53,9 +54,9 @@ tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "h
                  N_1 = rep(60, 7),
                  N_2 = rep(60, 7),
                  stratum = rep("NULL", 7))
-tb <- tb \%>\% dplyr::mutate(pct_1 = n_1/N_1 * 100, pct_2 = n_2/N_2 * 100)
+tb <- tb \%>\% mutate(pct_1 = n_1/N_1 * 100, pct_2 = n_2/N_2 * 100)
 db <- list(table = tb, listing = tb \%>\% rename(AE = ae),
-           sample_size = tibble::tibble(treatment = c("treatment", "control"), N = c(60, 60)),
+           sample_size = tibble(treatment = c("treatment", "control"), N = c(60, 60)),
            treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
 
 plot_forest(db)
