@@ -1,22 +1,24 @@
 #' Unstratified and Stratified  Miettinen and Nurminen Test
-#' @param formula a symbolic description of the model to be fitted, which has the form \code{y ~ x} for unstratified MN test, and the form \code{y ~ x + strata(s)} for stratified MN test, where \code{y} is the numeric vector with values of 0 or 1, \code{x} is the group information, and \code{s} is the stratum information.
+#' @param formula a symbolic description of the model to be fitted, which has the form \code{y ~ x}, where \code{y} is the numeric vector with values of 0 or 1 and \code{x} is the group information.
+#' @param strata an optional vector of weights to be used in the analysis. If not specified, unstratified MN analysis is used. If specified, stratified MN analysis is conducted.
 #' @param data an optional data frame, list or environment containing the variables in the model. If not found in data, the variables are taken from \code{environment (formula)}, typically the environment from which \code{rate_compare} is called.
 #' @param delta a numeric value to set the difference of two group under the null.
 #' @param weight_schema weighting schema used in stratified MN method. \code{"equal"} for equal weighting, \code{"ss"} for sample size weighting, \code{"cmh"} for Cochran Mantel-Haenszel's weights. Default is "ss". 
 #' @param test a character string specifying the side of p-value, must be one of \code{"one.sided"}, or \code{"two.sided"}.
 #' @param bisection the number of sections in the interval used in Bisection Method. Default is 100.
 #' @param eps the level of precision. Default is eps=1e-06.
-#' @param alpha pre-defined alpha level for Confidence Interval
+#' @param alpha pre-defined alpha level for two-sided confidence interval.
 #' @references Miettinen, O. and Nurminen, M, \emph{Comparative Analysis of Two Rates}. STATISTICS IN MEDICINE, 4:213-226, 1985.
 #' @examples
 #' ##To conduct the stratified MN analysis with sample size weights:
 #' treatment <- c(rep('pbo',100),rep('exp',100))
 #' response <- c(rep(0,80),rep(1,20),rep(0,40),rep(1,60))
 #' stratum <- c(rep(1:4,12),1,3,3,1,rep(1:4,12),rep(1:4,25))
-#' rate_compare(formula=response~factor(treatment,levels=c('pbo','exp'))+strata(stratum),delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
+#' rate_compare(formula=response~factor(treatment,levels=c('pbo','exp')),strata=stratum,delta = 0, weight_schema='ss',test = 'one.sided',alpha=0.05)
 #' @export
 
 rate_compare <- function(formula, 
+                         strata,
                          data,
                          delta = 0, 
                          weight_schema=c('ss','equal','cmh'),
@@ -26,27 +28,28 @@ rate_compare <- function(formula,
                          alpha=0.05)
 {
   test <- match.arg(test)
+  weight_schema <- match.arg(weight_schema)
   mf <- match.call(expand.dots = FALSE)
-  m <- match(c("formula", "data"), names(mf), 0L)
+  m <- match(c("formula", "data","strata"), names(mf), 0L)
   mf <- mf[c(1L, m)]
   mf$drop.unused.levels <- TRUE
   mf[[1L]] <- quote(stats::model.frame)
   mf <- eval(mf, parent.frame())
   response <- model.response(mf, "numeric")
-  stratum <- mf[,attr(terms(formula,specials="strata"),"specials")$strata]
+  treatment <- mf[,2L]
   
   # Count the event
-  if (length(stratum)==0){
-    treatment <- mf[,2L]
+  if (missing(strata)){
+    strata2 <- NULL
     strt <- sapply(split(response,treatment),sum)
     ntrt <- sapply(split(response,treatment),length)
     rtrt <- strt/ntrt
     trt <- names(ntrt)
   }
-  if (length(stratum)!=0) { 
-    treatment <- mf[,-attr(terms(formula,specials="strata"),"specials")$strata][,2L]
-    strt <- sapply(split(response,paste(t(stratum),treatment,sep="_")),sum)
-    ntrt <- sapply(split(response,paste(t(stratum),treatment,sep="_")),length)
+  if (!missing(strata)) { 
+    strata2 <- strata
+    strt <- sapply(split(response,paste(t(strata2),treatment,sep="_")),sum)
+    ntrt <- sapply(split(response,paste(t(strata2),treatment,sep="_")),length)
     str <- sapply(strsplit(names(ntrt),"_"),"[",1)
     trt <- sapply(strsplit(names(ntrt),"_"),"[",2)
   }
@@ -80,12 +83,12 @@ rate_compare <- function(formula,
   r1t  <- r0t + delta
   vart <- (r1t*(1-r1t)/n1+ r0t*(1-r0t)/n0)*(n/(n-1))
   
-  if (length(stratum)==0){
+  if (missing(strata)){
     r_diff <- (r1 - r0)
     z_score <- (r_diff - delta) / sqrt(vart)
     pval <- switch(test,one.sided=ifelse(delta<=0, 1 - pnorm(z_score), pnorm(z_score)),two.sided=1 - pchisq(z_score^2,1))
   }
-  if (length(stratum)!=0) {
+  if (!missing(strata)) {
     # Start to calculate the chi-square
     w <- switch (weight_schema,equal=rep(1,length(str)),ss=n/sum(n),cmh=(n0*n1/n)/sum(n0*n1/n))
     r1_w <- r1*w
@@ -155,11 +158,12 @@ rate_compare <- function(formula,
     r0t  = 2*p*cos(a)-l2/(3*l3)
     r1t  = r0t + d
     vart = (r1t*(1-r1t)/n1+ r0t*(1-r0t)/n0)*(n/(n-1))
-    if (length(stratum)==0){        
+    
+    if (is.null(strata2)){        
       r_diff = (s1/n1 - s0/n0)
       chisq_obs = (r_diff - d)^2/vart
     }
-    if (length(stratum)!=0){
+    if (!is.null(strata2)){
       # Start to calculate the chi-square
       r1_w = r1*w
       r0_w = r0*w

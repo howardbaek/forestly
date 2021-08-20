@@ -122,14 +122,15 @@ The p-value can be calculated as stated above.
 # Paramters in Function
 | Parameters | Description                | Default | 
 |:-----------|:---------------------------|:---------|
-|formula    |a symbolic description of the model to be fitted, which has the form \code{y ~ x} for unstratified MN test, and the form \code{y ~ x + strata(s)} for stratified MN test, where \code{y} is the numeric vector with values of 0 or 1, \code{x} is the group information, and \code{s} is the stratum information.   |       |
-|data      |an optional data frame, list or environment containing the variables in the model. | |
+|formula    |A symbolic description of the model to be fitted, which has the form \code{y ~ x}, where \code{y} is the numeric vector with values of 0 or 1 and \code{x} is the group information. |       |
+|strata      |An optional vector of weights to be used in the analysis. If not specified, unstratified MN analysis is used. If specified, stratified MN analysis is conducted. | |
+|data      |An optional data frame, list or environment containing the variables in the model. | |
 |delta      |A numeric value to set the difference of two group under the null.|0       |
 |weight_schema      |Weighting schema used in stratified MN method. "equal", "ss" and "cmh". |ss       |
 |test      |A character string specifying the side of p-value, must be one of "right" (default), "left" or "two.sided".|right     |
 |bisection      |The number of sections in the interval used in Bisection Method.|100       |
 |eps      |The level of precision. |1e-06   |
-|alpha      |Pre-difined alpha level for two-sided confidence interval.|0.05       |
+|alpha      |Pre-defined alpha level for two-sided confidence interval.|0.05       |
 
 # Load Function
 =======
