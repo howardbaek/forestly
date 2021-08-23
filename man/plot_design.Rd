@@ -9,11 +9,11 @@ plot_design(
   fig_prop_range,
   fig_prop_label = c("treatment", "control"),
   fig_prop_color = c("#00857C", "#66203A"),
-  fig_prop_colwidth = fig_prop_colwidth,
+  fig_prop_colwidth = 300,
   fig_diff_range,
   fig_diff_label = "treatment <- Favor -> control",
   fig_diff_color = "black",
-  fig_diff_colwidth = fig_diff_colwidth
+  fig_diff_colwidth = 300
 )
 }
 \arguments{
@@ -84,7 +84,9 @@ tb = tb \%>\% dplyr::mutate(pct_1 = n_1/N_1,
 a <- plot_design(tb,
                  fig_prop_range = c(0, 0.8),
                  fig_prop_color = c("blue", "green"),
+                 fig_prop_colwidth = 300,
                  fig_diff_range = c(-0.5, 0.9),
                  fig_diff_label = "treatment <- Favor -> control",
-                 fig_diff_color = "blue")
+                 fig_diff_color = "blue",
+                 fig_diff_colwidth = 300)
 }

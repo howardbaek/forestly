@@ -16,6 +16,7 @@ Imports:
     r2rtf,
     downloadthis,
     crosstalk,
+    crosstool,
     plotly,
     brew,
     dplyr,
