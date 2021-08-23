@@ -8,8 +8,10 @@ plot_forest(
   db,
   fig_prop_color = c("#00857C", "#66203A"),
   fig_prop_label = NULL,
+  fig_prop_colwidth = 300,
   fig_diff_color = "black",
   fig_diff_label = NULL,
+  fig_diff_colwidth = 300,
   small_sample = NULL
 )
 }
@@ -28,11 +30,17 @@ The first entry refers to the x-lab legend of the treatment arm.
 The second entry refers to the x-lab legend of the control arm.
 The default value is  c("treatment", "control")}
 
+\item{fig_prop_colwidth}{a numerical value to specify the column width of the two proportion plot
+the default value is 300}
+
 \item{fig_diff_color}{a string to specify the color to plot the error bar.
 The default value is "black".}
 
 \item{fig_diff_label}{a string to specify the x-axis legend of the error bar.
 The default value is "treatment <- Favor -> control".}
+
+\item{fig_diff_colwidth}{a numerical value to specify the column width of the two proportion plot
+the default value is 300}
 
 \item{small_sample}{a integral vector of length 2. The first element is for treatment group and
 the second element is for control group. The default value is c(4, 4).}
@@ -44,9 +52,10 @@ a reactable with a select list
 Generate interactive forest plot with a select list as filter
 }
 \examples{
-\dontrun{
 library(dplyr)
 library(tibble)
+library(crosstalk)
+library(crosstool)
 tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
@@ -60,6 +69,10 @@ db <- list(table = tb, listing = tb \%>\% rename(AE = ae),
            treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
 
 plot_forest(db)
-plot_forest(db, fig_prop_color = c("red", "green"), fig_diff_color = "blue")
-}
+plot_forest(db, 
+            fig_prop_color = c("gold", "purple"),
+            fig_prop_label = NULL,  
+            fig_diff_color = "black", 
+            fig_diff_label = NULL, 
+            small_sample = c(4, 4))
 }

@@ -22,13 +22,17 @@
 #'                       with the first entry indicating the color of ae proportion in the treatment arm, 
 #'                       and the second entry indicating the color of ae proportion in the control arm.
 #'                       The default value is c("gold", "purple")
+#' @param fig_prop_colwidth a numerical value to specify the column width of the two proportion plot
+#'                          the default value is 300
 #' @param fig_diff_range a numerical vector of length 2 to indicate 
 #'                      the range to plot the difference between two ae proportion, ex., c(-0.5, 0.5)
 #' @param fig_diff_label a string to indicate the x-label of the error.
 #'                       The default value is "treatment <- Favor -> control"
 #' @param fig_diff_color a string to indicate the color the error.
 #'                       The default value is "black"
-#'                       
+#' @param fig_diff_colwidth a numerical value to specify the column width of the two proportion plot
+#'                          the default value is 300
+#'                                             
 #' @return a list contain the plotting details, including
 #'         design_prop_cell: the Java Script to plot the two ae proportions;
 #'         design_diff_cell: the Jave Script to plot the difference of the two ae proportions;
@@ -61,44 +65,24 @@ plot_design <- function(t_display,
                         fig_prop_range, 
                         fig_prop_label = c("treatment", "control"),
                         fig_prop_color = c("#00857C", "#66203A"),
+                        fig_prop_colwidth = fig_prop_colwidth,
                         ## setting of the error bar plots
                         fig_diff_range, 
                         fig_diff_label = "treatment <- Favor -> control",
-                        fig_diff_color = "black"){
+                        fig_diff_color = "black",
+                        fig_diff_colwidth = fig_diff_colwidth){
   
   # Function to create proportion of subjects figure
-  # js_fig_prop_cell <- sparkline_point_js2(tbl = t_display,
-  #                                         x = c("pct_1","pct_2"),
-  #                                         y = c(1, 1),
-  #                                         xlim = fig_prop_range,
-  #                                         color = fig_prop_color,
-  #                                         width = 300, 
-  #                                         height = 30,
-  #                                         text = c("x[0]", "x[1]"))
   js_fig_prop_cell <- sparkline_point_js4(tbl = t_display,
                                           type = "cell",
-                                          x = c("pct_1","pct_2"),
+                                          x = c("pct_1", "pct_2"),
                                           y = c(1, 1),
                                           xlim = fig_prop_range,
                                           color = fig_prop_color,
-                                          width = 300, 
+                                          width = fig_prop_colwidth, 
                                           height = 30,
                                           text = c("x[0]", "x[1]"))
   # Function to create Axis 
-  # fig_prop_footer <- function(value){
-  #   sparkline_draw_axis(color = fig_prop_color,
-  #                       label = fig_prop_label, #label = c("MK9999", "Placebo"),
-  #                       xlim = fig_prop_range  #xlim = fig_prop_range,
-  #                       )
-  # }
-  # fig_prop_footer <- sparkline_point_js3(tbl = data.frame(x = 1), 
-  #                                        x = "x",
-  #                                        type = "footer",
-  #                                        xlim = fig_prop_range,
-  #                                        height = 30,
-  #                                        width = 300,
-  #                                        color = "#FFFFFF00",
-  #                                        margin = c(30, rep(0,4)))
   fig_prop_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
                                          x = c("x", "x"),
                                          y = -1,
@@ -106,7 +90,7 @@ plot_design <- function(t_display,
                                          type = "footer",
                                          xlim = fig_prop_range,
                                          height = 90,
-                                         width = 300,
+                                         width = fig_prop_colwidth,
                                          color = fig_prop_color,
                                          legend = TRUE,
                                          legend_label = fig_prop_label,
@@ -116,42 +100,18 @@ plot_design <- function(t_display,
                                          margin = c(70, rep(0,4)))
 
   # Function to create proportion difference figure
-  # js_fig_diff_cell <- sparkline_point_js2(tbl = t_display,
-  #                                         x = "fig_diff",
-  #                                         x_lower = "lower",
-  #                                         x_upper = "upper",
-  #                                         width = 300,
-  #                                         xlim = fig_diff_range,
-  #                                         text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
-  #                                         color = fig_diff_color)
   js_fig_diff_cell <- sparkline_point_js4(tbl = t_display,
                                           type = "cell",
                                           x = "fig_diff",
                                           x_lower = "lower",
                                           x_upper = "upper",
                                           xlim = fig_diff_range,
-                                          width = 300,
+                                          width = fig_diff_colwidth,
                                           text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
                                           color = fig_diff_color)
 
   
   # Function to create Axis 
-  # fig_diff_footer <- function(value){
-  #   sparkline_draw_axis(showlegend = FALSE, 
-  #                       xlab = fig_diff_label, #xlab = "MK9999 <- Favor -> Placebo", 
-  #                       color = "black",
-  #                       xlim = fig_diff_range, #xlim = fig_diff_range, 
-  #                       height = 58, margin_bottom = 50)
-  # }
-  # fig_diff_footer <- sparkline_point_js3(tbl = data.frame(x = 1), 
-  #                                        type = "footer",
-  #                                        x = "x",
-  #                                        y = 1,
-  #                                        xlim = fig_diff_range,
-  #                                        height = 30,
-  #                                        width = 300,
-  #                                        color = "#FFFFFF00",
-  #                                        margin = c(60, rep(0,4)))
   fig_diff_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
                                          type = "footer",
                                          x = "x",
@@ -159,7 +119,7 @@ plot_design <- function(t_display,
                                          xlab = fig_diff_label,
                                          xlim = fig_diff_range,
                                          height = 90,
-                                         width = 300,
+                                         width = fig_diff_colwidth,
                                          legend = FALSE,
                                          margin = c(70, rep(0,4)))
   

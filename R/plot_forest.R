@@ -11,19 +11,24 @@
 #'                       The first entry refers to the x-lab legend of the treatment arm.
 #'                       The second entry refers to the x-lab legend of the control arm.
 #'                       The default value is  c("treatment", "control")
+#' @param fig_prop_colwidth a numerical value to specify the column width of the two proportion plot
+#'                          the default value is 300
 #' @param fig_diff_color a string to specify the color to plot the error bar.
 #'                       The default value is "black".
 #' @param fig_diff_label a string to specify the x-axis legend of the error bar.
 #'                       The default value is "treatment <- Favor -> control".
+#' @param fig_diff_colwidth a numerical value to specify the column width of the two proportion plot
+#'                          the default value is 300
 #' @param small_sample a integral vector of length 2. The first element is for treatment group and 
 #'                     the second element is for control group. The default value is c(4, 4).
 #' @return a reactable with a select list
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' library(dplyr)
 #' library(tibble)
+#' library(crosstalk)
+#' library(crosstool)
 #' tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
 #'                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
 #'                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
@@ -37,15 +42,22 @@
 #'            treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
 #' 
 #' plot_forest(db)
-#' plot_forest(db, fig_prop_color = c("red", "green"), fig_diff_color = "blue")
-#' }
+#' plot_forest(db, 
+#'             fig_prop_color = c("gold", "purple"),
+#'             fig_prop_label = NULL,  
+#'             fig_diff_color = "black", 
+#'             fig_diff_label = NULL, 
+#'             small_sample = c(4, 4))
+
 
 
 plot_forest <- function(db, 
                         fig_prop_color = c("#00857C", "#66203A"), 
                         fig_prop_label = NULL,
+                        fig_prop_colwidth = 300,
                         fig_diff_color = "black", 
                         fig_diff_label = NULL,
+                        fig_diff_colwidth = 300,
                         small_sample = NULL){
   
   # Set the default arguments
@@ -102,9 +114,11 @@ plot_forest <- function(db,
                                fig_prop_range, 
                                fig_prop_label = fig_prop_label,
                                fig_prop_color = fig_prop_color,
+                               fig_prop_colwidth = fig_prop_colwidth,
                                fig_diff_range, 
                                fig_diff_label = fig_diff_label,
-                               fig_diff_color = fig_diff_color)
+                               fig_diff_color = fig_diff_color,
+                               fig_diff_colwidth = fig_diff_colwidth)
   
   # Make a reactable with a select list
   p <- crosstalk::bscols(
@@ -156,7 +170,8 @@ plot_forest <- function(db,
         ae_label = reactable::colDef(header = "Label", show = FALSE),
         
         fig_prop = reactable::colDef(header = "AE Proportion (%)",
-                                     width = 300, align = "center",
+                                     width = fig_prop_colwidth, 
+                                     align = "center",
                                      cell = reactable::JS(design_details$design_prop_cell),
                                      footer = reactable::JS(design_details$design_prop_footer),
                                      html = TRUE,
@@ -165,7 +180,8 @@ plot_forest <- function(db,
         
         fig_diff = reactable::colDef(header = "Risk Diff (%) + 95% CI",
                                      defaultSortOrder = "desc",
-                                     width = 300, align = "center",
+                                     width = fig_prop_colwidth, 
+                                     align = "center",
                                      cell = reactable::JS(design_details$design_diff_cell),
                                      footer = reactable::JS(design_details$design_diff_footer),
                                      html = TRUE,

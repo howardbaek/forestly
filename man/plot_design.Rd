@@ -9,9 +9,11 @@ plot_design(
   fig_prop_range,
   fig_prop_label = c("treatment", "control"),
   fig_prop_color = c("#00857C", "#66203A"),
+  fig_prop_colwidth = fig_prop_colwidth,
   fig_diff_range,
   fig_diff_label = "treatment <- Favor -> control",
-  fig_diff_color = "black"
+  fig_diff_color = "black",
+  fig_diff_colwidth = fig_diff_colwidth
 )
 }
 \arguments{
@@ -41,6 +43,9 @@ with the first entry indicating the color of ae proportion in the treatment arm,
 and the second entry indicating the color of ae proportion in the control arm.
 The default value is c("gold", "purple")}
 
+\item{fig_prop_colwidth}{a numerical value to specify the column width of the two proportion plot
+the default value is 300}
+
 \item{fig_diff_range}{a numerical vector of length 2 to indicate
 the range to plot the difference between two ae proportion, ex., c(-0.5, 0.5)}
 
@@ -49,6 +54,9 @@ The default value is "treatment <- Favor -> control"}
 
 \item{fig_diff_color}{a string to indicate the color the error.
 The default value is "black"}
+
+\item{fig_diff_colwidth}{a numerical value to specify the column width of the two proportion plot
+the default value is 300}
 }
 \value{
 a list contain the plotting details, including
