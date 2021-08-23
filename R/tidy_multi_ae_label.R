@@ -70,7 +70,7 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested){
       mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x))) 
     
     ## Union the filtered AE with the old data
-    res <- union_all(res, res_new)
+    res <- dplyr::union_all(res, res_new)
     
     ## It is possible that only treatment or control arm has the interested AE.
     ## So for the arm without the interested AE, we fill the AE case as 0 and also fill in the arm sample size

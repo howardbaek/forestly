@@ -75,55 +75,55 @@ plot_design <- function(t_display,
                         fig_diff_colwidth = 300){
   
   # Function to create proportion of subjects figure
-  js_fig_prop_cell <- sparkline_point_js4(tbl = t_display,
-                                          type = "cell",
-                                          x = c("pct_1", "pct_2"),
-                                          y = c(1, 1),
-                                          xlim = fig_prop_range,
-                                          color = fig_prop_color,
-                                          width = fig_prop_colwidth, 
-                                          height = 30,
-                                          text = c("x[0]", "x[1]"))
-  # Function to create Axis 
-  fig_prop_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
-                                         x = c("x", "x"),
-                                         y = -1,
-                                         xlab = "",
-                                         type = "footer",
+  js_fig_prop_cell <- sparkline_point_js(tbl = t_display,
+                                         type = "cell",
+                                         x = c("pct_1", "pct_2"),
+                                         y = c(1, 1),
                                          xlim = fig_prop_range,
-                                         height = 90,
-                                         width = fig_prop_colwidth,
                                          color = fig_prop_color,
-                                         legend = TRUE,
-                                         legend_label = fig_prop_label,
-                                         legend_title = "",
-                                         legend_position = -0.8,
-                                         legend_type = "point",
-                                         margin = c(70, rep(0,4)))
+                                         width = fig_prop_colwidth, 
+                                         height = 30,
+                                         text = c("x[0]", "x[1]"))
+  # Function to create Axis 
+  fig_prop_footer <- sparkline_point_js(tbl = data.frame(x = 1), 
+                                        x = c("x", "x"),
+                                        y = -1,
+                                        xlab = "",
+                                        type = "footer",
+                                        xlim = fig_prop_range,
+                                        height = 90,
+                                        width = fig_prop_colwidth,
+                                        color = fig_prop_color,
+                                        legend = TRUE,
+                                        legend_label = fig_prop_label,
+                                        legend_title = "",
+                                        legend_position = -0.8,
+                                        legend_type = "point",
+                                        margin = c(70, rep(0,4)))
 
   # Function to create proportion difference figure
-  js_fig_diff_cell <- sparkline_point_js4(tbl = t_display,
-                                          type = "cell",
-                                          x = "fig_diff",
-                                          x_lower = "lower",
-                                          x_upper = "upper",
-                                          xlim = fig_diff_range,
-                                          width = fig_diff_colwidth,
-                                          text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
-                                          color = fig_diff_color)
+  js_fig_diff_cell <- sparkline_point_js(tbl = t_display,
+                                         type = "cell",
+                                         x = "fig_diff",
+                                         x_lower = "lower",
+                                         x_upper = "upper",
+                                         xlim = fig_diff_range,
+                                         width = fig_diff_colwidth,
+                                         text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
+                                         color = fig_diff_color)
 
   
   # Function to create Axis 
-  fig_diff_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
-                                         type = "footer",
-                                         x = "x",
-                                         y = -1,
-                                         xlab = fig_diff_label,
-                                         xlim = fig_diff_range,
-                                         height = 90,
-                                         width = fig_diff_colwidth,
-                                         legend = FALSE,
-                                         margin = c(70, rep(0,4)))
+  fig_diff_footer <- sparkline_point_js(tbl = data.frame(x = 1), 
+                                        type = "footer",
+                                        x = "x",
+                                        y = -1,
+                                        xlab = fig_diff_label,
+                                        xlim = fig_diff_range,
+                                        height = 90,
+                                        width = fig_diff_colwidth,
+                                        legend = FALSE,
+                                        margin = c(70, rep(0,4)))
   
   list(design_prop_cell = js_fig_prop_cell,
        design_diff_cell = js_fig_diff_cell,
