@@ -2,8 +2,10 @@
 #'
 #' @param tbl A data frame
 #' @param x A vector of variable names in `tbl` for value.
+#' @param type A character for the type of reactable component. 
 #' @param x_lower A vector of variable names in `tbl` for lower error difference.
 #' @param x_upper A vector of variable names in `tbl` for upper error difference. Default is the same as `x_lower`.
+#' @param xlab A character for the x-axis label. 
 #' @param xlim Numeric vectors of length 2, giving the x coordinates ranges.
 #' @param y Numeric vector of y-axis value.
 #' @param vline Numeric value for the location to draw the vertical reference line.
@@ -13,6 +15,12 @@
 #' @param color Character vector of point color name
 #' @param color_errorbar Character vector of errorbar color name
 #' @param color_vline Character vector of vertical reference line color name
+#' @param margin A vector of length 5 for figure margin at bottom, left, top, right and padding.
+#' @param legend A logical value to display legend.
+#' @param legend_label A character vector for legend label.
+#' @param legend_title A character value for legend title.
+#' @param legend_position A numeric value for legend vertical position.
+#' @param legend_type A character value for legend type. 
 #' @examples
 #' \dontrun{
 #'  
@@ -55,11 +63,13 @@
 #' }
 #' 
 #' @export
-sparkline_point_js <- function(tbl,
+sparkline_point_js4 <- function(tbl,
                                x,
+                               type = c("cell", "footer", "header"),
                                x_lower = NULL,
                                x_upper = x_lower,
                                xlim = NULL,
+                               xlab = "",
                                y = seq_along(x),
                                vline = NULL,
                                text = NULL,
@@ -67,29 +77,40 @@ sparkline_point_js <- function(tbl,
                                width = 150,
                                color = "gold",
                                color_errorbar = color,
-                               color_vline = "#00000050"){
-
+                               color_vline = "#00000050", 
+                               legend = FALSE,
+                               legend_label = NULL,
+                               legend_title = "",
+                               legend_position = 0,
+                               legend_type = c("point", "line", "point+line"),
+                               margin = rep(0, 5)){
+  
   # Input Checking
   stopifnot(x %in% names(tbl))
-
+  
   if(! is.null(x_lower)){
     stopifnot(x_lower %in% names(tbl))
     stopifnot(x_upper %in% names(tbl))
   }
-
+  
   stopifnot(length(xlim) %in% c(0, 2))
-
+  
   stopifnot(length(vline) <= 1)
   stopifnot(length(height) == 1)
   stopifnot(length(width) == 1)
-
+  
   stopifnot(length(color) %in% c(1, length(x)) )
   stopifnot(length(color_errorbar) %in% c(1, length(x)) )
   stopifnot(length(color_vline) %in% 1 )
-
+  
+  stopifnot(length(legend_label) %in% c(0, length(x)) )
+  
   if(is.null(text)){
     text <- '""'
   }
+  
+  type <- match.arg(type)
+  legend_type <- match.arg(legend_type)
   
   # Vectorize input 
   meta <- data.frame(x, y, text, color, color_errorbar)
@@ -109,9 +130,14 @@ sparkline_point_js <- function(tbl,
   
   # Convert x and error bar
   x_v <- tbl[ ,x]
-  js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
-
-  if(is.null(x_lower)){
+  
+  if(type == "cell"){
+    js_x <- paste(paste0('cell.row["', x, '"]'), collapse = ", ")
+  }else{
+    js_x <- paste(seq_along(color), collapse = ", ")
+  }
+  
+  if(is.null(x_lower) | type %in% c("footer", "header")){
     js_x_lower <- 0
     js_x_upper <- 0
     x_l <- x_v
@@ -123,32 +149,32 @@ sparkline_point_js <- function(tbl,
     js_x_lower <- paste(paste0('cell.row["', x_lower, '"]'), collapse = ", ")
     js_x_upper <- paste(paste0('cell.row["', x_upper, '"]'), collapse = ", ")
   }
-
+  
   # Convert y
   js_y <- paste(y, collapse = ", ")
-
+  
   # Convert axis range
   if(is.null(xlim)){
     xlim <- range(c(x_v, x_l, x_u)) + c(-0.5, 0.5)
   }
   js_x_range <- paste(xlim, collapse = ", ")
   js_y_range <- paste(c(0, length(x) + 1), collapse = ", ")
-
+  
   # Convert text
   if(is.null(text)){
     js_text <- '""'
   }else{
     js_text <- paste(text, collapse = ", ")
   }
-
+  
   # Convert v_line
   if(is.null(vline)) vline <- "[]"
   js_vline <- as.character(vline)
-
+  
   # Convert shape
   js_height <- as.character(height)
   js_width <- as.character(width)
-
+  
   # Convert color
   foo <- function(x){
     rgba <- grDevices::col2rgb(x, alpha = TRUE)
@@ -158,7 +184,22 @@ sparkline_point_js <- function(tbl,
   js_color <- foo(color)
   js_color_errorbar <- foo(color_errorbar)
   js_color_vline <- foo(color_vline)
-
+  
+  # Convert x-axis label 
+  js_xlab <- xlab
+  
+  # Convert legend 
+  js_showlegend <- ifelse(legend, "true", "false")
+  js_legend_title <- legend_title
+  js_legend_position <- legend_position
+  js_legend_type <- as.character(factor(legend_type, 
+                                        levels = c("point", "line", "point+line"), 
+                                        labels = c("markers", "lines", "markers+lines")))
+  js_legend_label <- paste(paste0('"', legend_label,'"'), collapse = ", ")
+  
+  # Convert margin
+  js_margin <- paste(margin, collapse = ", ")
+  
   # data trace template
   data_trace_js <- function(n){
     
@@ -169,22 +210,30 @@ sparkline_point_js <- function(tbl,
    "error_x": {
       type: "data",
       symmetric: false,
-      array: [x_upper[i]],
-      arrayminus: [x_lower[i]],
+      array: [x_upper[i] - x[i]],
+      arrayminus: [x[i] - x_lower[i]],
       "color": color_errorbar[i]
     },
     "text": text[i],
     "hoverinfo": "text",
-    "mode": "markers",
+    "mode": "<%=js_legend_type%>",
     "alpha_stroke": 1,
     "sizes": [10, 100],
     "spans": [1, 20],
     "type": "scatter",
+    "name": legend_label[i],
     "marker": {
-      "color": [color[i]]
+      "color": [color[i]],
+      "line": {
+          "color": color[i]
+      }
+    },
+    "line": {
+        "color": color[i]
     }
   }'
     
+    template <- gsub("<%=js_legend_type%>", js_legend_type, template, fixed = TRUE)
     js <- lapply(1:n - 1, function(x) gsub("[i]", paste0("[",x,"]"), template, fixed = TRUE) )
     js <- paste(js, collapse = ",")
     
@@ -192,13 +241,12 @@ sparkline_point_js <- function(tbl,
   
   data_trace <- data_trace_js(length(x))
   # Brew
-
+  
   plotly_file <- tempfile(fileext = ".js")
   brew::brew(system.file("javascripts/sparkline.js", package = "forestly"), output = plotly_file)
-
+  
   js <- paste(readLines(plotly_file), collapse = "\n")
-
+  
   js
-
+  
 }
-

@@ -13,13 +13,17 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
+    r2rtf,
+    downloadthis,
+    crosstalk,
     plotly,
     brew,
     dplyr,
     tidyr,
     rlang,
     magrittr,
-    jsonlite
+    jsonlite,
+    tibble
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

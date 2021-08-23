@@ -13,6 +13,12 @@ function(cell, state) {
  var color = [<%=js_color%>];
  var color_errorbar = [<%=js_color_errorbar%>];
  var color_vline = <%=js_color_vline%>;
+ var margin = [<%=js_margin%>];
+ var x_label = "<%=js_xlab%>";
+ var showlegend = <%=js_showlegend%>;
+ var legend_title = "<%=js_legend_title%>";
+ var legend_position = <%=js_legend_position%>;
+ var legend_label = [<%=js_legend_label%>];
  
  return React.createElement(Plot, {
     data: [
@@ -22,16 +28,21 @@ function(cell, state) {
     "height": height,
     "width": width,
     "margin": {
-      "b": 0,
-      "l": 0,
-      "t": 0,
-      "r": 0,
-      "pad": 0
+      "b": margin[0],
+      "l": margin[1],
+      "t": margin[2],
+      "r": margin[3],
+      "pad": margin[4]
     },
     "xaxis": {
       "domain": [0,1],
-      "title": "",
+      "title": {
+        "text": x_label,
+        "standoff": 0
+      },
       "range": x_range,
+      "showline": true,
+      "ticks": "outside",
       "zeroline": false,
       "fixedrange": true
     },
@@ -62,8 +73,17 @@ function(cell, state) {
     "hoverlabel": {
       "bgcolor": "lightgray"
     },
-    "showlegend": false,
-    "hovermode": "closest"
+    "showlegend": showlegend,
+    "hovermode": "closest",
+    "legend": {
+      "title": {
+        "text": legend_title
+      },
+      "orientation": "h",
+      "xanchor": "center",
+      "x": 0.5,
+      "y": legend_position
+    }
   },
   "config": {
     "showSendToCloud": false,
@@ -73,3 +93,4 @@ function(cell, state) {
 
   })
 }
+
