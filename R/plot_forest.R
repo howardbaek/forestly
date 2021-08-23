@@ -25,6 +25,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' library(tibble)
 #' library(crosstalk)
@@ -48,6 +49,7 @@
 #'             fig_diff_color = "black", 
 #'             fig_diff_label = NULL, 
 #'             small_sample = c(4, 4))
+#'}
 
 
 

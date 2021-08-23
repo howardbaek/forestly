@@ -52,6 +52,7 @@ a reactable with a select list
 Generate interactive forest plot with a select list as filter
 }
 \examples{
+\dontrun{
 library(dplyr)
 library(tibble)
 library(crosstalk)
@@ -75,4 +76,5 @@ plot_forest(db,
             fig_diff_color = "black", 
             fig_diff_label = NULL, 
             small_sample = c(4, 4))
+}
 }
