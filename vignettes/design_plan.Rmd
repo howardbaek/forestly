@@ -42,7 +42,6 @@ The main function `tidy_ae_table()` is used to obtain AE information ready for v
 Specifically speaking, it merges standardized `adsl` and `adae` tables together, and outputs a AE summary table. 
 The AE summary table summarizes the number/ratio of subjects experiencing a certain AE for both treatment arm and control arm.
 
-This function has dependence to R package `dplyr` and `tidyr`.
 
 There are some utility functions developed inside of `tidy_ae_table()` and we list them as follows.
 
