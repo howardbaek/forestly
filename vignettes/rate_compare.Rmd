@@ -168,7 +168,7 @@ The sample size weighting is often used in the clinical trial.
 Below is the function to conduct stratified MN analysis with sample size weights.
 
 ```{r}
-rate_compare(formula=response~treatment+strata(stratum), data = ana,
+rate_compare(formula=response~treatment, strata=stratum, data = ana,
                      weight_schema="ss")
 ```
 

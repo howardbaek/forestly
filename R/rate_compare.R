@@ -47,7 +47,7 @@ rate_compare <- function(formula,
     trt <- names(ntrt)
   }
   if (!missing(strata)) { 
-    strata2 <- strata
+    strata2 <-  mf[,3L]
     strt <- sapply(split(response,paste(t(strata2),treatment,sep="_")),sum)
     ntrt <- sapply(split(response,paste(t(strata2),treatment,sep="_")),length)
     str <- sapply(strsplit(names(ntrt),"_"),"[",1)
