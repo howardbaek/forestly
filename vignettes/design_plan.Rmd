@@ -67,7 +67,7 @@ tidy_ae_table(...,
               ...).
 ```
 
-- `tidy_multi_ae_label()`: This a function is design to rbind data together according to the interested AE labels defined in `ae_interested = `. For example, if you use Example 1 above, `tidy_multi_ae_label()` will generate an AE summary table as rbind(summary table of all AE, summary of serious AE).
+- `tidy_multi_ae_label()`: This a function is design to `rbind` data together according to the interested AE labels defined in `ae_interested = `. For example, if you use Example 1 above, `tidy_multi_ae_label()` will generate an AE summary table as rbind(summary table of all AE, summary of serious AE).
 
 - `tidy_listing()`: This function generates a data frame which serves as the listed details in the the reactable.
 
