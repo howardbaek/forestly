@@ -18,125 +18,29 @@ knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE
 )
-
-#knitr::opts_knit$set(root.dir = "~/Rtemp/test_temp/forestly")
 ```
 
-This vignette introduces the construction of interactive forest plot. 
-We will generate several reactables with check boxes as Adverse Events (AE) filters. 
-The AE filters considered in this vignette including, but not limited to
+This vignette introduces the construction of an interactive forest plot for the review of the Data Monitoring Committee (DMC).
+The interactive features include:
 
-- Serious AE: `adae$AESER`;
-- Drug related AE: `adae$AEREL`;
-- AE result in death: `adae$AESDTH`.
+- Labels can be revealed by hovering the mouse over a point.
+- Details can be listed by clicking $\blacktriangledown$.
+- Search bars are embedded for users to find the targeted adverse events (AE).
+- AE tables can be downloaded as .rft files.
+- Filters can be applied, i.e., filter the 
 
-For example, 
-
-- If you click `AESER` (usually has a custom label, e.g. `with serious adverse events`), then only the serious AEs will be displayed in the forest plot;
-- If you click `AEREL` (usually has a custom label, e.g. `with drug-related adverse events`), then only the drug related AEs will be displayed in the forest plot, including PROBABLE/POSSIBLE/REMOTE drug related AEs;
-
-The defalt display of the AE table includes all the AEs.
-
-
-**Done:**
-
-- _July 14:_
+  - discontinued due to an adverse event;
+  - with drug-related adverse events;
+  - with serious adverse events;
+  - with toxicity grade 3-5 adverse events.
   
-  - Applied `AESER`/`AEREL`/`NONE` filters to the forest plot to select serious/drug-related/all AEs.
-  - Expedite the code by Java Script render.
+The procedures to generate a forest plot with the above interactive features are listed as follows.
 
-- _July 28:_
+- Step 0: Get standardized _adsl_ and _adae_ tables. 
+- Step 1: Use `tidy_ae_table2()` function (developed in this package) to get a tidy AE table.
+- Step 2: Use `download_ae()` function (developed in this package) to generate a download button If you click this download button, you will download a .zip file, which consists AE summary table with custom filters, for example, serious AE, drug-related AE, etc.
+- Step 3: Use `plot_forest()` function (developed in this package) to generate an interactive forest plot. 
 
-  - Transform check box into a select list. There is no radio buttom in crosstalk.
-  - Impute `adae$ATOXGR`, `adae$AEACN` and `Grade3To5Flag`. 
-  - Add `adae$AESDTH`,  `adae$adae$Grade3To5Flag` as the filter label.
-  - Change the event-count to subject-count. See issue https://github.com/elong0527/forestly/issues/37 and `VISION BLURRED` is an example to check.
-  - Add text labels for the error bar (Thanks Yilong)
-  - Encapsulate the long Rmd file into several functions for SP to validate.
-
-- _August 11:_
-  
-  - Incorporate `N=` in `plot_forest` by adding the list component in `tidy_ae_table2()`
-  
-  - Use the `crosstool` package to set the default display as all the ae. (Previously, the reactable generates all labels first and the select list only filters the generated label. Although the labels can be hid, all labels will be displayed when nothing is chosen in the select list.)
-  
-  - Update the arguments in `plot_forest()`:
-  
-    - (TO DO) `fig_prop_color`: set the default color suggested by https://rconnect.merck.com:3939/mkthemes/  
-    - `fig_prop_label`: set the default label as that in  `tidy_ae_table2()`
-    - `fig_diff_label`: set the default label as that in  `tidy_ae_table2()` 
-
-  - Change the name displayed in the filter as 
-    
-    - NONE: with one or more adverse events
-    - AEREL: with drug-related adverse events
-    - Grade 3 to 5: with toxicity grade 3-5 adverse events
-    - AESER: with serious adverse events
-    - AEACN: discontinued due to an adverse event    
-    - ...
-  
-  - Change the interested_ae argument in `tidy_ae_table2` as a function, which specifies the interested ae structure and the user-defined filter. For example,  `AEACN`->`DRUG WITHDRAWN`
-  
-  - Give more details to the forest plot listing (refer to screenshot in the group chat):
-    - `Participant ID` -> `USUBJID`, 
-    - `Trial Number` -> `STUDYID`,
-    - `Site Number` -> `SITEID`
-    - `Gender` -> `SEX`
-    - `Race` -> `RACE`
-    - `Age` -> `AGE`
-    - `Relative Day of Last Recorded Dose of Study Medication`: not included in this POC project
-    - `Onset Epoch`: included by defaults
-    - `Relative Day of Onset`: 
-    - `Adverse Event`: included by defaults
-    - `Duration` -> "ADURN" (duration time) + "ADURU" (duration unit) 
-    - `Intensity` -> `AESEV`
-    - `Serious` -> `AESER`
-    - `Related` -> `AEREL`
-    - `Action Taken` -> `AEACN`
-    - `Outcome` -> `AEOUT`
-    - `Days from Previous Dose To Day of AE Onset`: not included in this POC project
-  
-  - Add a download button (see https://github.com/fmmattioni/downloadthis and https://merck.github.io/r2rtf/articles/example-ae-summary.html)
-  
-  - When sample size is small, add logic to not display error bar. 
-    - Set an argument for the treatment arm, e.x., `CI_cutoff_trt = 4`
-    - Set an argument for the control arm, e.x., `CI_cutoff_col = 4`
-
-- _Aug 25:_
- 
-  - Set a temp directory to store .rtf file, instead of a folder in the package index. (reference `tempdir()`).
-  - Change `ae_interested(ae_criterion = c("AESER != "N"", "AEREL != "NONE"", "Grade3To5Flag != "Y", "AEACN != DRUG WITHDRAWN"), ae_label = ...)`.
-  - Edit the footnotes, the source notes in the downloaded rtf table.
-  - Widen the width of the reactable.
-  - Change the title for the download rtf table (Reference: \\bardsar-test\baamr\mk1293-p006\outtable\apr0ae0tier30ge00sort.rtf):
-    
-    - ALL: Analysis of Participants With Specific Adverse Events 
-           All Participants as Treated
-    - AESER: Analysis of Participants With Serious Adverse Events 
-             All Participants as Treated 
-    - AEREL: Analysis of Participants With Drug-related Adverse Events 
-             All Participants as Treated 
-    - Grade 3-5: Analysis of Participants With Grade 3-5 Adverse Events 
-                 All Participants as Treated
-    - [TO DO] AEACN: Analysis of Participants With Adverse Events Resulting in Treatment Discontinuation 
-                     All Participants as Treated
-              Can I have Analysis of Participants With discontinued due to an adverse event Adverse Events
-                     All Participants as Treated
-    - Format the downloaded rtf table with a similar style as that indev mk9999/mk1293.
-    - The default color of the two proportion plot is green and brown (the second example in https://rconnect.merck.com:3939/mkthemes/reference/scale_mk.html)
-
-**Discussion:**
-  
-  - For the title of the downloaded rtf tables, it is difficult to have two lines with `rtf_title()`.
-  - Download both the rtf table and the code (ask Nan for the gsDesign shinny). 
-    
-    - Download code will use the `brew` package, see the repo gsDesignShiny.
-    - It is difficult to get download-code feature in static vignette, but workable in shiny.
-
-**To Do List:**
-
-  
-  
 # Load Required Packages 
 ```{r setup}
 library(DescTools)      # Compare risk difference (Obtain confidence interval)
@@ -199,9 +103,9 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"', 
                                                                     'Grade3To5Flag == "Y"', 'AEACN == "DRUG WITHDRAWN"'),
                                                   ae_label = c("with serious adverse events",
-                                                                "with drug-related adverse events",
-                                                                "with toxicity grade 3-5 adverse events",
-                                                                "discontinued due to an adverse event")),
+                                                               "with drug-related adverse events",
+                                                               "with toxicity grade 3-5 adverse events",
+                                                               "discontinued due to an adverse event")),
                     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
                                     "ADURN", "ADURU", # duration time and unit
                                     "AESEV", # Intensity: c("MILD", "MODERATE", "SEVERE")
@@ -228,11 +132,14 @@ download_ae(db, ae_label_download)
 ```{r}
 plot_forest(db, 
             fig_prop_color = c("#00857C", "#66203A"),
-            fig_prop_label = NULL, # c("MK9979", "Placebo"), 
+            fig_prop_label = NULL, # c("Treatment", "Placebo"), 
             fig_diff_color = "black", 
-            fig_diff_label = NULL, # "MK9999 <- Favor -> Placebo",
+            fig_diff_label = NULL, # "Treatment <- Favor -> Placebo",
             small_sample = c(4, 4)) 
 ```
+
+
+
 
 
 
