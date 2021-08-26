@@ -71,7 +71,7 @@ test_that("tidy_ae_table can tidy the data", {
       select(- treatment) %>%
       pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
       mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
-    
+
     ## For each interested AE, iteration once and rbind them together
     for (ae_idx in seq_along(interested_ae_criterion)) {
       
@@ -115,6 +115,7 @@ test_that("tidy_ae_table can tidy the data", {
          listing = db_listing, 
          sample_size = db_N,
          treatment_order = trt_order)
+
   }
     
   
