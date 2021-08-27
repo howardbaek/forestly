@@ -32,8 +32,8 @@
 #' download_ae(db, ae_label_download = c("AESER", "AEREL"))
 #' }
 
-download_ae <- function(db, ae_label_download, 
-                        source = NULL, footnote = NULL){
+download_ae_reports <- function(db, ae_label_download, 
+                                source = NULL, footnote = NULL){
   
   # Set the default value for souce and fottnote
   if(is.null(source)){

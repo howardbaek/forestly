@@ -16,12 +16,12 @@
 #' @export
 #'
 #' @examples 
-#' ae_interested(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
-#' ae_interested(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-#'               ae_label = c("with serious adverse events", "with drug-related adverse events"))
+#' define_ae_selectList(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
+#' define_ae_selectList(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
+#'                      ae_label = c("with serious adverse events", "with drug-related adverse events"))
 #' 
-ae_interested <- function(ae_criterion = NULL,
-                          ae_label = NULL){
+define_ae_selectList <- function(ae_criterion = NULL,
+                                 ae_label = NULL){
   
   if(is.null(ae_criterion)){
     stop("Please list the ae_criterion!")

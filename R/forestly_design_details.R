@@ -53,77 +53,77 @@
 #'                           lower = fig_diff - 0.05,
 #'                           upper = fig_diff + 0.05)
 #' 
-#' a <- plot_design(tb,
-#'                  fig_prop_range = c(0, 0.8),
-#'                  fig_prop_color = c("blue", "green"),
-#'                  fig_prop_colwidth = 300,
-#'                  fig_diff_range = c(-0.5, 0.9),
-#'                  fig_diff_label = "treatment <- Favor -> control",
-#'                  fig_diff_color = "blue",
-#'                  fig_diff_colwidth = 300)
+#' a <- forestly_design_details(tb,
+#'                              fig_prop_range = c(0, 0.8),
+#'                              fig_prop_color = c("blue", "green"),
+#'                              fig_prop_colwidth = 300,
+#'                              fig_diff_range = c(-0.5, 0.9),
+#'                              fig_diff_label = "treatment <- Favor -> control",
+#'                              fig_diff_color = "blue",
+#'                              fig_diff_colwidth = 300)
 
-plot_design <- function(t_display, 
-                        ## setting of the two proportion plots
-                        fig_prop_range, 
-                        fig_prop_label = c("treatment", "control"),
-                        fig_prop_color = c("#00857C", "#66203A"),
-                        fig_prop_colwidth = 300,
-                        ## setting of the error bar plots
-                        fig_diff_range, 
-                        fig_diff_label = "treatment <- Favor -> control",
-                        fig_diff_color = "black",
-                        fig_diff_colwidth = 300){
+forestly_design_details <- function(t_display, 
+                                    ## setting of the two proportion plots
+                                    fig_prop_range, 
+                                    fig_prop_label = c("treatment", "control"),
+                                    fig_prop_color = c("#00857C", "#66203A"),
+                                    fig_prop_colwidth = 300,
+                                    ## setting of the error bar plots
+                                    fig_diff_range, 
+                                    fig_diff_label = "treatment <- Favor -> control",
+                                    fig_diff_color = "black",
+                                    fig_diff_colwidth = 300){
   
   # Function to create proportion of subjects figure
-  js_fig_prop_cell <- sparkline_point_js4(tbl = t_display,
-                                          type = "cell",
-                                          x = c("pct_1", "pct_2"),
-                                          y = c(1, 1),
-                                          xlim = fig_prop_range,
-                                          color = fig_prop_color,
-                                          width = fig_prop_colwidth, 
-                                          height = 30,
-                                          text = c("x[0]", "x[1]"))
-  # Function to create Axis 
-  fig_prop_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
-                                         x = c("x", "x"),
-                                         y = -1,
-                                         xlab = "",
-                                         type = "footer",
+  js_fig_prop_cell <- sparkline_point_js(tbl = t_display,
+                                         type = "cell",
+                                         x = c("pct_1", "pct_2"),
+                                         y = c(1, 1),
                                          xlim = fig_prop_range,
-                                         height = 90,
-                                         width = fig_prop_colwidth,
                                          color = fig_prop_color,
-                                         legend = TRUE,
-                                         legend_label = fig_prop_label,
-                                         legend_title = "",
-                                         legend_position = -0.8,
-                                         legend_type = "point",
-                                         margin = c(70, rep(0,4)))
+                                         width = fig_prop_colwidth, 
+                                         height = 30,
+                                         text = c("x[0]", "x[1]"))
+  # Function to create Axis 
+  fig_prop_footer <- sparkline_point_js(tbl = data.frame(x = 1), 
+                                        x = c("x", "x"),
+                                        y = -1,
+                                        xlab = "",
+                                        type = "footer",
+                                        xlim = fig_prop_range,
+                                        height = 90,
+                                        width = fig_prop_colwidth,
+                                        color = fig_prop_color,
+                                        legend = TRUE,
+                                        legend_label = fig_prop_label,
+                                        legend_title = "",
+                                        legend_position = -0.8,
+                                        legend_type = "point",
+                                        margin = c(70, rep(0,4)))
 
   # Function to create proportion difference figure
-  js_fig_diff_cell <- sparkline_point_js4(tbl = t_display,
-                                          type = "cell",
-                                          x = "fig_diff",
-                                          x_lower = "lower",
-                                          x_upper = "upper",
-                                          xlim = fig_diff_range,
-                                          width = fig_diff_colwidth,
-                                          text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
-                                          color = fig_diff_color)
+  js_fig_diff_cell <- sparkline_point_js(tbl = t_display,
+                                         type = "cell",
+                                         x = "fig_diff",
+                                         x_lower = "lower",
+                                         x_upper = "upper",
+                                         xlim = fig_diff_range,
+                                         width = fig_diff_colwidth,
+                                         text = "'range:' + x + '(' + x_lower + ',' + x_upper + ')'",
+                                         color = fig_diff_color)
 
   
   # Function to create Axis 
-  fig_diff_footer <- sparkline_point_js4(tbl = data.frame(x = 1), 
-                                         type = "footer",
-                                         x = "x",
-                                         y = -1,
-                                         xlab = fig_diff_label,
-                                         xlim = fig_diff_range,
-                                         height = 90,
-                                         width = fig_diff_colwidth,
-                                         legend = FALSE,
-                                         margin = c(70, rep(0,4)))
+  fig_diff_footer <- sparkline_point_js(tbl = data.frame(x = 1), 
+                                        type = "footer",
+                                        x = "x",
+                                        y = -1,
+                                        xlab = fig_diff_label,
+                                        xlim = fig_diff_range,
+                                        height = 90,
+                                        width = fig_diff_colwidth,
+                                        legend = FALSE,
+                                        margin = c(70, rep(0,4)))
   
   list(design_prop_cell = js_fig_prop_cell,
        design_diff_cell = js_fig_diff_cell,

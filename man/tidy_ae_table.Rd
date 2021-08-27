@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidy_ae_table.R
 \name{tidy_ae_table}
 \alias{tidy_ae_table}
-\title{tidy_ae_table}
+\title{tidy_ae_table2}
 \usage{
 tidy_ae_table(
   population_from,
@@ -11,7 +11,8 @@ tidy_ae_table(
   observation_where = NULL,
   treatment_var = "TRTA",
   treatment_order = unique(population_from[[treatment_var]]),
-  ae_var = "AEDECOD",
+  ae_var = ae_var,
+  ae_interested,
   stratum_var = NULL,
   listing_var = names(observation_from)
 )
@@ -29,7 +30,9 @@ tidy_ae_table(
 
 \item{treatment_order}{A character vector to define the treatment display order and label.}
 
-\item{ae_var}{A character string to define the variable of new column called ae"}
+\item{ae_var}{A character string to define the variable of new column called ae}
+
+\item{ae_interested}{A character string including the interested AE structure, ex. AESER, AEREL, ...}
 
 \item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.}
 
@@ -39,16 +42,19 @@ tidy_ae_table(
 Return a standard adverse event data frame
 }
 \description{
-Define analysis data
 This function is used to obtain AE information ready for visualization
 }
 \examples{
-pop <- adsl 
-colnames(pop)[which(names(pop) == "TRT01A")] <- "TRTA"
-db <- tidy_ae_table(population_from  = pop,
+library(dplyr)
+db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                     observation_from = adae,
+                    population_where = NULL,
+                    observation_where = NULL,
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-                    listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX",
-                                    "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
+                    ae_var = "AEDECOD",
+                    ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
+                                                  ae_label = c("with serious adverse events",
+                                                               "with drug-related adverse events")),
+                    listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
 }

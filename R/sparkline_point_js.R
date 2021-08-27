@@ -63,7 +63,7 @@
 #' }
 #' 
 #' @export
-sparkline_point_js4 <- function(tbl,
+sparkline_point_js <- function(tbl,
                                x,
                                type = c("cell", "footer", "header"),
                                x_lower = NULL,
