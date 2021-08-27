@@ -12,7 +12,7 @@ tidy_ae_table(
   treatment_var = "TRTA",
   treatment_order = unique(population_from[[treatment_var]]),
   ae_var = ae_var,
-  ae_interested = ae_interested,
+  ae_interested,
   stratum_var = NULL,
   listing_var = names(observation_from)
 )

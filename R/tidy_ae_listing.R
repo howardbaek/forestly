@@ -29,12 +29,12 @@
 #'             AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), rep("RECOVERED/RESOLVED", 3), rep("FATAL", 3))
 #' )
 #' 
-#' detail1 <- tidy_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
-#' detail2 <- tidy_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
-#' detail3 <- tidy_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
+#' detail1 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
+#' detail2 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
+#' detail3 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
 
 
-tidy_listing <- function(db, listing_var = NULL){
+tidy_ae_listing <- function(db, listing_var = NULL){
    
   # Set the default value of listing_var
   if(is.null(listing_var)){

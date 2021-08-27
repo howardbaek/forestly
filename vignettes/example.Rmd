@@ -100,12 +100,13 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                     ae_var = "AEDECOD",
-                    ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"', 
-                                                                    'Grade3To5Flag == "Y"', 'AEACN == "DRUG WITHDRAWN"'),
-                                                  ae_label = c("with serious adverse events",
-                                                               "with drug-related adverse events",
-                                                               "with toxicity grade 3-5 adverse events",
-                                                               "discontinued due to an adverse event")),
+                    ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
+                                                                          'Grade3To5Flag == "Y"', 
+                                                                          'AEACN == "DRUG WITHDRAWN"'),
+                                                         ae_label = c("with serious adverse events",
+                                                                      "with drug-related adverse events",
+                                                                      "with toxicity grade 3-5 adverse events",
+                                                                      "discontinued due to an adverse event")),
                     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
                                     "ADURN", "ADURU", # duration time and unit
                                     "AESEV", # Intensity: c("MILD", "MODERATE", "SEVERE")
@@ -123,19 +124,19 @@ ae_label_download = c("with serious adverse events",
                       "with drug-related adverse events",
                       "with toxicity grade 3-5 adverse events",
                       "discontinued due to an adverse event")
-download_ae(db, ae_label_download)
+download_ae_reports(db, ae_label_download)
 ```
 
 
 # Construct Interactive Froest Plot
 
 ```{r}
-plot_forest(db, 
-            fig_prop_color = c("#00857C", "#66203A"),
-            fig_prop_label = NULL, # c("Treatment", "Placebo"), 
-            fig_diff_color = "black", 
-            fig_diff_label = NULL, # "Treatment <- Favor -> Placebo",
-            small_sample = c(4, 4)) 
+forestly(db, 
+         fig_prop_color = c("#00857C", "#66203A"),
+         fig_prop_label = NULL, # c("Treatment", "Placebo"), 
+         fig_diff_color = "black", 
+         fig_diff_label = NULL, # "Treatment <- Favor -> Placebo",
+         small_sample = c(4, 4)) 
 ```
 
 

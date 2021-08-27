@@ -36,7 +36,7 @@ tidy_ae_table <- function(population_from,
                           treatment_var = "TRTA",
                           treatment_order = unique(population_from[[treatment_var]]),
                           ae_var = ae_var,
-                          ae_interested = ae_interested,
+                          ae_interested,
                           stratum_var = NULL,
                           listing_var = names(observation_from)){
 
@@ -59,7 +59,7 @@ tidy_ae_table <- function(population_from,
   db <- subset(db, USUBJID %in% pop$USUBJID)
   
   # Select the variables to be listed in the detailed listing
-  db_listing <- tidy_listing(db, listing_var)
+  db_listing <- tidy_ae_listing(db, listing_var)
   
   # count the sample size of each arm
   db_N <- dplyr::count(pop, treatment, stratum, name = "N")

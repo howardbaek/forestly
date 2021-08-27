@@ -23,15 +23,15 @@ To generate an interactive forest plot, we develop three main functions as liste
 And the details of these three main functions will be introduced in the next three sections separately.
 
 - `tidy_ae_table`:  This function is used to obtain adverse event (AE) information ready for visualization.
-- `download_ae`: This function is used to generate a download bottom, so users can download the AE summary tables by clicking this bottom.
-- `plot_forest`: This function is used to generate an interactive forest plot.
+- `download_ae_reports`: This function is used to generate a download bottom, so users can download the AE summary tables by clicking this bottom.
+- `forestly`: This function is used to generate an interactive forest plot.
 
 A minimal example summarized the major steps in using `forestly` package is
 
 ```{}
 mydata <- tidy_ae_table(...)    # Step 1: create tidy AE data
-download_ae(mydata)             # Step 2: generate download botton
-plot_forest(mydata)             # Step 3: generate interactive forest plot 
+download_ae_reports(mydata)     # Step 2: generate download botton
+forestly(mydata)                # Step 3: generate interactive forest plot 
                                 # (the order of Step 2 and Step 3 can be reversed)
 ```
 
@@ -51,35 +51,33 @@ There are some utility functions developed inside of `tidy_ae_table()` and we li
 
 - ``prop_test_mn()`: This function tests equal proportion using Miettinen and Nurminen method. In the `forestly` package, it generates the confidence interval (CI) for the risk difference between treatment arm and control arm.
 
-- `ae_interested()`: This function is to specify the AE labels to be displayed in the interactive forestly plot. The AE labels refers to, for example, the serious AE, the drug-related AE, etc.. This function is used in the arguments `ae_interested = ` in function `tidy_ae_table()` (see examples below). It throws errors if the length of the `ae_criterion` doesn't match that of `ae_label`.
+- `define_ae_selectList()`: This function is to specify the AE labels to be displayed in the select list of the interactive forestly plot. It has two arguments, (1) `ae_criterion` and (2) `ae_label`. The first argument `ae_criterion` is a (vector of) string, which defines the criterion to select a class of AE to display in the interactive forest plot. For example, if `ae_criterion = 'AESER == "Y"'`, then it will select the serious AE. The second argument `ae_label` is a (vector of) string, which defines the labels to be displayed in the select list of interactive forest plot. If these two arguments are both string vectors, then they must be a 1:1 map. This function is used in the arguments `ae_interested = ` in function `tidy_ae_table()` (see examples below). It throws errors if the length of the `ae_criterion` doesn't match that of `ae_label`.
 
 ```{}
-# Example 1: if you would like to display the serious A
+# Example 1: if you would like to display the serious AE
 tidy_ae_table(...,
-              ae_interested(ae_criterion = 'AESER == "Y"', 
-                            ae_label = "serious AE"),
+              ae_interested = define_ae_selectList(ae_criterion = 'AESER == "Y"', 
+                                                   ae_label = "serious AE"),
               ...).
 
 # Example 2: if you would like to display both serious AE and drug-related AE
 tidy_ae_table(...,
-              ae_interested(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-                            ae_label = c("serious AE", "drug-related AE")
+              ae_interested = define_ae_selectList(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
+                                                   ae_label = c("serious AE", "drug-related AE")
               ...).
 ```
 
 - `tidy_multi_ae_label()`: This a function is design to `rbind` data together according to the interested AE labels defined in `ae_interested = `. For example, if you use Example 1 above, `tidy_multi_ae_label()` will generate an AE summary table as rbind(summary table of all AE, summary of serious AE).
 
-- `tidy_listing()`: This function generates a data frame which serves as the listed details in the the reactable.
+- `tidy_ae_listing()`: This function generates a data frame which serves as the listed details in the the reactable.
 
 
-# Main function 2: `download_ae()`
+# Main function 2: `download_ae_reports()`
 
 This function generates a download bottom for users to download AE summary tables, given the returned objected of `tidy_ae_table()`.
 The downloaded AE summary tables follows the standardized Merck style.
 
-This function has dependency to R package `downloadthis` and `r2rtf`.
-
-# Main function 3: `plot_forest()`
+# Main function 3: `forestly()`
 
 This function generates an interactive forest plot for the returned objected of `tidy_ae_table()`.
 For this interactive forstly plot, it consists two blocks. 
@@ -94,11 +92,9 @@ The second block is a reactable.
 The reactable summarizes the AE information under the selected AE label.
 The main tool to develop this block is `reactable::reactable()`.
 
-This function has dependency to R package `crosstalk`, `crosstool`. 
+There are some utility functions used to develop `forestly()` and we listed them as follows.
 
-There are some utility functions used to develop `plot_forest()` and we listed them as follows.
-
-- `plot_design()`: This function returns the design details of the reactable in the forest plot, including
+- `forestly_design_details()`: This function returns the design details of the reactable in the forest plot, including
   
   - the design details of the cell of the two proportions;
   - the design details of the cell of the CI;
@@ -114,7 +110,7 @@ There are some utility functions used to develop `plot_forest()` and we listed t
   - column width: the column width of the two proportion/CI plot (see arguments `fig_prop_colwidth = ` and `fig_diff_colwidth =`);
   - range: the x-axis range to plot the two proportion/CI plot (see arguments `fig_prop_range = ` and `fig_diff_range =`).
   
-- `sparkline_point_js()`:  This function generates a Javascript to be rendered. It is used for the design details of reactables, including both the cell and the footer. It has dependence to R package `brew` and `plotly`, and the files under path `forestly/inst/javascripts/sparkline.js`.
+- `sparkline_point_js()`:  This function generates a Javascript to be rendered. It is used for the design details of reactables, including both the cell and the footer. It has dependence to the files under path `forestly/inst/javascripts/sparkline.js`.
 
 - `mk_reactable()`: This function is used to create a data table from tabular data with sorting and pagination by default. Essentially, it is a wrapper of function `reactable()` for robust BAAMR usage. It has dependence to R package `reactable`.
 

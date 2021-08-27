@@ -53,26 +53,26 @@
 #'                           lower = fig_diff - 0.05,
 #'                           upper = fig_diff + 0.05)
 #' 
-#' a <- plot_design(tb,
-#'                  fig_prop_range = c(0, 0.8),
-#'                  fig_prop_color = c("blue", "green"),
-#'                  fig_prop_colwidth = 300,
-#'                  fig_diff_range = c(-0.5, 0.9),
-#'                  fig_diff_label = "treatment <- Favor -> control",
-#'                  fig_diff_color = "blue",
-#'                  fig_diff_colwidth = 300)
+#' a <- forestly_design_details(tb,
+#'                              fig_prop_range = c(0, 0.8),
+#'                              fig_prop_color = c("blue", "green"),
+#'                              fig_prop_colwidth = 300,
+#'                              fig_diff_range = c(-0.5, 0.9),
+#'                              fig_diff_label = "treatment <- Favor -> control",
+#'                              fig_diff_color = "blue",
+#'                              fig_diff_colwidth = 300)
 
-plot_design <- function(t_display, 
-                        ## setting of the two proportion plots
-                        fig_prop_range, 
-                        fig_prop_label = c("treatment", "control"),
-                        fig_prop_color = c("#00857C", "#66203A"),
-                        fig_prop_colwidth = 300,
-                        ## setting of the error bar plots
-                        fig_diff_range, 
-                        fig_diff_label = "treatment <- Favor -> control",
-                        fig_diff_color = "black",
-                        fig_diff_colwidth = 300){
+forestly_design_details <- function(t_display, 
+                                    ## setting of the two proportion plots
+                                    fig_prop_range, 
+                                    fig_prop_label = c("treatment", "control"),
+                                    fig_prop_color = c("#00857C", "#66203A"),
+                                    fig_prop_colwidth = 300,
+                                    ## setting of the error bar plots
+                                    fig_diff_range, 
+                                    fig_diff_label = "treatment <- Favor -> control",
+                                    fig_diff_color = "black",
+                                    fig_diff_colwidth = 300){
   
   # Function to create proportion of subjects figure
   js_fig_prop_cell <- sparkline_point_js(tbl = t_display,

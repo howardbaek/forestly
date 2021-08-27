@@ -42,25 +42,25 @@
 #'            sample_size = tibble(treatment = c("treatment", "control"), N = c(60, 60)),
 #'            treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo"))
 #' 
-#' plot_forest(db)
-#' plot_forest(db, 
-#'             fig_prop_color = c("gold", "purple"),
-#'             fig_prop_label = NULL,  
-#'             fig_diff_color = "black", 
-#'             fig_diff_label = NULL, 
-#'             small_sample = c(4, 4))
+#' forestly(db)
+#' forestly(db, 
+#'          fig_prop_color = c("gold", "purple"),
+#'          fig_prop_label = NULL,  
+#'          fig_diff_color = "black", 
+#'          fig_diff_label = NULL, 
+#'          small_sample = c(4, 4))
 #'}
 
 
 
-plot_forest <- function(db, 
-                        fig_prop_color = c("#00857C", "#66203A"), 
-                        fig_prop_label = NULL,
-                        fig_prop_colwidth = 300,
-                        fig_diff_color = "black", 
-                        fig_diff_label = NULL,
-                        fig_diff_colwidth = 300,
-                        small_sample = NULL){
+forestly <- function(db, 
+                     fig_prop_color = c("#00857C", "#66203A"), 
+                     fig_prop_label = NULL,
+                     fig_prop_colwidth = 300,
+                     fig_diff_color = "black", 
+                     fig_diff_label = NULL,
+                     fig_diff_colwidth = 300,
+                     small_sample = NULL){
   
   # Set the default arguments
   if(is.null(fig_prop_label)){
@@ -112,15 +112,15 @@ plot_forest <- function(db,
   t_display1 <- crosstalk::SharedData$new(t_display)
   
   # Store the design details in a object
-  design_details = plot_design(t_display, 
-                               fig_prop_range, 
-                               fig_prop_label = fig_prop_label,
-                               fig_prop_color = fig_prop_color,
-                               fig_prop_colwidth = fig_prop_colwidth,
-                               fig_diff_range, 
-                               fig_diff_label = fig_diff_label,
-                               fig_diff_color = fig_diff_color,
-                               fig_diff_colwidth = fig_diff_colwidth)
+  design_details = forestly_design_details(t_display, 
+                                           fig_prop_range, 
+                                           fig_prop_label = fig_prop_label,
+                                           fig_prop_color = fig_prop_color,
+                                           fig_prop_colwidth = fig_prop_colwidth,
+                                           fig_diff_range, 
+                                           fig_diff_label = fig_diff_label,
+                                           fig_diff_color = fig_diff_color,
+                                           fig_diff_colwidth = fig_diff_colwidth)
   
   # Make a reactable with a select list
   p <- crosstalk::bscols(
