@@ -36,7 +36,7 @@ sparkline_point <- function(
   p <- plot_ly(
                x = x,
                y = y,
-               color = color,
+               color = y,
                colors = color,
                text = hover_text,
                hoverinfo = 'text',
