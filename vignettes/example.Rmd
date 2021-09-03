@@ -53,7 +53,7 @@ library(crosstool)      # A generic control widget for crosstalk.
 library(htmltools)
 library(downloadthis)   # To implement download buttons in HTML output from RMarkdown
 library(r2rtf)          # Generate rtf for download
-devtools::load_all()
+library(forestly)
 ```
 
 

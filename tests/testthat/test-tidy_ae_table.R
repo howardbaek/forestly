@@ -1,7 +1,6 @@
 library(devtools)
 library(dplyr)
 library(tidyr)
-load_all()
 
 test_that("tidy_ae_table's 2 variables:'population_from', 'observation_from', must have input data.",{
   expect_error(tidy_ae_table(observation_from = adae,
