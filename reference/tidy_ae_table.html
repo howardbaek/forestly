@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>tidy_ae_table — tidy_ae_table • forestly</title>
+<title>tidy_ae_table2 — tidy_ae_table • forestly</title>
 
 
 <!-- jquery -->
@@ -41,9 +41,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="tidy_ae_table — tidy_ae_table" />
-<meta property="og:description" content="Define analysis data
-This function is used to obtain AE information ready for visualization" />
+<meta property="og:title" content="tidy_ae_table2 — tidy_ae_table" />
+<meta property="og:description" content="This function is used to obtain AE information ready for visualization" />
 
 
 
@@ -98,10 +97,16 @@ This function is used to obtain AE information ready for visualization" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/example.html">example</a>
+      <a href="../articles/design_plan.html">Design Plan of R Package forestly</a>
+    </li>
+    <li>
+      <a href="../articles/example.html">Interactive Forest Plot for DMC</a>
     </li>
     <li>
       <a href="../articles/onboarding.html">onboarding</a>
+    </li>
+    <li>
+      <a href="../articles/rate_compare.html">Unstratified and Stratified  Miettinen and Nurminen Test</a>
     </li>
   </ul>
 </li>
@@ -124,14 +129,13 @@ This function is used to obtain AE information ready for visualization" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>tidy_ae_table</h1>
+    <h1>tidy_ae_table2</h1>
     
     <div class="hidden name"><code>tidy_ae_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Define analysis data
-This function is used to obtain AE information ready for visualization</p>
+    <p>This function is used to obtain AE information ready for visualization</p>
     </div>
 
     <pre class="usage"><span class='fu'>tidy_ae_table</span><span class='op'>(</span>
@@ -141,7 +145,8 @@ This function is used to obtain AE information ready for visualization</p>
   observation_where <span class='op'>=</span> <span class='cn'>NULL</span>,
   treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
   treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>population_from</span><span class='op'>[[</span><span class='va'>treatment_var</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,
-  ae_var <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
+  ae_var <span class='op'>=</span> <span class='va'>ae_var</span>,
+  <span class='va'>ae_interested</span>,
   stratum_var <span class='op'>=</span> <span class='cn'>NULL</span>,
   listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>observation_from</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -175,7 +180,11 @@ This function is used to obtain AE information ready for visualization</p>
     </tr>
     <tr>
       <th>ae_var</th>
-      <td><p>A character string to define the variable of new column called ae"</p></td>
+      <td><p>A character string to define the variable of new column called ae</p></td>
+    </tr>
+    <tr>
+      <th>ae_interested</th>
+      <td><p>A character string including the interested AE structure, ex. AESER, AEREL, ...</p></td>
     </tr>
     <tr>
       <th>stratum_var</th>
@@ -192,15 +201,24 @@ This function is used to obtain AE information ready for visualization</p>
     <p>Return a standard adverse event data frame</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>pop</span> <span class='op'>&lt;-</span> <span class='va'>adsl</span> 
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>pop</span><span class='op'>)</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>pop</span><span class='op'>)</span> <span class='op'>==</span> <span class='st'>"TRT01A"</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='st'>"TRTA"</span>
-<span class='va'>db</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_ae_table</span><span class='op'>(</span>population_from  <span class='op'>=</span> <span class='va'>pop</span>,
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>db</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_ae_table</span><span class='op'>(</span>population_from  <span class='op'>=</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>TRTA <span class='op'>=</span> <span class='va'>TRT01A</span><span class='op'>)</span>,
                     observation_from <span class='op'>=</span> <span class='va'>adae</span>,
+                    population_where <span class='op'>=</span> <span class='cn'>NULL</span>,
+                    observation_where <span class='op'>=</span> <span class='cn'>NULL</span>,
                     treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
                     treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span>,
-                    listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SITEID"</span>, <span class='st'>"USUBJID"</span>, <span class='st'>"AGE"</span>, <span class='st'>"RACE"</span>, <span class='st'>"SEX"</span>,
-                                    <span class='st'>"AETERM"</span>, <span class='st'>"AESER"</span>, <span class='st'>"AEREL"</span>, <span class='st'>"AEACN"</span>, <span class='st'>"AEOUT"</span><span class='op'>)</span> <span class='op'>)</span>
-</div></pre>
+                    ae_var <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
+                    ae_interested <span class='op'>=</span> <span class='fu'>ae_interested</span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'AESER == "Y"'</span>, <span class='st'>'AEREL != "NONE"'</span><span class='op'>)</span>,
+                                                  ae_label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"with serious adverse events"</span>,
+                                                               <span class='st'>"with drug-related adverse events"</span><span class='op'>)</span><span class='op'>)</span>,
+                    listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"AGE"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in ae_interested(ae_criterion = c("AESER == \"Y\"", "AEREL != \"NONE\""),     ae_label = c("with serious adverse events", "with drug-related adverse events")): could not find function "ae_interested"</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
