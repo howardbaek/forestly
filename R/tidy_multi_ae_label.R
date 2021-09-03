@@ -28,8 +28,8 @@
 #'                                          labels = treatment_order), 
 #'                       N = c(3, 2))
 #' 
-#' tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
-#'                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
+#' tidy_multi_ae_label(db, db_N, ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
+#'                                                                    ae_label = c("with serious adverse events","with drug-related adverse events")))
 
 tidy_multi_ae_label <- function(db, db_N, ae_interested){
   
