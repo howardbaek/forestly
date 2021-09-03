@@ -12,21 +12,23 @@ test_that("sparkline_point's 2 variables:'x' and 'y'must have input data.",{
                                 hover_text = c('a','b','c','d','e'), "argument\"y\" is missing, with no default"))
 })
 
+plotly_snap <- function(p){
+  p_js <- plotly::plotly_json(p, jsonedit = FALSE)
+  p_lst <- jsonlite::fromJSON(p_js) 
+  gsub(names(p_lst$visdat), "0000", as.character(p_lst))
+} 
 
-test_that("scatterplots are generated without error", {
-  p<-plot_ly(x = 1:5,y = 1:5,color = c("red", "blue", "gold", "grey", "black"),text=c('a','b','c','d','e'),
-                                    hoverinfo = 'text',type = 'scatter',mode = 'markers',height = 300,width = 150)
-  p<-p %>% sparkline_layout(xlim = 1.5,vline = 1.5,margin =list(l = 0, r = 0, b = 0, t = 0, pad = 0))
-  expectation_scatterplots<-p
+test_that("sparkline_point",{
+  local_edition(3) # avoid Error: `expect_snapshot_output()` requires the 3rd edition.
+  x = 1:5
+  y = 1:5
+  color = c("red", "blue", "gold", "grey", "black")
+  hover_text=c('a','b','c','d','e')
+  xlim = 1.5
+  vline = 1.5
+  temp1<-sparkline_point(x, y, color,hover_text,xlim,vline)
+  
+  expect_snapshot_output(plotly_snap(temp1))
+  
+})
 
- # compare the actual result with expectation scatterplots:
-  expect_equal(sparkline_point(x=1:5,y=1:5,color = c("red", "blue", "gold", "grey", "black"),height = 300,
-                               width = 150,hover_text =c('a','b','c','d','e'),xlim = 1.5, vline =1.5,
-                               margin = list(l = 0, r = 0, b = 0, t = 0, pad = 0)),expectation_scatterplots)
-  })
-
-
-
-testthat::expect_snapshot(sparkline_point(x=1:5,y=1:5,color = c("red", "blue", "gold", "grey", "black"),height = 300,
-                                          width = 150,hover_text =c('a','b','c','d','e'),xlim = 1.5, vline =1.5,
-                                          margin = list(l = 0, r = 0, b = 0, t = 0, pad = 0)),expectation_scatterplots)
