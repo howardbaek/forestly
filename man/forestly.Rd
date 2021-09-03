@@ -54,7 +54,6 @@ Generate interactive forest plot with a select list as filter
 \examples{
 \dontrun{
 library(dplyr)
-library(tibble)
 library(crosstalk)
 library(crosstool)
 tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),

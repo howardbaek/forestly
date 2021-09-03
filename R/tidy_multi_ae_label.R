@@ -12,7 +12,6 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(tibble)
 #' treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 #' 
 #' db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),

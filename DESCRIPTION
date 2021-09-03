@@ -31,7 +31,8 @@ Suggests:
     htmltools,
     reactR,
     ggplot2,
-    crosstool
+    crosstool,
+    tibble
 Depends: 
     R (>= 3.6)
 Remotes: bwlewis/crosstool
