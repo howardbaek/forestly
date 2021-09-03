@@ -24,9 +24,9 @@
 #'                     treatment_var = "TRTA",
 #'                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
 #'                     ae_var = "AEDECOD",
-#'                     ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
-#'                                                   ae_label = c("with serious adverse events",
-#'                                                                "with drug-related adverse events")),
+#'                     ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
+#'                                                          ae_label = c("with serious adverse events",
+#'                                                                       "with drug-related adverse events")),
 #'                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
 
 tidy_ae_table <- function(population_from,
