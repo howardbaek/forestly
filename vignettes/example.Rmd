@@ -1,189 +1,146 @@
 ---
-title: "example"
+title: "Interactive Forest Plot for DMC"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
+    self_contained: false
+    number_sections: true
+    code_folding: hide
 vignette: >
-  %\VignetteIndexEntry{example}
+  %\VignetteIndexEntry{Interactive Forest Plot for DMC}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-pkgdown:
-  as_is: true
 ---
-
-<style>
-    body .main-container {
-        max-width: 2000px;
-    }
-</style>
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE
 )
 ```
 
-# Load Required Package 
+This vignette introduces the construction of an interactive forest plot for the review of the Data Monitoring Committee (DMC).
+The interactive features include:
+
+- Labels can be revealed by hovering the mouse over a point.
+- Details can be listed by clicking $\blacktriangledown$.
+- Search bars are embedded for users to find the targeted adverse events (AE).
+- AE tables can be downloaded as .rft files.
+- Filters can be applied, i.e., filter the 
+
+  - discontinued due to an adverse event;
+  - with drug-related adverse events;
+  - with serious adverse events;
+  - with toxicity grade 3-5 adverse events.
+  
+The procedures to generate a forest plot with the above interactive features are listed as follows.
+
+- Step 0: Get standardized _adsl_ and _adae_ tables. 
+- Step 1: Use `tidy_ae_table2()` function (developed in this package) to get a tidy AE table.
+- Step 2: Use `download_ae()` function (developed in this package) to generate a download button If you click this download button, you will download a .zip file, which consists AE summary table with custom filters, for example, serious AE, drug-related AE, etc.
+- Step 3: Use `plot_forest()` function (developed in this package) to generate an interactive forest plot. 
+
+# Load Required Packages 
 ```{r setup}
 library(DescTools)      # Compare risk difference (Obtain confidence interval)
 library(plotly)         # Interactive figure 
 library(reactable)      # Interactive table 
 library(dplyr)          
 library(tidyr)
+library(crosstalk)
+library(crosstool)      # A generic control widget for crosstalk.        
+library(htmltools)
+library(downloadthis)   # To implement download buttons in HTML output from RMarkdown
+library(r2rtf)          # Generate rtf for download
 devtools::load_all()
 ```
 
 
-# Define analysis data
+# Data Preparation
 
+## Impute Data
+Because there are some variables missing in the example data set, we first impute the data set. 
+
+- Impute `adae$ATOXGR`: if `adae$AESDTH='Y'` then `adae$ATOXGR='5'`, and random assign toxicity grade for other AE records;
+- Generate `Grade3To5Flag` from `adae$ATOXGR`: `Grade3To5Flag` = "Y" if `adae$ATOXGR`>=3, otherwise `Grade3To5Flag` = "N". [create check box for 1,2,3,4,5? (Difficult to implement now, maybe left for future work).
+- Impute `adae$AEACN`: `adae$AEACN` = `"DOSE NOT CHANGED"` or `"DRUG INTERRUPTED"` or `"DRUG WITHDRAWN"`. Here we impute 5% who discontinue drug (`DRUG WITHDRAWN`) and select the latest AE as `"DRUG WITHDRAWN"`.
+
+```{r}
+## Impute `adae$ATOXGR`
+temp_fun <- function(x) {
+    
+  if(x == "Y"){
+    return("5")
+    }else{
+    return(as.character(sample(1:4, size = 1, replace = TRUE)))
+  }
+}
+adae <- adae %>% mutate(ATOXGR = unlist(adae$AESDTH %>% purrr:::map(temp_fun)))
+
+## Generate `Grade3To5Flag`
+adae <- adae %>% mutate(Grade3To5Flag = ifelse(ATOXGR %in% c("3", "4", "5"), "Y", "N"))
+
+## Impute `adae$AEACN`
+adae$AEACN = sample(c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN"), 
+                    size = length(adae$AEACN), prob = c(0.7, 0.25, 0.05), replace = TRUE)
+```
+
+
+
+## Define Analysis Data
 ```{r}
 # tidy_ae_table is defined in R/ folder with same name 
-# obtain AE inforation ready for visulization
+# obtain AE information ready for visualization
+
 db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     observation_from = adae,
+                    population_where = NULL,
+                    observation_where = NULL,
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-                    listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX", 
-                                    "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
+                    ae_var = "AEDECOD",
+                    ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
+                                                                          'Grade3To5Flag == "Y"', 
+                                                                          'AEACN == "DRUG WITHDRAWN"'),
+                                                         ae_label = c("with serious adverse events",
+                                                                      "with drug-related adverse events",
+                                                                      "with toxicity grade 3-5 adverse events",
+                                                                      "discontinued due to an adverse event")),
+                    listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
+                                    "ADURN", "ADURU", # duration time and unit
+                                    "AESEV", # Intensity: c("MILD", "MODERATE", "SEVERE")
+                                    "AESER", # Serious event: c("N", "Y")
+                                    "AEREL", # Related: c("PROBABLE", "REMOTE", "POSSIBLE", "NONE")
+                                    "AEACN", # Action taken: c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN")
+                                    "AEOUT", # Outcome: c("NOT RECOVERED/NOT RESOLVED", "RECOVERED/RESOLVED", "FATAL" )
+                                    "AETERM", "TRTA" ))
 ```
+
+# Download the AE Summary Count Table
 
 ```{r}
-# Calculate test using M&N method 
-tb <- cbind(db$table,
-            with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
-
-t_display <- tb %>% mutate(fig_prop = NA, fig_diff = est, 
-                           ae = tools::toTitleCase(tolower(ae))) %>% 
-                    select(ae, stratum, fig_prop, fig_diff, n_1, pct_1, n_2, pct_2)
+ae_label_download = c("with serious adverse events",
+                      "with drug-related adverse events",
+                      "with toxicity grade 3-5 adverse events",
+                      "discontinued due to an adverse event")
+download_ae_reports(db, ae_label_download)
 ```
+
+
+# Construct Interactive Froest Plot
 
 ```{r}
-# Listing of subjects
-# Require proper format for the header. 
-t_detail <- db$listing
+forestly(db, 
+         fig_prop_color = c("#00857C", "#66203A"),
+         fig_prop_label = NULL, # c("Treatment", "Placebo"), 
+         fig_diff_color = "black", 
+         fig_diff_label = NULL, # "Treatment <- Favor -> Placebo",
+         small_sample = c(4, 4)) 
 ```
 
-```{r}
-color <- c("gold", "purple")
-```
-
-# Create Table
-
-```{r}
-# function to create proportion of subjects figure
-fig_prop_cell <- function(value, index){
-  
-  tmp <- tb[index, ] %>% pivot_longer(cols = starts_with("pct"))
-  xlim <- round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) )
-  
-  sparkline_point(x = tmp$value,
-                  y = tmp$ae,
-                  xlim = xlim,
-                  color = color,
-                  height = 30)
-  
-}
-
-# function to create Axis 
-fig_prop_footer <- function(value){
-  
-  tmp <- tb[1, ] %>% pivot_longer(cols = starts_with("pct"))
-  xlim <- round(range(c(tb$pct_1, tb$pct_2)) + c(-0.51, 0.51) )
-  sparkline_draw_axis(color = color, 
-                      label = levels(db$listing$treatment), 
-                      xlim = xlim)
-  
-}
-
-# function to create proportion difference figure
-fig_diff_cell <- function(value, index){
-  
-  tmp <- tb[index, ] 
-  xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
-  
-  sparkline_errorbar(tmp$est, 
-                     tmp$lower, 
-                     tmp$upper, 
-                     xlim = xlim, 
-                     color = "black")
-  
-}
-
-# function to create Axis 
-fig_diff_footer <- function(value){
-  
-  tmp <- tb[1, ] %>% pivot_longer(cols = starts_with("pct"))
-  xlim = round(range(c(tb$lower, tb$upper)) + c(-0.51, 0.51))
-  sparkline_draw_axis(showlegend = FALSE, 
-                      xlab = "MK9999 <- Favor -> Placebo", 
-                      color = "black",
-                      xlim = xlim, height = 60, margin_bottom = 50)
-  
-}
-```
-
-```{r}
-Sys.time()
-```
-
-```{r}
-# mk_reactable saved in the R/ folder: define default behavior of reactable. 
-t_display %>% mk_reactable(
-  
-  # reactable configuration https://glin.github.io/reactable/reference/reactable.html
-  resizable = TRUE, 
-  filterable = TRUE,
-  searchable = TRUE, 
-  defaultPageSize = 10, 
-  borderless = TRUE, 
-  striped = TRUE, 
-  highlight = TRUE, 
-  
-  # No padding between two cells (ensure no break line between reference line)
-  theme = reactableTheme(cellPadding = "0px 8px"),
-  
-  # Default sort variable 
-  defaultSorted = c("fig_diff"),
-  
-  # Define listing of subjects
-  details = function(index){
-    t_row <- t_display[index, ]
-    subset(t_detail, toupper(ae) %in% toupper(t_row$ae)) %>% mk_reactable
-  },
-  
-  # Customize cell feature 
-  columnGroups = list(
-    colGroup(name = "MK9999 (N = 84)",  columns = c("n_1", "pct_1")),
-    colGroup(name = "Placebo (N = 86)", columns = c("n_2", "pct_2"))
-  ),
-  # 
-  column = list(
-    ae = colDef(header = "Adverse Events", minWidth = 300, align = "right"),
-
-    stratum = colDef(header = "Stratum", show = FALSE),
-
-    fig_prop = colDef(header = "AE Proportion (%)",
-                      minWidth = 300, align = "center",
-                      cell = fig_prop_cell, footer = fig_prop_footer
-    ),
 
 
-    fig_diff = colDef(header = "Risk Diff (%) + 95% CI",
-                      defaultSortOrder = "desc",
-                      minWidth = 200, align = "center",
-                      cell = fig_diff_cell, footer = fig_diff_footer,
-                      show = TRUE),
 
-    n_1 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
-    n_2 = colDef(header = "n", defaultSortOrder = "desc", width = 60, align = "center"),
-    pct_1 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) ),
-    pct_2 = colDef(header = "(%)", defaultSortOrder = "desc", width = 80, align = "center", format = colFormat(digits = 2) )
-  )
 
-)
-```
-
-```{r}
-Sys.time()
-```
 

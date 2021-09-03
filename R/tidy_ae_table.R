@@ -1,8 +1,6 @@
-#' tidy_ae_table
-#'
-#' Define analysis data
+#' tidy_ae_table2
+#' 
 #' This function is used to obtain AE information ready for visualization
-#'
 #'
 #' @param population_from A data frame to obtain population level variables.Typically an 'adsl' dataset.
 #' @param observation_from A data frame to obtain observation level variables.
@@ -10,7 +8,8 @@
 #' @param observation_where A character string to define the criteria to select analysis observation.
 #' @param treatment_var A character string to define the variable of new column called "treatment"
 #' @param treatment_order A character vector to define the treatment display order and label.
-#' @param ae_var A character string to define the variable of new column called ae"
+#' @param ae_var A character string to define the variable of new column called ae
+#' @param ae_interested A character string including the interested AE structure, ex. AESER, AEREL, ...
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
 #' @param listing_var  A character string to define the criteria to select the column of the table
 #'
@@ -18,20 +17,26 @@
 #' @export
 #' @examples
 #' library(dplyr)
-#' library(tidyr)
 #' db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                     observation_from = adae,
+#'                     population_where = NULL,
+#'                     observation_where = NULL,
 #'                     treatment_var = "TRTA",
 #'                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-#'                     listing_var = c("SITEID", "USUBJID", "AGE", "RACE", "SEX",
-#'                                     "AETERM", "AESER", "AEREL", "AEACN", "AEOUT") )
+#'                     ae_var = "AEDECOD",
+#'                     ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
+#'                                                   ae_label = c("with serious adverse events",
+#'                                                                "with drug-related adverse events")),
+#'                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+
 tidy_ae_table <- function(population_from,
                           observation_from,
                           population_where = "ITTFL=='Y'",
                           observation_where = NULL,
                           treatment_var = "TRTA",
                           treatment_order = unique(population_from[[treatment_var]]),
-                          ae_var = "AEDECOD",
+                          ae_var = ae_var,
+                          ae_interested,
                           stratum_var = NULL,
                           listing_var = names(observation_from)){
 
@@ -48,23 +53,27 @@ tidy_ae_table <- function(population_from,
                          observation_where = observation_where,
                          treatment_var    = treatment_var,
                          treatment_order  = treatment_order)
-
-  db[["ae"]] <- db[[ae_var]]
+  
+  # select the overlap pop(adsl) and db(adae)
+  db[["ae"]] <- tools::toTitleCase(tolower(db[[ae_var]])) 
   db <- subset(db, USUBJID %in% pop$USUBJID)
-
-  # Yilong: will remove dplyr, tiyer dependency
-  db_N <- count(pop, treatment, stratum, name = "N")
-
-  res <- db %>% group_by(treatment, ae) %>%
-    summarise(n = n()) %>%
-    left_join(db_N) %>%
-    mutate(pct = n / N * 100) %>%
-    ungroup() %>%
-    mutate(trtn = as.numeric(treatment)) %>%
-    select(- treatment) %>%
-    pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
-    mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
-
-  listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
-  list(table = res, listing = db[, listing_var])
+  
+  # Select the variables to be listed in the detailed listing
+  db_listing <- tidy_ae_listing(db, listing_var)
+  
+  # count the sample size of each arm
+  db_N <- dplyr::count(pop, treatment, stratum, name = "N")
+  
+  # rbind the data with interested AE labels
+  res <- tidy_multi_ae_label(db, db_N, ae_interested)
+  
+  # Title Case the cell values
+  res$ae <- tools::toTitleCase(tolower(res$ae))
+  
+  # sort the output returns
+  #listing_var <- unique(c("USUBJID", "ae", "treatment", listing_var))
+  list(table = res, 
+       listing = db_listing, #listing = db[, listing_var],
+       sample_size = db_N,
+       treatment_order = treatment_order)
 }

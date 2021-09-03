@@ -6,7 +6,7 @@
 \alias{forestly-package}
 \title{forestly: Interactive Forest Plot}
 \description{
-Interactive Forest Plot.
+Interactive Forest Plot using `reactable` and `plotly`.
 }
 \author{
 \strong{Maintainer}: Yilong Zhang \email{yilong.zhang@merck.com}

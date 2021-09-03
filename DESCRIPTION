@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
     person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
     )
-Description: Interactive Forest Plot.
+Description: Interactive Forest Plot using `reactable` and `plotly`.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -13,16 +13,21 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
+    r2rtf,
+    downloadthis,
+    crosstalk,
     plotly,
     brew,
+    dplyr,
+    tidyr,
+    rlang,
     magrittr,
-    jsonlite
+    jsonlite,
+    tibble
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    dplyr,
-    tidyr,
     haven,
     devtools,
     htmltools,
