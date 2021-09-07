@@ -19,7 +19,6 @@ plotly_snap <- function(p){
 } 
 
 test_that("sparkline_point",{
-  local_edition(3) # avoid Error: `expect_snapshot_output()` requires the 3rd edition.
   x = 1:5
   y = 1:5
   color = c("red", "blue", "gold", "grey", "black")
