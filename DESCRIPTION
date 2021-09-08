@@ -1,10 +1,10 @@
 Package: forestly
 Title: Interactive Forest Plot
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Yilong", "Zhang", email = "yilong.zhang@merck.com", role = c("aut", "cre"))
     )
-Description: Interactive Forest Plot.
+Description: Interactive Forest Plot using `reactable` and `plotly`.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -13,20 +13,27 @@ RoxygenNote: 7.1.1
 Imports:
     DescTools,
     reactable,
+    r2rtf,
+    downloadthis,
+    crosstalk,
     plotly,
     brew,
-    magrittr
+    dplyr,
+    tidyr,
+    rlang,
+    magrittr,
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
-    dplyr,
-    tidyr,
     haven,
     devtools,
     htmltools,
     reactR,
-    ggplot2
+    ggplot2,
+    crosstool,
+    tibble
 Depends: 
     R (>= 3.6)
+Remotes: bwlewis/crosstool
 Config/testthat/edition: 3

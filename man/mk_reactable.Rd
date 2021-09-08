@@ -33,7 +33,7 @@ mk_reactable(
 
 \item{highlight}{A character string to highlight table rows on hover.}
 
-\item{...}{Additional arguments transfered to reactable.}
+\item{...}{Additional arguments transferred to reactable.}
 }
 \value{
 an interactive data table.
