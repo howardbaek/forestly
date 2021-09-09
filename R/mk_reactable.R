@@ -13,6 +13,9 @@
 #' @param borderless  A character string to remove inner borders from table.
 #' @param striped A character string to add zebra-striping to table rows.
 #' @param highlight A character string to highlight table rows on hover.
+#' @param fullWidth Stretch the table to fill the full width of its container? Defaults to TRUE.
+#' @param width Width of the table in pixels. Defaults to "auto" for automatic sizing.
+#' @param theme Theme options for the table
 #' @param ... Additional arguments transferred to reactable.
 #' 
 #' @return an interactive data table.
@@ -26,6 +29,7 @@
 #'
 #' @export
 mk_reactable <- function(data,
+                         # reactable configuration https://glin.github.io/reactable/reference/reactable.html
                          resizable = TRUE,
                          filterable = TRUE,
                          searchable = TRUE,
@@ -33,6 +37,10 @@ mk_reactable <- function(data,
                          borderless = TRUE,
                          striped = TRUE,
                          highlight = TRUE,
+                         fullWidth = TRUE,
+                         width = 1200,
+                         theme = reactableTheme(cellPadding = "0px 8px"), # No padding between two cells 
+                                                                          # (ensure no break line between reference line)
                          ...){
 
   reactable::reactable(data = data,
@@ -43,6 +51,9 @@ mk_reactable <- function(data,
             borderless = borderless,
             striped = striped,
             highlight = highlight,
+            fullWidth = fullWidth,
+            width = width,
+            theme = theme,
             ...)
 
 }

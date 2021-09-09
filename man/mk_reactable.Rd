@@ -13,6 +13,9 @@ mk_reactable(
   borderless = TRUE,
   striped = TRUE,
   highlight = TRUE,
+  fullWidth = TRUE,
+  width = 1200,
+  theme = reactableTheme(cellPadding = "0px 8px"),
   ...
 )
 }
@@ -32,6 +35,12 @@ mk_reactable(
 \item{striped}{A character string to add zebra-striping to table rows.}
 
 \item{highlight}{A character string to highlight table rows on hover.}
+
+\item{fullWidth}{Stretch the table to fill the full width of its container? Defaults to TRUE.}
+
+\item{width}{Width of the table in pixels. Defaults to "auto" for automatic sizing.}
+
+\item{theme}{Theme options for the table}
 
 \item{...}{Additional arguments transferred to reactable.}
 }

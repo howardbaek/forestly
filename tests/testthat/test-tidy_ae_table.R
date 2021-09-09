@@ -126,7 +126,7 @@ test_that("tidy_ae_table can tidy the data", {
                              treatment_var = "TRTA",
                              treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                              ae_var = "AEDECOD",
-                             ae_interested = define_ae_selectList(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
+                             ae_interested = define_ae_select_list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
                              listing_var = c("USUBJID", "SEX", "RACE", "AGE")),
                expectation_table(data1 = adsl %>% rename(TRTA = TRT01A),
                                  data2 = adae,

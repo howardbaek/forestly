@@ -1,4 +1,4 @@
-#' tidy_ae_table2
+#' tidy_ae_table
 #' 
 #' This function is used to obtain AE information ready for visualization
 #'
@@ -9,7 +9,7 @@
 #' @param treatment_var A character string to define the variable of new column called "treatment"
 #' @param treatment_order A character vector to define the treatment display order and label.
 #' @param ae_var A character string to define the variable of new column called ae
-#' @param ae_interested A character string including the interested AE structure, ex. AESER, AEREL, ...
+#' @param ae_interested An object returned by function define_ae_select_list()
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
 #' @param listing_var  A character string to define the criteria to select the column of the table
 #'
@@ -24,8 +24,8 @@
 #'                     treatment_var = "TRTA",
 #'                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
 #'                     ae_var = "AEDECOD",
-#'                     ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
-#'                                                          ae_label = c("with serious adverse events",
+#'                     ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
+#'                                                           ae_label = c("with serious adverse events",
 #'                                                                       "with drug-related adverse events")),
 #'                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
 
@@ -36,7 +36,7 @@ tidy_ae_table <- function(population_from,
                           treatment_var = "TRTA",
                           treatment_order = unique(population_from[[treatment_var]]),
                           ae_var = ae_var,
-                          ae_interested,
+                          ae_interested = NULL,
                           stratum_var = NULL,
                           listing_var = names(observation_from)){
 

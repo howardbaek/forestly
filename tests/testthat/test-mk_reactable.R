@@ -17,7 +17,10 @@ test_that("mk_reactable() can generate a table as expected ", {
                                              defaultPageSize = 10,
                                              borderless = TRUE,
                                              striped = TRUE,
-                                             highlight = TRUE))
+                                             highlight = TRUE,
+                                             fullWidth = TRUE,
+                                             width = 1200,
+                                             theme = reactableTheme(cellPadding = "0px 8px")))
 
   # compare the mk_reactable result with reactable function with the related argument settings-2:
   expect_equal(mk_reactable(adae, filterable = FALSE,defaultPageSize = 5), reactable(adae,
@@ -27,7 +30,10 @@ test_that("mk_reactable() can generate a table as expected ", {
                                                                                      defaultPageSize = 5,
                                                                                      borderless = TRUE,
                                                                                      striped = TRUE,
-                                                                                     highlight = TRUE))
+                                                                                     highlight = TRUE,
+                                                                                     fullWidth = TRUE,
+                                                                                     width = 1200,
+                                                                                     theme = reactableTheme(cellPadding = "0px 8px")))
 
   # compare the mk_reactable result with reactable function with the related argument settings-3:
   expect_equal(mk_reactable(adae, searchable = TRUE,highlight = FALSE), reactable(adae,
@@ -37,5 +43,8 @@ test_that("mk_reactable() can generate a table as expected ", {
                                                                                   defaultPageSize = 10,
                                                                                   borderless = TRUE,
                                                                                   striped = TRUE,
-                                                                                  highlight = FALSE))
+                                                                                  highlight = FALSE,
+                                                                                  fullWidth = TRUE,
+                                                                                  width = 1200,
+                                                                                  theme = reactableTheme(cellPadding = "0px 8px")))
 })
