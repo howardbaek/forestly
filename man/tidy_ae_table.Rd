@@ -2,7 +2,7 @@
 % Please edit documentation in R/tidy_ae_table.R
 \name{tidy_ae_table}
 \alias{tidy_ae_table}
-\title{tidy_ae_table2}
+\title{tidy_ae_table}
 \usage{
 tidy_ae_table(
   population_from,
@@ -12,7 +12,7 @@ tidy_ae_table(
   treatment_var = "TRTA",
   treatment_order = unique(population_from[[treatment_var]]),
   ae_var = ae_var,
-  ae_interested,
+  ae_interested = NULL,
   stratum_var = NULL,
   listing_var = names(observation_from)
 )
@@ -32,7 +32,7 @@ tidy_ae_table(
 
 \item{ae_var}{A character string to define the variable of new column called ae}
 
-\item{ae_interested}{A character string including the interested AE structure, ex. AESER, AEREL, ...}
+\item{ae_interested}{An object returned by function define_ae_select_list()}
 
 \item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.}
 
@@ -53,8 +53,8 @@ db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                     ae_var = "AEDECOD",
-                    ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
-                                                         ae_label = c("with serious adverse events",
+                    ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
+                                                          ae_label = c("with serious adverse events",
                                                                       "with drug-related adverse events")),
                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
 }

@@ -1,14 +1,13 @@
 ---
 title: "Interactive Forest Plot for DMC"
-output: 
+output:
   html_document:
-    self_contained: false
-    number_sections: true
+    self_contained: no
+    number_sections: yes
     code_folding: hide
-vignette: >
-  %\VignetteIndexEntry{Interactive Forest Plot for DMC}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  pdf_document: default
+vignette: |
+  %\VignetteIndexEntry{Interactive Forest Plot for DMC} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -53,7 +52,7 @@ library(crosstool)      # A generic control widget for crosstalk.
 library(htmltools)
 library(downloadthis)   # To implement download buttons in HTML output from RMarkdown
 library(r2rtf)          # Generate rtf for download
-library(forestly)
+devtools::load_all()
 ```
 
 
@@ -100,13 +99,13 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                     ae_var = "AEDECOD",
-                    ae_interested = define_ae_selectList(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
-                                                                          'Grade3To5Flag == "Y"', 
-                                                                          'AEACN == "DRUG WITHDRAWN"'),
-                                                         ae_label = c("with serious adverse events",
-                                                                      "with drug-related adverse events",
-                                                                      "with toxicity grade 3-5 adverse events",
-                                                                      "discontinued due to an adverse event")),
+                    ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
+                                                                           'Grade3To5Flag == "Y"', 
+                                                                           'AEACN == "DRUG WITHDRAWN"'),
+                                                          ae_label = c("with serious adverse events",
+                                                                       "with drug-related adverse events",
+                                                                       "with toxicity grade 3-5 adverse events",
+                                                                       "discontinued due to an adverse event")),
                     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
                                     "ADURN", "ADURU", # duration time and unit
                                     "AESEV", # Intensity: c("MILD", "MODERATE", "SEVERE")

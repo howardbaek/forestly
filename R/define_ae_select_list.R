@@ -4,7 +4,7 @@
 #' to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE
 #' @param ae_criterion a character vector to specify the AE criterion to filter the interested ones.
 #'                     For example, 
-#'                     1) ae_criterion = c('AESER != "N"', 'AEREL != "None"') 
+#'                     1) ae_criterion = c('AESER != "N"', 'AEREL != "None"')   
 #'                     2) ae_criterion = c('AESER != "N"', 'AEREL != "None"', 'Grade3To5Flag != "Y"', 'AEACN != "DRUG WITHDRAWN"')
 #' @param ae_label a string vector to specify the according AE labels to be displayed in the selected list.
 #'                 The default value is c("with serious adverse events", "with drug-related adverse events",
@@ -16,19 +16,19 @@
 #' @export
 #'
 #' @examples 
-#' define_ae_selectList(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
-#' define_ae_selectList(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-#'                      ae_label = c("with serious adverse events", "with drug-related adverse events"))
+#' define_ae_select_list(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
+#' define_ae_select_list(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
+#'                       ae_label = c("with serious adverse events", "with drug-related adverse events"))
 #' 
-define_ae_selectList <- function(ae_criterion = NULL,
-                                 ae_label = NULL){
+define_ae_select_list <- function(ae_criterion = NULL,
+                                  ae_label = NULL){
   
   if(is.null(ae_criterion)){
-    stop("Please list the ae_criterion!")
+    stop("Please enter the argument ae_criterion!")
   }
   
   if(is.null(ae_label)){
-    stop("Please list the ae_label!")
+    stop("Please enter the argument ae_label!")
   }
   
   if(length(ae_criterion) != length(ae_label)){
