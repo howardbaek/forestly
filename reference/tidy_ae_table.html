@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>tidy_ae_table2 — tidy_ae_table • forestly</title>
+<title>tidy_ae_table — tidy_ae_table • forestly</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,7 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="tidy_ae_table2 — tidy_ae_table" />
+<meta property="og:title" content="tidy_ae_table — tidy_ae_table" />
 <meta property="og:description" content="This function is used to obtain AE information ready for visualization" />
 
 
@@ -129,7 +129,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>tidy_ae_table2</h1>
+    <h1>tidy_ae_table</h1>
     
     <div class="hidden name"><code>tidy_ae_table.Rd</code></div>
     </div>
@@ -146,7 +146,7 @@
   treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
   treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>population_from</span><span class='op'>[[</span><span class='va'>treatment_var</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,
   ae_var <span class='op'>=</span> <span class='va'>ae_var</span>,
-  <span class='va'>ae_interested</span>,
+  ae_interested <span class='op'>=</span> <span class='cn'>NULL</span>,
   stratum_var <span class='op'>=</span> <span class='cn'>NULL</span>,
   listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>observation_from</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -184,7 +184,7 @@
     </tr>
     <tr>
       <th>ae_interested</th>
-      <td><p>A character string including the interested AE structure, ex. AESER, AEREL, ...</p></td>
+      <td><p>An object returned by function define_ae_select_list()</p></td>
     </tr>
     <tr>
       <th>stratum_var</th>
@@ -214,8 +214,8 @@
                     treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
                     treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span>,
                     ae_var <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
-                    ae_interested <span class='op'>=</span> <span class='fu'><a href='define_ae_selectList.html'>define_ae_selectList</a></span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'AESER == "Y"'</span>, <span class='st'>'AEREL != "NONE"'</span><span class='op'>)</span>,
-                                                         ae_label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"with serious adverse events"</span>,
+                    ae_interested <span class='op'>=</span> <span class='fu'><a href='define_ae_select_list.html'>define_ae_select_list</a></span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'AESER == "Y"'</span>, <span class='st'>'AEREL != "NONE"'</span><span class='op'>)</span>,
+                                                          ae_label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"with serious adverse events"</span>,
                                                                       <span class='st'>"with drug-related adverse events"</span><span class='op'>)</span><span class='op'>)</span>,
                     listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"AGE"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div></pre>

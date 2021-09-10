@@ -6,7 +6,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • forestly</title>
+<title>To formate the interested ae and its filter
+For example, if the interested ae are c("AESER", "AEREF"),
+then their accoding filters can be defined as c("N", "None")
+to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE — define_ae_select_list • forestly</title>
 
 
 <!-- jquery -->
@@ -41,7 +44,14 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="To formate the interested ae and its filter
+For example, if the interested ae are c("AESER", "AEREF"),
+then their accoding filters can be defined as c("N", "None")
+to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE — define_ae_select_list" />
+<meta property="og:description" content="To formate the interested ae and its filter
+For example, if the interested ae are c(&quot;AESER&quot;, &quot;AEREF&quot;),
+then their accoding filters can be defined as c(&quot;N&quot;, &quot;None&quot;)
+to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE" />
 
 
 
@@ -60,7 +70,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -126,110 +136,66 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>To formate the interested ae and its filter
+For example, if the interested ae are c("AESER", "AEREF"),
+then their accoding filters can be defined as c("N", "None")
+to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE</h1>
+    
+    <div class="hidden name"><code>define_ae_select_list.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>To formate the interested ae and its filter
+For example, if the interested ae are c("AESER", "AEREF"),
+then their accoding filters can be defined as c("N", "None")
+to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>define_ae_select_list</span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='cn'>NULL</span>, ae_label <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-data-preparation" class="hasAnchor"><a href="#section-data-preparation" class="anchor"></a>Data Preparation</h2>
-          <p class="section-desc"><p>Prepare data ready for visualization</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="tidy_ae_listing.html">tidy_ae_listing()</a></code> </p>
-        </td>
-        <td><p>Output a data frame with the listed details in the reactable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_ae_table.html">tidy_ae_table()</a></code> </p>
-        </td>
-        <td><p>tidy_ae_table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_multi_ae_label.html">tidy_multi_ae_label()</a></code> </p>
-        </td>
-        <td><p>This is a function to rbind data together according to the interested ae labels</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_observation.html">tidy_observation()</a></code> </p>
-        </td>
-        <td><p>tidy_observation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_population.html">tidy_population()</a></code> </p>
-        </td>
-        <td><p>tidy_population</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-sparkline" class="hasAnchor"><a href="#section-sparkline" class="anchor"></a>Sparkline</h2>
-          <p class="section-desc"><p>Sparkline figures</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="sparkline_point_js.html">sparkline_point_js()</a></code> </p>
-        </td>
-        <td><p>Sparkline Point Figure Javascript Render Using Plotly</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-utility" class="hasAnchor"><a href="#section-utility" class="anchor"></a>Utility</h2>
-          <p class="section-desc"><p>Utility functions</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="prop_test_mn.html">prop_test_mn()</a></code> </p>
-        </td>
-        <td><p>Test of Equal Proportion Using Miettinen and Nurminen Method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mk_reactable.html">mk_reactable()</a></code> </p>
-        </td>
-        <td><p>mk_reactable</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>ae_criterion</th>
+      <td><p>a character vector to specify the AE criterion to filter the interested ones.
+For example,
+1) ae_criterion = c('AESER != "N"', 'AEREL != "None"')
+2) ae_criterion = c('AESER != "N"', 'AEREL != "None"', 'Grade3To5Flag != "Y"', 'AEACN != "DRUG WITHDRAWN"')</p></td>
+    </tr>
+    <tr>
+      <th>ae_label</th>
+      <td><p>a string vector to specify the according AE labels to be displayed in the selected list.
+The default value is c("with serious adverse events", "with drug-related adverse events",
+"with toxicity grade 3-5 adverse events","discontinued due to an adverse event")</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>a list including
+(1) the ae filters
+(3) the ae labels</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>define_ae_select_list</span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='st'>'AESER != "N"'</span>, ae_label <span class='op'>=</span> <span class='st'>"with serious adverse events"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $interested_ae_criterion
+#&gt; [1] "AESER != \"N\""
+#&gt; 
+#&gt; $interested_ae_label
+#&gt; [1] "with serious adverse events"
+#&gt; </div><div class='input'><span class='fu'>define_ae_select_list</span><span class='op'>(</span>ae_criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'AESER != "N"'</span>, <span class='st'>'AEREL != "None"'</span><span class='op'>)</span>,
+                      ae_label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"with serious adverse events"</span>, <span class='st'>"with drug-related adverse events"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $interested_ae_criterion
+#&gt; [1] "AESER != \"N\""    "AEREL != \"None\""
+#&gt; 
+#&gt; $interested_ae_label
+#&gt; [1] "with serious adverse events"      "with drug-related adverse events"
+#&gt; </div><div class='input'>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
