@@ -86,7 +86,7 @@ The output of the `tlf_xxx` functions are `r2rtf` objects created by `rtf_encode
 - `tlf_download`: a function to download multiple TLFs in Rmarkdown. 
 Rewrite `ae_download_report` to allow it use `tlf_xxx` functions as input. 
 
-```{r}
+```{}
 tlf <- list()
 tlf[[1]] <- tlf_ae_summary()
 tlf[[2]] <- tlf_ae_specific()  # AESER
