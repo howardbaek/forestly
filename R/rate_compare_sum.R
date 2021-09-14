@@ -4,9 +4,8 @@
 #'
 #' @param n0,n1 the sample size in the control group and experimental group, separately. The length should be the same as the length for `s0/s1` and `strata`.
 #' @param s0,s1 the number of events in the control group and experimental group, separately. The length should be the same as the length for `n0/n1` and `strata`.
-#' @param strata an optional vector of stratum indication to be used in the analysis.
-#' If not specified, unstratified MN analysis is used.
-#' If specified, stratified MN analysis is conducted.
+#' @param strata a vector of stratum indication to be used in the analysis. If the unique values of `strata` equals to 1, it is unstratified MN analysis. Otherwise, 
+#' it is stratified MN analysis. The length of `strata` should be the same as the length for `s0/s1` and `n0/n1`. 
 #' @param delta a numeric value to set the difference of two group under the null.
 #' @param weight weighting schema used in stratified MN method. Default is "ss".
 #' - `"equal"` for equal weighting,
@@ -30,7 +29,7 @@
 #' s1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
 #' strata=c(1,2,3,4)
 #' rate_compare_sum(
-#'   n0,n1,s0,s1
+#'   n0,n1,s0,s1,
 #'   strata,
 #'   delta = 0,
 #'   weight = "ss",
@@ -40,17 +39,17 @@
 #' @export
 
 rate_compare_sum <- function(n0,n1,
-                         s0,s1,
-                         strata,
-                         delta = 0,
-                         weight = c("ss", "equal", "cmh"),
-                         test = c("one.sided", "two.sided"),
-                         bisection = 100,
-                         eps = 1e-06,
-                         alpha = 0.05) {
+                             s0,s1,
+                             strata,
+                             delta = 0,
+                             weight = c("ss", "equal", "cmh"),
+                             test = c("one.sided", "two.sided"),
+                             bisection = 100,
+                             eps = 1e-06,
+                             alpha = 0.05) {
   test <- match.arg(test)
   weight <- match.arg(weight)
-
+  
   # Count the event
   n <- n0 + n1
   c <- s0 + s1
@@ -78,7 +77,7 @@ rate_compare_sum <- function(n0,n1,
   r1t <- r0t + delta
   vart <- (r1t * (1 - r1t) / n1 + r0t * (1 - r0t) / n0) * (n / (n - 1))
   
-  if (missing(strata)) {
+  if (length(unique(strata))==1) {
     r_diff <- (r1 - r0)
     z_score <- (r_diff - delta) / sqrt(vart)
     pval <- switch(test,
@@ -86,7 +85,7 @@ rate_compare_sum <- function(n0,n1,
                    two.sided = 1 - pchisq(z_score^2, 1)
     )
   }
-  if (!missing(strata)) {
+  if (!length(unique(strata))==1) {
     # Start to calculate the chi-square
     w <- switch(weight,
                 equal = rep(1, length(strata)),
@@ -171,11 +170,11 @@ rate_compare_sum <- function(n0,n1,
     r1t <- r0t + d
     vart <- (r1t * (1 - r1t) / n1 + r0t * (1 - r0t) / n0) * (n / (n - 1))
     
-    if (is.null(strata2)) {
+    if (length(unique(strata))==1) {
       r_diff <- (s1 / n1 - s0 / n0)
       chisq_obs <- (r_diff - d)^2 / vart
     }
-    if (!is.null(strata2)) {
+    if (!length(unique(strata))==1) {
       # Start to calculate the chi-square
       r1_w <- r1 * w
       r0_w <- r0 * w
