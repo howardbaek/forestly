@@ -144,11 +144,36 @@ tidy_ae_table(...,
 <li><p><code><a href="../reference/tidy_ae_listing.html">tidy_ae_listing()</a></code>: This function generates a data frame which serves as the listed details in the the reactable.</p></li>
 </ul>
 </div>
-<div id="main-function-2-download_ae_reports" class="section level1">
+<div id="main-function-2-tlf_download" class="section level1">
 <h1 class="hasAnchor">
-<a href="#main-function-2-download_ae_reports" class="anchor"></a>Main function 2: <code>download_ae_reports()</code>
+<a href="#main-function-2-tlf_download" class="anchor"></a>Main function 2: <code>tlf_download()</code>
 </h1>
-<p>This function generates a download bottom for users to download AE summary tables, given the returned objected of <code><a href="../reference/tidy_ae_table.html">tidy_ae_table()</a></code>. The downloaded AE summary tables follows the standardized Merck style.</p>
+<p>This function generates a download bottom for users to download AE tables.</p>
+<ul>
+<li>
+<code>tlf_ae_summary</code>: a function to create AE summary table.
+<ul>
+<li>Example: <a href="https://merck.github.io/r2rtf/articles/example-ae-summary.html" class="uri">https://merck.github.io/r2rtf/articles/example-ae-summary.html</a>
+</li>
+</ul>
+</li>
+<li>
+<code>tlf_ae_specific</code>: a function to create specific AE table.</li>
+<li>
+<code>tlf_ae_listing</code>: a function to create AE listing.</li>
+</ul>
+<p>The output of the <code>tlf_xxx</code> functions are <code>r2rtf</code> objects created by <code>rtf_encode</code></p>
+<ul>
+<li>
+<code>tlf_download</code>: a function to download multiple TLFs in Rmarkdown. Rewrite <code>ae_download_report</code> to allow it use <code>tlf_xxx</code> functions as input.</li>
+</ul>
+<pre><code>tlf &lt;- list()
+tlf[[1]] &lt;- tlf_ae_summary()
+tlf[[2]] &lt;- tlf_ae_specific()  # AESER
+tlf[[3]] &lt;- tlf_ae_specifcc()  # All AE 
+tlf[[4]] &lt;- tlf_ae_listing()   # As needed 
+
+tlf_download(tlf)</code></pre>
 </div>
 <div id="main-function-3-forestly" class="section level1">
 <h1 class="hasAnchor">
