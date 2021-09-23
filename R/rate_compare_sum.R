@@ -4,7 +4,7 @@
 #'
 #' @param n0,n1 the sample size in the control group and experimental group, separately. The length should be the same as the length for `s0/s1` and `strata`.
 #' @param s0,s1 the number of events in the control group and experimental group, separately. The length should be the same as the length for `n0/n1` and `strata`.
-#' @param strata a vector of stratum indication to be used in the analysis. If the unique values of `strata` equals to 1, it is unstratified MN analysis. Otherwise, 
+#' @param strata a vector of stratum indication to be used in the analysis. If `NULL` or the length of unique values of `strata` equals to 1, it is unstratified MN analysis. Otherwise, 
 #' it is stratified MN analysis. The length of `strata` should be the same as the length for `s0/s1` and `n0/n1`. 
 #' @param delta a numeric value to set the difference of two group under the null.
 #' @param weight weighting schema used in stratified MN method. Default is "ss".
@@ -27,7 +27,7 @@
 #' n1 <- sapply(split(treatment[treatment=='exp'], stratum[treatment=='exp']), length)
 #' s0 <- sapply(split(response[treatment=='pbo'], stratum[treatment=='pbo']), sum)
 #' s1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
-#' strata=c(1,2,3,4)
+#' strata=c("a","b","c","d")
 #' rate_compare_sum(
 #'   n0,n1,s0,s1,
 #'   strata,
@@ -40,7 +40,7 @@
 
 rate_compare_sum <- function(n0,n1,
                              s0,s1,
-                             strata,
+                             strata=NULL,
                              delta = 0,
                              weight = c("ss", "equal", "cmh"),
                              test = c("one.sided", "two.sided"),
@@ -50,6 +50,8 @@ rate_compare_sum <- function(n0,n1,
   test <- match.arg(test)
   weight <- match.arg(weight)
   
+  if ((is.null(strata)&(length(n0)!=1|length(n1)!=1|length(s0)!=1|length(s1)!=1))
+      |(!is.null(strata)&max(length(n0),length(n1),length(s1),length(s0),length(strata))!=min(length(n0),length(n1),length(s1),length(s0),length(strata)))) stop("The length of input parameters n0, n1, s0, s1, and strata are different.")
   # Count the event
   n <- n0 + n1
   c <- s0 + s1
@@ -77,7 +79,7 @@ rate_compare_sum <- function(n0,n1,
   r1t <- r0t + delta
   vart <- (r1t * (1 - r1t) / n1 + r0t * (1 - r0t) / n0) * (n / (n - 1))
   
-  if (length(unique(strata))==1) {
+  if (is.null(strata)|length(unique(strata))==1) {
     r_diff <- (r1 - r0)
     z_score <- (r_diff - delta) / sqrt(vart)
     pval <- switch(test,
@@ -170,7 +172,7 @@ rate_compare_sum <- function(n0,n1,
     r1t <- r0t + d
     vart <- (r1t * (1 - r1t) / n1 + r0t * (1 - r0t) / n0) * (n / (n - 1))
     
-    if (length(unique(strata))==1) {
+    if (is.null(strata)|length(unique(strata))==1) {
       r_diff <- (s1 / n1 - s0 / n0)
       chisq_obs <- (r_diff - d)^2 / vart
     }
