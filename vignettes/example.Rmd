@@ -83,6 +83,15 @@ adae <- adae %>% mutate(Grade3To5Flag = ifelse(ATOXGR %in% c("3", "4", "5"), "Y"
 ## Impute `adae$AEACN`
 adae$AEACN = sample(c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN"), 
                     size = length(adae$AEACN), prob = c(0.7, 0.25, 0.05), replace = TRUE)
+
+## Impute stratum 
+adsl$STRATUMN <- sample(seq(1,3), size = length(adsl$USUBJID), prob = c(0.3, 0.3, 0.4), replace = TRUE)
+
+adae <- adae %>% left_join(data.frame(USUBJID = adsl$USUBJID, STRATUMN = adsl$STRATUMN))
+
+# adae <- adae %>% group_by(USUBJID) %>% 
+#   mutate(STRATUMN = rep(sample(seq(1,3), size = 1, prob = c(0.3, 0.3, 0.4), replace = TRUE), n()))%>%
+#   ungroup()
 ```
 
 
@@ -98,6 +107,7 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     observation_where = NULL,
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                    stratum_var = "STRATUMN",
                     ae_var = "AEDECOD",
                     ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
                                                                            'Grade3To5Flag == "Y"', 
