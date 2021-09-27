@@ -107,7 +107,7 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     observation_where = NULL,
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
-                    stratum_var = "STRATUMN",
+                    stratum_var = "STRATUMN", #if there is not stratum, then stratum_var = NULL
                     ae_var = "AEDECOD",
                     ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
                                                                            'Grade3To5Flag == "Y"', 
@@ -117,13 +117,15 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                                                                        "with toxicity grade 3-5 adverse events",
                                                                        "discontinued due to an adverse event")),
                     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
+                                    "AETERM", # AE term
+                                    "TRTA",   # treatment/control arm
                                     "ADURN", "ADURU", # duration time and unit
-                                    "AESEV", # Intensity: c("MILD", "MODERATE", "SEVERE")
-                                    "AESER", # Serious event: c("N", "Y")
-                                    "AEREL", # Related: c("PROBABLE", "REMOTE", "POSSIBLE", "NONE")
-                                    "AEACN", # Action taken: c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN")
-                                    "AEOUT", # Outcome: c("NOT RECOVERED/NOT RESOLVED", "RECOVERED/RESOLVED", "FATAL" )
-                                    "AETERM", "TRTA" ))
+                                    "AESEV",  # Intensity: c("MILD", "MODERATE", "SEVERE")
+                                    "AESER",  # Serious event: c("N", "Y")
+                                    "AEREL",  # Related: c("PROBABLE", "REMOTE", "POSSIBLE", "NONE")
+                                    "AEACN",  # Action taken: c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN")
+                                    "AEOUT"  # Outcome: c("NOT RECOVERED/NOT RESOLVED", "RECOVERED/RESOLVED", "FATAL" )
+                                    ))
 ```
 
 # Download the AE Summary Count Table

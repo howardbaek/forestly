@@ -60,6 +60,7 @@ forestly <- function(db,
                      fig_diff_label = NULL,
                      fig_diff_colwidth = 300,
                      small_sample = NULL){
+  
   # Check the correctness of input
   if(length(fig_prop_color) != 2){
     stop("Argument fig_prop_color should be a string vector of length 2!")
@@ -91,25 +92,39 @@ forestly <- function(db,
   # Listing of subjects details
   t_detail <- db$listing
   
-  # Calculate test using M&N method 
-  tb <- cbind(db$table,
-              with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
+  # count number of events for each AE regardless the stratum
+  tb_no_stratum <- db$table %>% 
+    select(-pct_1, -pct_2) %>% 
+    group_by(ae, ae_label) %>% 
+    summarise(n_1 = sum(n_1), n_2 = sum(n_2), N_1 = sum(N_1), N_2 = sum(N_2)) %>% 
+    distinct() %>% 
+    mutate(pct_1 = n_1 / N_1 * 100, pct_2 = n_2 / N_2 * 100)
   
-  # Round the digits
-  tb$pct_1 = round(tb$pct_1, 2)
-  tb$pct_2 = round(tb$pct_2, 2)
-  tb$lower = round(tb$lower, 2)
-  tb$upper = round(tb$upper, 2)
+  # Calculate test using M&N method 
+  tb_rate_compare <- as.data.frame(do.call(rbind, db$table %>% 
+                                                     group_by(ae, ae_label) %>% 
+                                                     group_map(~ rate_compare_sum(n0 = .x$N_1, n1 = .x$N_2, 
+                                                                                  s0 = .x$n_1, s1 = .x$n_2, 
+                                                                                  strata = .x$stratum))))
+  tb <- cbind(tb_no_stratum, tb_rate_compare) %>% 
+    rename(est = r_diff, lower = lower.limit, upper = upper.limit, p = pval) %>% 
+    mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%  # round into 4 digits
+    mutate(est = est * 100, lower = lower * 100, upper = upper * 100)       # change 0.1 into 10%
+  # tb <- cbind(db$table,
+  #             with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
   
   # Calculate the range of the forest plot
   fig_prop_range = round(range(c(tb$pct_1, tb$pct_2)) + c(-2, 2)) #c(-0.51, 0.51))
   fig_diff_range = round(range(c(tb$lower, tb$upper)) + c(-2, 2)) #c(-0.51, 0.51))
   
+  # Calculate the sample size without stratum
+  sample_size_no_stratum <- aggregate(N ~ treatment, FUN = sum, data = db$sample_size)
+  
   # Sort the data frame to display in the reactable
   t_display <- tb %>% dplyr::mutate(fig_prop = NA, 
                                     fig_diff = round(est, 2), 
                                     ae = tools::toTitleCase(tolower(ae))) %>% 
-                      dplyr::select(ae, ae_label, stratum, 
+                      dplyr::select(ae, ae_label, 
                                     fig_prop, fig_diff, 
                                     lower, upper, 
                                     n_1, pct_1, n_2, pct_2)
@@ -157,15 +172,15 @@ forestly <- function(db,
       
       # Customize cell feature
       columnGroups = list(
-        colGroup(name = paste0(fig_prop_label[1], "(N=", as.numeric(db$sample_size[1, "N"]), ")"),  columns = c("n_1", "pct_1")),
-        colGroup(name = paste0(fig_prop_label[2], "(N=", as.numeric(db$sample_size[2, "N"]), ")"), columns = c("n_2", "pct_2"))
+        colGroup(name = paste0(fig_prop_label[1], "(N=", as.numeric(sample_size_no_stratum[1, "N"]), ")"),  columns = c("n_1", "pct_1")),
+        colGroup(name = paste0(fig_prop_label[2], "(N=", as.numeric(sample_size_no_stratum[2, "N"]), ")"), columns = c("n_2", "pct_2"))
       ),
       
       # List of column definitions
       columns = list(
         ae = reactable::colDef(header = "Adverse Events", minWidth = 150, align = "right"),
         
-        stratum = reactable::colDef(header = "Stratum", show = FALSE),
+        #stratum = reactable::colDef(header = "Stratum", show = FALSE),
         
         ae_label = reactable::colDef(header = "Label", show = FALSE),
         

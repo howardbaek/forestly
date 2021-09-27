@@ -35,16 +35,18 @@
 tidy_multi_ae_label <- function(db, db_N, ae_interested = NULL){
   
   ## Start with all AE
-  res <- db %>% group_by(treatment, ae) %>%
-    summarise(n = n_distinct(USUBJID)) %>%  # summarise(n = n()) %>%
+  res <- db %>% select(treatment, ae, stratum, USUBJID) %>%
+    complete(treatment, ae, stratum) %>%   # fill it with 0
+    group_by(treatment, ae, stratum) %>%
+    summarise(n = n_distinct(USUBJID, na.rm = TRUE)) %>%  # summarise(n = n()) %>%
     mutate(ae_label = "All") %>%            # give a label to the AE without filter   
     left_join(db_N) %>%
     mutate(pct = n / N * 100) %>%
     ungroup() %>%
     mutate(trtn = as.numeric(treatment)) %>%
     select(- treatment) %>%
-    pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
-    mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+    pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) #%>%
+    #mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
   
   if(is.null(ae_interested)){
     res <- res %>% mutate(across(pct_1 : pct_2, ~ round(.x, digits = 4)))
@@ -63,28 +65,31 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested = NULL){
     
     ## Filter the interested AE
     res_new <- eval(parse(text = paste0("subset(db,", temp_ae_criterion, ")")))
-    res_new <- res_new %>% group_by(treatment, ae) %>%
-      summarise(n = n_distinct(USUBJID)) %>%  # summarise(n = n()) %>%
+    
+    res_new <- res_new %>% select(treatment, ae, stratum, USUBJID) %>%
+      complete(treatment, ae, stratum) %>%    # fill it with 0
+      group_by(treatment, ae) %>%             # group_by(treatment, ae) %>%
+      summarise(n = n_distinct(USUBJID, na.rm = TRUE)) %>%  # summarise(n = n()) %>%
       mutate(ae_label = temp_ae_label) %>%    # give a label to the AE without filter
       left_join(db_N) %>%
       mutate(pct = n / N * 100) %>%
       ungroup() %>%
       mutate(trtn = as.numeric(treatment)) %>%
       select(- treatment) %>%
-      pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
-      mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x))) 
+      pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) #%>%
+      #mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x))) 
     
     ## Union the filtered AE with the old data
     res <- dplyr::union_all(res, res_new)
     
     ## It is possible that only treatment or control arm has the interested AE.
     ## So for the arm without the interested AE, we fill the AE case as 0 and also fill in the arm sample size
-    res$N_1[is.na(res$N_1)] = db_N$N[as.numeric(db_N$treatment) == 1] 
-    res$N_2[is.na(res$N_2)] = db_N$N[as.numeric(db_N$treatment) == 2] 
-    res$n_1[is.na(res$n_1)] = 0
-    res$n_2[is.na(res$n_2)] = 0
-    res$pct_1[is.na(res$pct_1)] = 0.0000
-    res$pct_2[is.na(res$pct_2)] = 0.0000
+    # res$N_1[is.na(res$N_1)] = db_N$N[as.numeric(db_N$treatment) == 1] 
+    # res$N_2[is.na(res$N_2)] = db_N$N[as.numeric(db_N$treatment) == 2] 
+    # res$n_1[is.na(res$n_1)] = 0
+    # res$n_2[is.na(res$n_2)] = 0
+    # res$pct_1[is.na(res$pct_1)] = 0.0000
+    # res$pct_2[is.na(res$pct_2)] = 0.0000
   }
   
   res <- res %>% mutate(across(pct_1 : pct_2, ~ round(.x, digits = 4)))
