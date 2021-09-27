@@ -38,7 +38,7 @@
 population_from  = adsl %>% rename(TRTA = TRT01A)
 observation_from = adae
 population_where = NULL
-observation_where =  "TRTEMFL=='Y'&AESER=='Y'"
+observation_where =  "TRTEMFL=='Y'"
 treatment_var = "TRTA"
 treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo")
 ae_var = "AEDECOD"
@@ -47,23 +47,25 @@ title_text = "Participants With Adverse Events by System Organ Class and Preferr
 subtitle_text = c("(Incidence>0% in More or More Treatment Group)","(APaT Population)")
 end_notes=c("Every subject is counted a single time for each applicable row and column.","Datacutoff")
 stratum_var = NULL
-display_ci=TRUE
+display_ci=FALSE
 output_name='s01specific0ae0all.rtf'
 
 
 specific_ae <- function(population_from,
-                              observation_from,
-                              population_where = "ITTFL=='Y'",
-                              observation_where = "TRTFL='Y'&AESER='Y'",
-                              treatment_var = "TRTA",
-                              treatment_order,
-                              ae_var,
-                              ae_grp,
-                              display_ci = FALSE,
-                              stratum_var = NULL,
-                              title_text = "Participants With Adverse Events by System Organ Class and Preferred Term",
-                              subtitle_text = c("(Incidence>0% in More or More Treatment Group)","(APaT Population)"),
-                              end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
+                        observation_from,
+                        population_where = "ITTFL=='Y'",
+                        observation_where = "TRTFL='Y'&AESER='Y'",
+                        treatment_var = "TRTA",
+                        treatment_order,
+                        ae_var,
+                        ae_grp,
+                        display_total = FALSE,
+                        display_ci = FALSE,
+                        display_pval = FALSE,
+                        stratum_var = NULL,
+                        title_text = "Participants With Adverse Events by System Organ Class and Preferred Term",
+                        subtitle_text = c("(Incidence>0% in More or More Treatment Group)","(APaT Population)"),
+                        end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
                         output_name){
   
   # Population Level Tidy Data
@@ -87,7 +89,7 @@ specific_ae <- function(population_from,
   # select the overlap pop(adsl) and db(adae)
   db <- subset(db, USUBJID %in% pop$USUBJID)
   
-  # count the sample size of each arm
+  # count the sample size of each arm and total
   pop_n <-  sapply(split(pop$treatment, pop$treatment), length)
   
   db_n <-   sapply(split(unique(db[,c("USUBJID","treatment")])$treatment, unique(db[,c("USUBJID","treatment")])$treatment), length)
@@ -104,8 +106,8 @@ specific_ae <- function(population_from,
   t_pop$aedecod <- c("Participants in population","with one or more adverse events","with no adverse events")
   t_pop$aebodsys <- "pop"
   
+  pop_db <- merge(pop,db,by=c('USUBJID',"treatment"))
   if (isTRUE(display_ci)){
-    pop_db <- merge(pop,db,by=c('USUBJID',"treatment"))
     pop_n_str <- sapply(split(pop$treatment, paste(pop$treatment,pop$stratum,sep="_")), length)
     pop_db$trt_str <- factor(paste(pop_db$treatment,pop_db$stratum,sep="_"),levels=names(pop_n_str))
     strata_level<-sub(".*_", "", names(pop_n_str))[1:length(unique(pop$stratum))]     
@@ -159,13 +161,21 @@ specific_ae <- function(population_from,
   soc_ae <- subset(soc_ae[order(soc_ae$aebodsys,soc_ae$order,soc_ae$aedecod),],select=-order)
   
   #prepare reporting data
-  if (isTRUE(display_ci)==FALSE){
+  if (isTRUE(display_total)==FALSE|isTRUE(display_ci)==FALSE){
     tbl_ae_spec <-  dplyr::bind_rows(t_pop,
                                    data.frame(aebodsys = "pop"), 
                                    soc_ae) %>% 
     dplyr::mutate(aedecod = ifelse(aedecod=="Participants in population"|aedecod == aebodsys , 
                                    aedecod, paste0("  ", aedecod)))
     tbl_ae_spec <- subset(tbl_ae_spec,select=c(6,5,1,3,2,4))
+  }
+    ##if display TOTAL
+  if (isTRUE(display_total)){
+    tbl_ae_spec <-  dplyr::bind_rows(t_pop,
+                                     data.frame(aebodsys = "pop"), 
+                                     soc_ae) %>% 
+      dplyr::mutate(aedecod = ifelse(aedecod=="Participants in population"|aedecod == aebodsys , 
+                                     aedecod, paste0("  ", aedecod)))
   }
   #MN CI if called
   if (isTRUE(display_ci)==TRUE){
