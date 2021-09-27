@@ -108,6 +108,7 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                     treatment_var = "TRTA",
                     treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                     stratum_var = "STRATUMN", #if there is not stratum, then stratum_var = NULL
+                    #stratum_var = NULL,
                     ae_var = "AEDECOD",
                     ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
                                                                            'Grade3To5Flag == "Y"', 

@@ -52,11 +52,11 @@ tidy_ae_table <- function(population_from,
   db <- tidy_observation(observation_from = observation_from,
                          observation_where = observation_where,
                          treatment_var    = treatment_var,
-                         treatment_order  = treatment_order)
+                         treatment_order  = treatment_order,
+                         stratum_var      = stratum_var)
   
   # select the overlap pop(adsl) and db(adae)
   db[["ae"]] <- tools::toTitleCase(tolower(db[[ae_var]])) 
-  db <- db %>% rename(stratum = STRATUMN)
   db <- subset(db, USUBJID %in% pop$USUBJID)
   
   # Select the variables to be listed in the detailed listing

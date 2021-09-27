@@ -8,7 +8,8 @@ tidy_observation(
   observation_from,
   observation_where,
   treatment_var = treatment_var,
-  treatment_order = treatment_order
+  treatment_order = treatment_order,
+  stratum_var = NULL
 )
 }
 \arguments{
@@ -23,6 +24,9 @@ It is the source of variables mentioned in
 
 \item{treatment_order}{A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
 It also provide the label names of the treatments after turning them into factors.}
+
+\item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.
+Only one 'stratum_var' is allowed.}
 }
 \value{
 an output data frame of observation information.
