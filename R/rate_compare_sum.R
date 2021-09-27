@@ -2,10 +2,10 @@
 #'
 #' Unstratified and Stratified  Miettinen and Nurminen Test.
 #'
-#' @param n0,n1 the sample size in the control group and experimental group, separately. The length should be the same as the length for `s0/s1` and `strata`.
-#' @param s0,s1 the number of events in the control group and experimental group, separately. The length should be the same as the length for `n0/n1` and `strata`.
+#' @param n0,n1 the sample size in the control group and experimental group, separately. The length should be the same as the length for `x0/x1` and `strata`.
+#' @param x0,x1 the number of events in the control group and experimental group, separately. The length should be the same as the length for `n0/n1` and `strata`.
 #' @param strata a vector of stratum indication to be used in the analysis. If `NULL` or the length of unique values of `strata` equals to 1, it is unstratified MN analysis. Otherwise, 
-#' it is stratified MN analysis. The length of `strata` should be the same as the length for `s0/s1` and `n0/n1`. 
+#' it is stratified MN analysis. The length of `strata` should be the same as the length for `x0/x1` and `n0/n1`. 
 #' @param delta a numeric value to set the difference of two group under the null.
 #' @param weight weighting schema used in stratified MN method. Default is "ss".
 #' - `"equal"` for equal weighting,
@@ -25,11 +25,11 @@
 #' stratum <- c(rep(1:4, 12), 1, 3, 3, 1, rep(1:4, 12), rep(1:4, 25))
 #' n0 <- sapply(split(treatment[treatment=='pbo'], stratum[treatment=='pbo']), length)
 #' n1 <- sapply(split(treatment[treatment=='exp'], stratum[treatment=='exp']), length)
-#' s0 <- sapply(split(response[treatment=='pbo'], stratum[treatment=='pbo']), sum)
-#' s1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
+#' x0 <- sapply(split(response[treatment=='pbo'], stratum[treatment=='pbo']), sum)
+#' x1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
 #' strata=c("a","b","c","d")
 #' rate_compare_sum(
-#'   n0,n1,s0,s1,
+#'   n0,n1,x0,x1,
 #'   strata,
 #'   delta = 0,
 #'   weight = "ss",
@@ -39,7 +39,7 @@
 #' @export
 
 rate_compare_sum <- function(n0,n1,
-                             s0,s1,
+                             x0,x1,
                              strata=NULL,
                              delta = 0,
                              weight = c("ss", "equal", "cmh"),
@@ -50,19 +50,19 @@ rate_compare_sum <- function(n0,n1,
   test <- match.arg(test)
   weight <- match.arg(weight)
   
-  if ((is.null(strata)&(length(n0)!=1|length(n1)!=1|length(s0)!=1|length(s1)!=1))
-      |(!is.null(strata)&max(length(n0),length(n1),length(s1),length(s0),length(strata))!=min(length(n0),length(n1),length(s1),length(s0),length(strata)))) stop("The length of input parameters n0, n1, s0, s1, and strata are different.")
+  if ((is.null(strata)&(length(n0)!=1|length(n1)!=1|length(x0)!=1|length(x1)!=1))
+      |(!is.null(strata)&max(length(n0),length(n1),length(x1),length(x0),length(strata))!=min(length(n0),length(n1),length(x1),length(x0),length(strata)))) stop("The length of input parameters n0, n1, x0, x1, and strata are different.")
   # Count the event
   n <- n0 + n1
-  c <- s0 + s1
-  r1 <- s1 / n1
-  r0 <- s0 / n0
+  c <- x0 + x1
+  r1 <- x1 / n1
+  r0 <- x0 / n0
   
   # start the analysis
   l3 <- n
   l2 <- (n1 + 2 * n0) * delta - n - c
-  l1 <- (n0 * delta - n - 2 * s0) * delta + c
-  l0 <- s0 * delta * (1 - delta)
+  l1 <- (n0 * delta - n - 2 * x0) * delta + c
+  l0 <- x0 * delta * (1 - delta)
   
   q <- (l2 / (3 * l3))^3 - l1 * l2 / (6 * l3^2) + l0 / (2 * l3)
   sign <- ifelse(q > 0, 1, -1)
@@ -147,8 +147,8 @@ rate_compare_sum <- function(n0,n1,
   func_d <- function(d) {
     l3 <- n
     l2 <- (n1 + 2 * n0) * d - n - c
-    l1 <- (n0 * d - n - 2 * s0) * d + c
-    l0 <- s0 * d * (1 - d)
+    l1 <- (n0 * d - n - 2 * x0) * d + c
+    l0 <- x0 * d * (1 - d)
     
     q <- (l2 / (3 * l3))^3 - l1 * l2 / (6 * l3^2) + l0 / (2 * l3)
     sign <- ifelse(q > 0, 1, -1)
@@ -173,7 +173,7 @@ rate_compare_sum <- function(n0,n1,
     vart <- (r1t * (1 - r1t) / n1 + r0t * (1 - r0t) / n0) * (n / (n - 1))
     
     if (is.null(strata)|length(unique(strata))==1) {
-      r_diff <- (s1 / n1 - s0 / n0)
+      r_diff <- (x1 / n1 - x0 / n0)
       chisq_obs <- (r_diff - d)^2 / vart
     }
     if (!length(unique(strata))==1) {
@@ -193,6 +193,6 @@ rate_compare_sum <- function(n0,n1,
   ci <- ci[(abs(ci) < 1)]
   
   z <- data.frame(r_diff, z_score, pval, ci[1], ci[2])
-  names(z)[c(4, 5)] <- c("lower.limit", "upper.limit")
+  names(z)[c(1,3,4, 5)] <- c("est","p","lower", "upper")
   z
 }
