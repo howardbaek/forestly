@@ -65,7 +65,7 @@ tidy_ae_listing <- function(db, listing_var = NULL){
   
   listing_var <- unique(c("stratum", listing_var))
   db_listing <- db[, listing_var] %>% 
-    rename(Stratum = stratum)
+    dplyr::rename(Stratum = stratum)
   
   selected_var <- NULL
   
