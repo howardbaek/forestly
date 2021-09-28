@@ -20,6 +20,7 @@
 #'                                levels = treatment_order, labels = treatment_order),
 #'             ae = c("headache", "pain", "headache", "fever", "running nose",
 #'                    "pain", "headache", "fever", "headache"),
+#'             stratum = c("a", "a", "b", "c", "c", "c", "b", "b", "a"),
 #'             ADURN = c(11, 3, 4, 5, 7, 20, 90, 34, 58),
 #'             ADURU = rep("minutes", 9),
 #'             AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
