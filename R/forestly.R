@@ -107,9 +107,9 @@ forestly <- function(db,
                                                                                   s0 = .x$n_1, s1 = .x$n_2, 
                                                                                   strata = .x$stratum))))
   tb <- cbind(tb_no_stratum, tb_rate_compare) %>% 
-    rename(est = r_diff, lower = lower.limit, upper = upper.limit, p = pval) %>% 
-    mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%  # round into 4 digits
-    mutate(est = est * 100, lower = lower * 100, upper = upper * 100)       # change 0.1 into 10%
+    dplyr::rename(est = r_diff, lower = lower.limit, upper = upper.limit, p = pval) %>% 
+    dplyr::mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%  # round into 4 digits
+    dplyr::mutate(est = est * 100, lower = lower * 100, upper = upper * 100)       # change 0.1 into 10%
   # tb <- cbind(db$table,
   #             with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
   
@@ -118,7 +118,7 @@ forestly <- function(db,
   fig_diff_range = round(range(c(tb$lower, tb$upper)) + c(-2, 2)) #c(-0.51, 0.51))
   
   # Calculate the sample size without stratum
-  sample_size_no_stratum <- aggregate(N ~ treatment, FUN = sum, data = db$sample_size)
+  sample_size_no_stratum <- stats::aggregate(N ~ treatment, FUN = sum, data = db$sample_size)
   
   # Sort the data frame to display in the reactable
   t_display <- tb %>% dplyr::mutate(fig_prop = NA, 
