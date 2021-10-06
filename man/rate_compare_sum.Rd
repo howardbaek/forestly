@@ -7,8 +7,8 @@
 rate_compare_sum(
   n0,
   n1,
-  s0,
-  s1,
+  x0,
+  x1,
   strata = NULL,
   delta = 0,
   weight = c("ss", "equal", "cmh"),
@@ -19,12 +19,12 @@ rate_compare_sum(
 )
 }
 \arguments{
-\item{n0, n1}{the sample size in the control group and experimental group, separately. The length should be the same as the length for \code{s0/s1} and \code{strata}.}
+\item{n0, n1}{the sample size in the control group and experimental group, separately. The length should be the same as the length for \code{x0/x1} and \code{strata}.}
 
-\item{s0, s1}{the number of events in the control group and experimental group, separately. The length should be the same as the length for \code{n0/n1} and \code{strata}.}
+\item{x0, x1}{the number of events in the control group and experimental group, separately. The length should be the same as the length for \code{n0/n1} and \code{strata}.}
 
 \item{strata}{a vector of stratum indication to be used in the analysis. If \code{NULL} or the length of unique values of \code{strata} equals to 1, it is unstratified MN analysis. Otherwise,
-it is stratified MN analysis. The length of \code{strata} should be the same as the length for \code{s0/s1} and \code{n0/n1}.}
+it is stratified MN analysis. The length of \code{strata} should be the same as the length for \code{x0/x1} and \code{n0/n1}.}
 
 \item{delta}{a numeric value to set the difference of two group under the null.}
 
@@ -55,11 +55,11 @@ response <- c(rep(0, 80), rep(1, 20), rep(0, 40), rep(1, 60))
 stratum <- c(rep(1:4, 12), 1, 3, 3, 1, rep(1:4, 12), rep(1:4, 25))
 n0 <- sapply(split(treatment[treatment=='pbo'], stratum[treatment=='pbo']), length)
 n1 <- sapply(split(treatment[treatment=='exp'], stratum[treatment=='exp']), length)
-s0 <- sapply(split(response[treatment=='pbo'], stratum[treatment=='pbo']), sum)
-s1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
+x0 <- sapply(split(response[treatment=='pbo'], stratum[treatment=='pbo']), sum)
+x1 <- sapply(split(response[treatment=='exp'], stratum[treatment=='exp']), sum)
 strata=c("a","b","c","d")
 rate_compare_sum(
-  n0,n1,s0,s1,
+  n0,n1,x0,x1,
   strata,
   delta = 0,
   weight = "ss",
