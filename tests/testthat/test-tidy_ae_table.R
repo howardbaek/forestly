@@ -1,7 +1,6 @@
 library(devtools)
 library(dplyr)
 library(tidyr)
-load_all()
 
 test_that("tidy_ae_table's 2 variables:'population_from', 'observation_from', must have input data.",{
   expect_error(tidy_ae_table(observation_from = adae,
@@ -127,7 +126,7 @@ test_that("tidy_ae_table can tidy the data", {
                              treatment_var = "TRTA",
                              treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                              ae_var = "AEDECOD",
-                             ae_interested = define_ae_selectList(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
+                             ae_interested = define_ae_select_list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
                              listing_var = c("USUBJID", "SEX", "RACE", "AGE")),
                expectation_table(data1 = adsl %>% rename(TRTA = TRT01A),
                                  data2 = adae,

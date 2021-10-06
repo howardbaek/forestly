@@ -13,6 +13,9 @@ mk_reactable(
   borderless = TRUE,
   striped = TRUE,
   highlight = TRUE,
+  fullWidth = TRUE,
+  width = 1200,
+  theme = reactableTheme(cellPadding = "0px 8px"),
   ...
 )
 }
@@ -33,6 +36,14 @@ mk_reactable(
 
 \item{highlight}{A character string to highlight table rows on hover.}
 
+\item{fullWidth}{Stretch the table to fill the full width of its container? Defaults to TRUE.}
+
+\item{width}{Width of the table in pixels. Defaults to "auto" for automatic sizing.}
+
+\item{theme}{Theme options for the table.
+The default value is \code{reactableTheme(cellPadding = "0px 8px")}:
+No padding between two cells (ensure no break line between reference line)}
+
 \item{...}{Additional arguments transferred to reactable.}
 }
 \value{
@@ -43,6 +54,7 @@ mk_reactable
 }
 \details{
 This function is used to create a data table from tabular data with sorting and pagination by default.
+The reactable configuration follows https://glin.github.io/reactable/reference/reactable.html
 The data table is an HTML widget that can be used in R Markdown documents and Shiny applications, or viewed from an R console.
 }
 \examples{

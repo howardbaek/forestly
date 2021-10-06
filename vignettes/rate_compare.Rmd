@@ -172,7 +172,7 @@ More details can be found in the `rate_compare` documentation.
 
 ```{r}
 rate_compare(formula=response~treatment, strata=stratum, data = ana,
-                     weight_schema="ss")
+                     weight="ss")
 ```
 
 # Reference

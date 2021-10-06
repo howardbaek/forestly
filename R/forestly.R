@@ -27,7 +27,6 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
-#' library(tibble)
 #' library(crosstalk)
 #' library(crosstool)
 #' tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
@@ -61,6 +60,18 @@ forestly <- function(db,
                      fig_diff_label = NULL,
                      fig_diff_colwidth = 300,
                      small_sample = NULL){
+  # Check the correctness of input
+  if(length(fig_prop_color) != 2){
+    stop("Argument fig_prop_color should be a string vector of length 2!")
+  }
+  
+  if(!is.numeric(fig_prop_colwidth) || fig_prop_colwidth < 0){
+    stop("Argument fig_prop_colwidth should be positive number!")
+  }
+  
+  if(!is.numeric(fig_diff_colwidth) || fig_diff_colwidth < 0){
+    stop("Argument fig_prop_colwidth should be positive number!")
+  }
   
   # Set the default arguments
   if(is.null(fig_prop_label)){
@@ -133,19 +144,6 @@ forestly <- function(db,
       
       # data frame to plot
       t_display1,
-      
-      # reactable configuration https://glin.github.io/reactable/reference/reactable.html
-      resizable = TRUE,
-      filterable = TRUE,
-      searchable = TRUE,
-      defaultPageSize = 10,
-      borderless = TRUE,
-      striped = TRUE,
-      highlight = TRUE,
-      fullWidth = TRUE,
-      width = 1200,
-      theme = reactableTheme(cellPadding = "0px 8px"), # No padding between two cells 
-                                                       # (ensure no break line between reference line)
       
       # Default sort variable
       defaultSorted = c("ae_label", "fig_diff"),

@@ -4,7 +4,7 @@
 \alias{tidy_multi_ae_label}
 \title{This is a function to rbind data together according to the interested ae labels}
 \usage{
-tidy_multi_ae_label(db, db_N, ae_interested)
+tidy_multi_ae_label(db, db_N, ae_interested = NULL)
 }
 \arguments{
 \item{db}{a data frame which is usually an intersection of adae and adsl,
@@ -24,7 +24,6 @@ This is a function to rbind data together according to the interested ae labels
 }
 \examples{
 library(dplyr)
-library(tibble)
 treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 
 db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
@@ -41,6 +40,7 @@ db_N = tibble(treatment = factor(c("Xanomeline", "Placebo"),
                                          labels = treatment_order), 
                       N = c(3, 2))
 
-tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
-                                                            ae_label = c("with serious adverse events","with drug-related adverse events")))
+tidy_multi_ae_label(db, db_N, ae_interested = NULL)
+tidy_multi_ae_label(db, db_N, ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
+                                                                    ae_label = c("with serious adverse events","with drug-related adverse events")))
 }

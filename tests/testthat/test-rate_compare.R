@@ -1,4 +1,3 @@
-
 test_that("rate_compare() matches prop_test_mn for unstratified analysis", {
   ana <- data.frame(
     treatment = c(rep(0,100),rep(1,100)),
@@ -15,6 +14,7 @@ test_that("rate_compare() matches prop_test_mn for unstratified analysis", {
   compare2 <- prop_test_mn(x0, n0, x1, n1)
   
   o1 <- c(compare1$est, compare1$lower, compare1$upper, compare1$p)*100
+
   o2 <- c(compare2$est, compare2$lower, compare2$upper, compare2$p)
   expect_equal(o1, o2, tolerance = 1e-3)
 })

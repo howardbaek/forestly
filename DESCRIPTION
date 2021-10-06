@@ -30,7 +30,10 @@ Suggests:
     devtools,
     htmltools,
     reactR,
-    ggplot2
+    ggplot2,
+    crosstool,
+    tibble
 Depends: 
     R (>= 3.6)
+Remotes: bwlewis/crosstool
 Config/testthat/edition: 3

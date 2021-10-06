@@ -12,7 +12,6 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(tibble)
 #' treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 #' 
 #' db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
@@ -29,13 +28,11 @@
 #'                                          labels = treatment_order), 
 #'                       N = c(3, 2))
 #' 
-#' tidy_multi_ae_label(db, db_N, ae_interested = ae_interested(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
-#'                                                             ae_label = c("with serious adverse events","with drug-related adverse events")))
+#' tidy_multi_ae_label(db, db_N, ae_interested = NULL)
+#' tidy_multi_ae_label(db, db_N, ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
+#'                                                                     ae_label = c("with serious adverse events","with drug-related adverse events")))
 
-tidy_multi_ae_label <- function(db, db_N, ae_interested){
-  
-  interested_ae_criterion <- ae_interested$interested_ae_criterion
-  interested_ae_label <- ae_interested$interested_ae_label
+tidy_multi_ae_label <- function(db, db_N, ae_interested = NULL){
   
   ## Start with all AE
   res <- db %>% group_by(treatment, ae) %>%
@@ -48,6 +45,14 @@ tidy_multi_ae_label <- function(db, db_N, ae_interested){
     select(- treatment) %>%
     pivot_wider(names_from = trtn, values_from = c(n, N, pct), values_fill = 0) %>%
     mutate(across(starts_with("N", ignore.case = FALSE), ~ max(.x)))
+  
+  if(is.null(ae_interested)){
+    res <- res %>% mutate(across(pct_1 : pct_2, ~ round(.x, digits = 4)))
+    return(res)
+  }
+  
+  interested_ae_criterion <- ae_interested$interested_ae_criterion
+  interested_ae_label <- ae_interested$interested_ae_label
   
   ## For each interested AE, iteration once and rbind them together
   for (ae_idx in seq_along(interested_ae_criterion)) {

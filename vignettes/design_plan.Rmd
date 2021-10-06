@@ -72,10 +72,29 @@ tidy_ae_table(...,
 - `tidy_ae_listing()`: This function generates a data frame which serves as the listed details in the the reactable.
 
 
-# Main function 2: `download_ae_reports()`
+# Main function 2: `tlf_download()`
 
-This function generates a download bottom for users to download AE summary tables, given the returned objected of `tidy_ae_table()`.
-The downloaded AE summary tables follows the standardized Merck style.
+This function generates a download bottom for users to download AE tables.
+
+- `tlf_ae_summary`: a function to create AE summary table. 
+  + Example: https://merck.github.io/r2rtf/articles/example-ae-summary.html 
+- `tlf_ae_specific`: a function to create specific AE table. 
+- `tlf_ae_listing`: a function to create AE listing. 
+
+The output of the `tlf_xxx` functions are `r2rtf` objects created by `rtf_encode`
+
+- `tlf_download`: a function to download multiple TLFs in Rmarkdown. 
+Rewrite `ae_download_report` to allow it use `tlf_xxx` functions as input. 
+
+```{}
+tlf <- list()
+tlf[[1]] <- tlf_ae_summary()
+tlf[[2]] <- tlf_ae_specific()  # AESER
+tlf[[3]] <- tlf_ae_specifcc()  # All AE 
+tlf[[4]] <- tlf_ae_listing()   # As needed 
+
+tlf_download(tlf)
+```
 
 # Main function 3: `forestly()`
 
