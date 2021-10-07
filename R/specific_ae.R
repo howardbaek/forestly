@@ -246,73 +246,73 @@ specific_ae <- function(population_from,
   if (display_total==FALSE&display_ci==FALSE){
     if (!is.null(ae_grp)){
       tbl_ae_spec %>% 
-        rtf_title(title_text, 
+        r2rtf::rtf_title(title_text, 
                   c(subtitle_text1,subtitle_text2)) %>%
         
-        rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
+        r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
                       col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
         ) %>%
-        rtf_colheader(" | n | (%) | n | (%) ",
+        r2rtf::rtf_colheader(" | n | (%) | n | (%) ",
                       border_top = c("",rep("single",2*length(unique(pop$treatment)))),
                       border_bottom = "single",
                       border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
                       col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))))
         ) %>%
         
-        rtf_body(
+        r2rtf::rtf_body(
           col_rel_width = c(1, 3,  rep(1, 2*length(unique(pop$treatment)))),
           border_left = c("single","single",rep(c("single",""),length(unique(pop$treatment)))),
           text_justification = c("l","l", rep("c", 2*length(unique(pop$treatment)))),
           text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
           page_by = "aebodsys", 
           pageby_row = "first_row") %>% 
-        rtf_footnote(end_notes) %>%
-        rtf_encode() %>%
-        write_rtf(output_name)
+        r2rtf::rtf_footnote(end_notes) %>%
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_name)
     }
     if (is.null(ae_grp)){
-      tbl_ae_spec  %>% select(-aebodsys)%>%
-        rtf_title(title_text, 
+      tbl_ae_spec  %>% dplyr::select(-aebodsys)%>%
+        r2rtf::rtf_title(title_text, 
                   c(subtitle_text1,subtitle_text2)) %>%
         
-        rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
+        r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
                       col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
         ) %>%
-        rtf_colheader(" | n | (%) | n | (%) ",
+        r2rtf::rtf_colheader(" | n | (%) | n | (%) ",
                       border_top = c("",rep("single",2*length(unique(pop$treatment)))),
                       border_bottom = "single",
                       border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
                       col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))))
         ) %>%
         
-        rtf_body(
+        r2rtf::rtf_body(
           col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment)))),
           border_left = c("single",rep(c("single",""),length(unique(pop$treatment)))),
           text_justification = c("l", rep("c", 2*length(unique(pop$treatment))))) %>% 
         
-        rtf_footnote(end_notes) %>%
-        rtf_encode() %>%
-        write_rtf(output_name)
+        r2rtf::rtf_footnote(end_notes) %>%
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_name)
     }
   }
   if (display_ci==TRUE){
     if (display_pval==TRUE){
       if (!is.null(ae_grp)){
         tbl_ae_spec %>% 
-          rtf_title(title_text, 
+          r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
                         col_rel_width = c(3, rep(2, length(unique(pop$treatment))),3)
           ) %>%
-          rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
+          r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
                         border_top = c("",rep("single",3*length(unique(pop$treatment)))),
                         border_bottom = "single",
                         border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
                         col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),2,1)
           ) %>%
           
-          rtf_body(
+          r2rtf::rtf_body(
             col_rel_width = c(1, 3,  rep(1, 2*length(unique(pop$treatment))),2,1),
             border_left = c("single","single",rep(c("single",""),length(unique(pop$treatment))),"single","single"),
             text_justification = c("l","l", rep("c", 3*length(unique(pop$treatment)))),
@@ -320,52 +320,52 @@ specific_ae <- function(population_from,
             page_by = "aebodsys", 
             pageby_row = "first_row") %>% 
           
-          rtf_footnote(end_notes) %>%
-          rtf_encode() %>%
-          write_rtf(output_name)
+          r2rtf::rtf_footnote(end_notes) %>%
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_name)
       }
       if (is.null(ae_grp)){
-        tbl_ae_spec %>% select(-aebodsys)%>%
-          rtf_title(title_text, 
+        tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
+          r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
                         col_rel_width = c(3, rep(2, length(unique(pop$treatment))),3)
           ) %>%
-          rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
+          r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
                         border_top = c("",rep("single",3*length(unique(pop$treatment)))),
                         border_bottom = "single",
                         border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
                         col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),2,1)
           ) %>%
           
-          rtf_body(
+          r2rtf::rtf_body(
             col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment))),2,1),
             border_left = c("single",rep(c("single",""),length(unique(pop$treatment))),"single","single"),
             text_justification = c("l", rep("c", 3*length(unique(pop$treatment))))) %>% 
           
-          rtf_footnote(end_notes) %>%
-          rtf_encode() %>%
-          write_rtf(output_name)
+          r2rtf::rtf_footnote(end_notes) %>%
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_name)
       }
     }
     if (display_pval==FALSE){
       if (!is.null(ae_grp)){
         tbl_ae_spec %>% 
-          rtf_title(title_text, 
+          r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
                         col_rel_width = c(3, rep(2, length(unique(pop$treatment))),2)
           ) %>%
-          rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
+          r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
                         border_top = c("",rep("single",2*length(unique(pop$treatment))),"single"),
                         border_bottom = "single",
                         border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single"),
                         col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),2)
           ) %>%
           
-          rtf_body(
+          r2rtf::rtf_body(
             col_rel_width = c(1, 3,  rep(1, 2*length(unique(pop$treatment))),2),
             border_left = c("single","single",rep(c("single",""),length(unique(pop$treatment))),"single"),
             text_justification = c("l","l", rep("c", 2*length(unique(pop$treatment))),"c"),
@@ -373,53 +373,53 @@ specific_ae <- function(population_from,
             page_by = "aebodsys", 
             pageby_row = "first_row") %>% 
           
-          rtf_footnote(end_notes) %>%
-          rtf_encode() %>%
-          write_rtf(output_name)
+          r2rtf::rtf_footnote(end_notes) %>%
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_name)
       }
       if (is.null(ae_grp)){
-        tbl_ae_spec %>% select(-aebodsys)%>%
-          rtf_title(title_text, 
+        tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
+          r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
                         col_rel_width = c(3, rep(2, length(unique(pop$treatment))),2)
           ) %>%
-          rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
+          r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
                         border_top = c("",rep("single",2*length(unique(pop$treatment))),"single"),
                         border_bottom = "single",
                         border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single"),
                         col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),2)
           ) %>%
           
-          rtf_body(
+          r2rtf::rtf_body(
             col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment))),2),
             border_left = c("single",rep(c("single",""),length(unique(pop$treatment))),"single"),
             text_justification = c("l", rep("c", 2*length(unique(pop$treatment))),"c")) %>% 
           
-          rtf_footnote(end_notes) %>%
-          rtf_encode() %>%
-          write_rtf(output_name)
+          r2rtf::rtf_footnote(end_notes) %>%
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_name)
       }
     }
   }
   if (display_total==TRUE){
     if (!is.null(ae_grp)){
       tbl_ae_spec %>% 
-        rtf_title(title_text, 
+        r2rtf::rtf_title(title_text, 
                   c(subtitle_text1,subtitle_text2)) %>%
         
-        rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
+        r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
                       col_rel_width = c(3, rep(2, 1+length(unique(pop$treatment))))
         ) %>%
-        rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
+        r2rtf::rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
                       border_top = c("",rep("single",2+2*length(unique(pop$treatment)))),
                       border_bottom = "single",
                       border_left = c("single", rep(c("single", ""), 1+length(unique(pop$treatment)))),
                       col_rel_width = c(3, rep(1, 2+2*length(unique(pop$treatment))))
         ) %>%
         
-        rtf_body(
+        r2rtf::rtf_body(
           col_rel_width = c(1, 3,  rep(1, 2+2*length(unique(pop$treatment)))),
           border_left = c("single","single",rep(c("single",""),1+length(unique(pop$treatment)))),
           text_justification = c("l","l", rep("c", 2+2*length(unique(pop$treatment)))),
@@ -427,33 +427,33 @@ specific_ae <- function(population_from,
           page_by = "aebodsys", 
           pageby_row = "first_row") %>% 
         
-        rtf_footnote(end_notes) %>%
-        rtf_encode() %>%
-        write_rtf(output_name)
+        r2rtf::rtf_footnote(end_notes) %>%
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_name)
     }
     if (is.null(ae_grp)){
-      tbl_ae_spec %>% select(-aebodsys) %>%
-        rtf_title(title_text, 
+      tbl_ae_spec %>% dplyr::select(-aebodsys) %>%
+        r2rtf::rtf_title(title_text, 
                   c(subtitle_text1,subtitle_text2)) %>%
         
-        rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
+        r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
                       col_rel_width = c(3, rep(2, 1+length(unique(pop$treatment))))
         ) %>%
-        rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
+        r2rtf::rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
                       border_top = c("",rep("single",2+2*length(unique(pop$treatment)))),
                       border_bottom = "single",
                       border_left = c("single", rep(c("single", ""), 1+length(unique(pop$treatment)))),
                       col_rel_width = c(3, rep(1, 2+2*length(unique(pop$treatment))))
         ) %>%
         
-        rtf_body(
+        r2rtf::rtf_body(
           col_rel_width = c(3,  rep(1, 2+2*length(unique(pop$treatment)))),
           border_left = c("single",rep(c("single",""),1+length(unique(pop$treatment)))),
           text_justification = c("l", rep("c", 2+2*length(unique(pop$treatment))))) %>% 
         
-        rtf_footnote(end_notes) %>%
-        rtf_encode() %>%
-        write_rtf(output_name)
+        r2rtf::rtf_footnote(end_notes) %>%
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_name)
     }
   }
 }
