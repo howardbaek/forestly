@@ -62,8 +62,8 @@ The function creates specific adverse events tables by AE term or grouped by AE 
 Total, confidence interval, or P-value columns.
 }
 \examples{
-adsl2 <- adsl \%>\% mutate(TRTA=TRT01A)
-specific_ae(population_from=adsl2,
+library(dplyr)
+specific_ae(population_from=adsl \%>\% rename(TRTA=TRT01A),
 observation_from=adae,
 population_where = "ITTFL=='Y'",
 observation_where = "TRTEMFL=='Y'",
