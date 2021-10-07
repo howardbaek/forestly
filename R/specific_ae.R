@@ -21,7 +21,6 @@
 #' @param end_notes A vector of text strings to appear in the footnote.
 #' @param output_name A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.
 #'
-#' @return
 #' @export
 #'
 #' @examples
