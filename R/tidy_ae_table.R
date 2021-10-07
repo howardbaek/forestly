@@ -52,7 +52,8 @@ tidy_ae_table <- function(population_from,
   db <- tidy_observation(observation_from = observation_from,
                          observation_where = observation_where,
                          treatment_var    = treatment_var,
-                         treatment_order  = treatment_order)
+                         treatment_order  = treatment_order,
+                         stratum_var      = stratum_var)
   
   # select the overlap pop(adsl) and db(adae)
   db[["ae"]] <- tools::toTitleCase(tolower(db[[ae_var]])) 
@@ -63,7 +64,7 @@ tidy_ae_table <- function(population_from,
   
   # count the sample size of each arm
   db_N <- dplyr::count(pop, treatment, stratum, name = "N")
-  
+ 
   # rbind the data with interested AE labels
   res <- tidy_multi_ae_label(db, db_N, ae_interested)
   

@@ -12,7 +12,8 @@
 #' @param treatment_var A character string to define the variable of new column called "treatment".
 #' @param treatment_order A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
 #'                        It also provide the label names of the treatments after turning them into factors.
-#'
+#' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.
+#'                    Only one 'stratum_var' is allowed.
 #' @return an output data frame of observation information.
 #'         STUDYID: Study identifier.
 #'         SITEID: Study site identifier.
@@ -83,7 +84,8 @@
 tidy_observation <- function(observation_from,
                              observation_where,
                              treatment_var    = treatment_var,
-                             treatment_order  = treatment_order
+                             treatment_order  = treatment_order,
+                             stratum_var = NULL
 ){
 
   ##################################
@@ -105,6 +107,13 @@ tidy_observation <- function(observation_from,
   } else {label_name = treatment_order}
 
   db[["treatment"]] <- factor(db[["treatment"]], levels = treatment_order, labels = label_name)
-
+  
+  # Define stratum
+  if(length(stratum_var) == 0){
+    db[["stratum"]] <- "All"
+  }else{
+    db[["stratum"]] <- db[[stratum_var]]
+  }
+  
   db
 }

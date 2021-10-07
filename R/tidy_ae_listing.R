@@ -20,6 +20,7 @@
 #'                                levels = treatment_order, labels = treatment_order),
 #'             ae = c("headache", "pain", "headache", "fever", "running nose",
 #'                    "pain", "headache", "fever", "headache"),
+#'             stratum = c("a", "a", "b", "c", "c", "c", "b", "b", "a"),
 #'             ADURN = c(11, 3, 4, 5, 7, 20, 90, 34, 58),
 #'             ADURU = rep("minutes", 9),
 #'             AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
@@ -49,11 +50,13 @@ tidy_ae_listing <- function(db, listing_var = NULL){
                     )
   }
 
-  listing_var <- unique(c("ae", "treatment", listing_var))
+  
   
   # Make sure the listing_var are included in the db
   for (i in seq_along(listing_var)) {
-    stopifnot(listing_var[i] %in% colnames(db))
+    if(! listing_var[i] %in% colnames(db)){
+      stop(paste("The ", i, "-th listing_var is not a validate colname of the input dataset!"))
+    }
   }
   
   # Make sure "ADURN" and "ADURU" appear in pairs
@@ -61,7 +64,9 @@ tidy_ae_listing <- function(db, listing_var = NULL){
     stopifnot(("ADURN" %in% listing_var) && ("ADURU" %in% listing_var))
   }
   
-  db_listing <- db[, listing_var]
+  listing_var <- unique(c("stratum", listing_var))
+  db_listing <- db[, listing_var] %>% 
+    dplyr::rename(Stratum = stratum)
   
   selected_var <- NULL
   
@@ -69,74 +74,74 @@ tidy_ae_listing <- function(db, listing_var = NULL){
   if("SITEID" %in% listing_var){
     db_listing[["Site Number"]] <- db_listing[["SITEID"]] 
     db_listing <- db_listing %>% dplyr::select(-SITEID)
-    selected_var <- c(selected_var, "Site Number")
+    #selected_var <- c(selected_var, "Site Number")
   }
   
   # Rename the USUBJID
   if("USUBJID" %in% listing_var){
     db_listing[["Participant ID"]] <- db_listing[["USUBJID"]] 
     db_listing <- db_listing %>% dplyr::select(-USUBJID)
-    selected_var <- c(selected_var, "Participant ID")
+    #selected_var <- c(selected_var, "Participant ID")
   }
   
   # Rename the SEX
   if("SEX" %in% listing_var){
     db_listing <- db_listing %>% dplyr::rename(Gender = SEX)
-    selected_var <- c(selected_var, "Gender")
+    #selected_var <- c(selected_var, "Gender")
   }
   
   # Rename the RACE
   if("RACE" %in% listing_var){
     db_listing$RACE <- tools::toTitleCase(tolower(db_listing$RACE))
     db_listing <- db_listing %>% dplyr::rename(Race = RACE)
-    selected_var <- c(selected_var, "Race")
+    #selected_var <- c(selected_var, "Race")
   }
   
   # Rename the AGE
   if("AGE" %in% listing_var){
     db_listing <- db_listing %>% dplyr::rename(Age = AGE)
-    selected_var <- c(selected_var, "Age")
+    #selected_var <- c(selected_var, "Age")
   }
   
   # Rename AETERM
   if("AETERM" %in% listing_var){
     db_listing$AETERM <- tools::toTitleCase(tolower(db_listing$AETERM))
     db_listing <- db_listing %>% dplyr::rename(AE = AETERM)
-    selected_var <- c(selected_var, "AE")
+    #selected_var <- c(selected_var, "AE")
   }
   
   # Rename the TRTA
   if("TRTA" %in% listing_var){
     db_listing[["Onset Epoch"]] <- db_listing[["TRTA"]] 
     db_listing <- db_listing %>% dplyr::select(-TRTA)
-    selected_var <- c(selected_var, "Onset Epoch")
+    #selected_var <- c(selected_var, "Onset Epoch")
   }
   
   # Rename the ADURN + ADURU
   if("ADURN" %in% listing_var){
     db_listing <- db_listing %>% dplyr::mutate(Duration = tools::toTitleCase(tolower(do.call(paste, c(db[c("ADURN", "ADURU")], sep = " "))))) %>%
       dplyr::select(- c("ADURN", "ADURU"))
-    selected_var <- c(selected_var, "Duration")
+    #selected_var <- c(selected_var, "Duration")
   }
   
   # Rename the AESEV
   if("AESEV" %in% listing_var){
     db_listing$AESEV <- tools::toTitleCase(tolower(db_listing$AESEV))
     db_listing <- db_listing %>% dplyr::rename(Intensity = AESEV)
-    selected_var <- c(selected_var, "Intensity")
+    #selected_var <- c(selected_var, "Intensity")
   }
   
   # Rename the AESER
   if("AESER" %in% listing_var){
     db_listing <- db_listing %>% dplyr::rename(Serious = AESER)
-    selected_var <- c(selected_var, "Serious")
+    #selected_var <- c(selected_var, "Serious")
   }
   
   # Rename the AEREL
   if("AEREL" %in% listing_var){
     db_listing$AEREL <- tools::toTitleCase(tolower(db_listing$AEREL))
     db_listing <- db_listing %>% dplyr::rename(Related = AEREL)
-    selected_var <- c(selected_var, "Related")
+    #selected_var <- c(selected_var, "Related")
   }
   
   # Rename the AEACN
@@ -144,16 +149,16 @@ tidy_ae_listing <- function(db, listing_var = NULL){
     db_listing$AEACN <- tools::toTitleCase(tolower(db_listing$AEACN))
     db_listing[["Action Taken"]] <- db_listing[["AEACN"]] 
     db_listing <- db_listing %>% dplyr::select(-AEACN)
-    selected_var <- c(selected_var, "Action Taken")
+    #selected_var <- c(selected_var, "Action Taken")
   }
   
   # Rename the AEOUT
   if("AEOUT" %in% listing_var){
     db_listing$AEOUT <- tools::toTitleCase(tolower(db_listing$AEOUT))
     db_listing <- db_listing %>% dplyr::rename(Outcome = AEOUT)
-    selected_var <- c(selected_var, "Outcome")
+    #selected_var <- c(selected_var, "Outcome")
   }
   
-  db_listing %>% select(selected_var)
+  db_listing #%>% select(selected_var)
   
 }
