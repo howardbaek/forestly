@@ -246,8 +246,7 @@ specific_ae <- function(population_from,
   if (display_total==FALSE&display_ci==FALSE){
     if (!is.null(ae_grp)){
       tbl_ae_spec %>% 
-        r2rtf::rtf_title(title_text, 
-                  c(subtitle_text1,subtitle_text2)) %>%
+        r2rtf::rtf_title(title_text, subtitle_text) %>%
         
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
                       col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
@@ -272,8 +271,7 @@ specific_ae <- function(population_from,
     }
     if (is.null(ae_grp)){
       tbl_ae_spec  %>% dplyr::select(-aebodsys)%>%
-        r2rtf::rtf_title(title_text, 
-                  c(subtitle_text1,subtitle_text2)) %>%
+        r2rtf::rtf_title(title_text, subtitle_text) %>%
         
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
                       col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
@@ -406,8 +404,7 @@ specific_ae <- function(population_from,
   if (display_total==TRUE){
     if (!is.null(ae_grp)){
       tbl_ae_spec %>% 
-        r2rtf::rtf_title(title_text, 
-                  c(subtitle_text1,subtitle_text2)) %>%
+        r2rtf::rtf_title(title_text, subtitle_text) %>%
         
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
                       col_rel_width = c(3, rep(2, 1+length(unique(pop$treatment))))
@@ -433,8 +430,7 @@ specific_ae <- function(population_from,
     }
     if (is.null(ae_grp)){
       tbl_ae_spec %>% dplyr::select(-aebodsys) %>%
-        r2rtf::rtf_title(title_text, 
-                  c(subtitle_text1,subtitle_text2)) %>%
+        r2rtf::rtf_title(title_text, subtitle_text) %>%
         
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total"),
                       col_rel_width = c(3, rep(2, 1+length(unique(pop$treatment))))
