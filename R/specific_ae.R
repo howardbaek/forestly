@@ -34,7 +34,7 @@
 #' ae_var = "AEDECOD",
 #' ae_grp="AEBODSYS",
 #' display_ci = FALSE,
-#' display_total = TRUE,
+#' display_total = FALSE,
 #' display_pval = FALSE,
 #' stratum_var = NULL,
 #' title_text1 = "Participants With Adverse Events",
