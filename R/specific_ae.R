@@ -37,7 +37,7 @@
 #' title_text = "Participants With Adverse Events",
 #' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
 #' end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
-#' output_name='s01specific0sae.rtf')
+#' output_name='/home/dengxua/s01specific0sae.rtf')
 #' 
 
 
