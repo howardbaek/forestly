@@ -1,4 +1,7 @@
-#' Specific AE tables
+#' Specific Adverse Events Table
+#'
+#' The function creates specific adverse events tables by AE term or grouped by AE SOC. The user can select whether displaying 
+#' Total, confidence interval, or P-value columns.
 #'
 #' @param population_from A data frame to obtain population level variables. Typically an 'adsl' dataset.
 #' @param observation_from A data frame to obtain observation level variables.
@@ -22,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#' specific_ae(population_from=adsl %>% rename(TRTA = TRT01A),
+#' specific_ae(population_from=adsl %>% rename(TRTA=TRT01A) ,
 #' observation_from=adae,
 #' population_where = "ITTFL=='Y'",
 #' observation_where = "TRTEMFL=='Y'",
@@ -37,16 +40,16 @@
 #' title_text1 = "Participants With Adverse Events",
 #' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
 #' end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
-#' output_name='/home/dengxua/s01specific0ae.rtf')
+#' output_name='s01specific0ae.rtf')
 #' 
 
 
 
 specific_ae <- function(population_from,
                         observation_from,
-                        population_where = "ITTFL=='Y'",
-                        observation_where = "TRTFL='Y'&AESER='Y'",
-                        treatment_var = "TRTA",
+                        population_where ,
+                        observation_where ,
+                        treatment_var ,
                         treatment_order,
                         ae_var,
                         ae_grp=NULL,
@@ -54,9 +57,9 @@ specific_ae <- function(population_from,
                         display_ci = FALSE,
                         display_pval = FALSE,
                         stratum_var = NULL,
-                        title_text1 = "Participants With Adverse Events",
-                        subtitle_text = c("(Incidence>0% in More or More Treatment Group)","(APaT Population)"),
-                        end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
+                        title_text1 ,
+                        subtitle_text  ,
+                        end_notes,
                         output_name){
   
   if (display_ci==TRUE&display_total==TRUE) stop('Cannot display difference estimates and total columns together.')
