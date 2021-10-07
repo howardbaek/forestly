@@ -19,8 +19,8 @@ test_that("match with prop_test_mn()", {
   my_x0 = 40   # number of response in arm 0
   my_x1 = 60   # number of response in arm 1
   
-  xx <- rate_compare_sum(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_s1)
-  yy <- prop_test_mn(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_s1)
+  xx <- rate_compare_sum(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_x1)
+  yy <- prop_test_mn(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_x1)
   
   xx_output <- c(xx$est, xx$lower, xx$upper) * 100
   yy_output <- c(yy$est, yy$lower, yy$upper)
