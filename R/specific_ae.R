@@ -24,7 +24,8 @@
 #' @export
 #'
 #' @examples
-#' specific_ae(population_from=adsl %>% rename(TRTA=TRT01A) ,
+#' adsl2 <- adsl %>% mutate(TRTA=TRT01A)
+#' specific_ae(population_from=adsl2,
 #' observation_from=adae,
 #' population_where = "ITTFL=='Y'",
 #' observation_where = "TRTEMFL=='Y'",
