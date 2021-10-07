@@ -29,15 +29,15 @@
 #' treatment_var = "TRTA",
 #' treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
 #' ae_var = "AEDECOD",
-#' ae_grp=NULL,
-#' display_ci = TRUE,
-#' display_total = FALSE,
-#' display_pval = TRUE,
-#' stratum_var = 'SEX',
-#' title_text = "Participants With Adverse Events",
+#' ae_grp="AEBODSYS",
+#' display_ci = FALSE,
+#' display_total = TRUE,
+#' display_pval = FALSE,
+#' stratum_var = NULL,
+#' title_text1 = "Participants With Adverse Events",
 #' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
 #' end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
-#' output_name='/home/dengxua/s01specific0sae.rtf')
+#' output_name='/home/dengxua/s01specific0ae.rtf')
 #' 
 
 
@@ -79,7 +79,8 @@ specific_ae <- function(population_from,
   db <- tidy_observation(observation_from = observation_from,
                          observation_where = observation_where,
                          treatment_var    = treatment_var,
-                         treatment_order  = treatment_order)
+                         treatment_order  = treatment_order,
+                         stratum_var = stratum_var)
   db[["trt_label"]]<-ifelse(db$treatment==names(treatment_order)[1],"exp","pbo")
   db[["trt_label"]]<-factor(db[["trt_label"]],levels=c("exp","pbo"))
   
@@ -108,7 +109,7 @@ specific_ae <- function(population_from,
   t_pop$aedecod <- c("Participants in population","with one or more adverse events","with no adverse events")
   t_pop$aebodsys <- "pop"
   
-  pop_db <- merge(pop,db,by=c('USUBJID',"trt_label"))
+  pop_db <- merge(pop,db,by=c('USUBJID',"trt_label","stratum","treatment"))
   pop_n_str <- sapply(split(pop$trt_label, paste(pop$trt_label,pop$stratum,sep="_")), length)
   pop_db$trt_str <- factor(paste(pop_db$trt_label,pop_db$stratum,sep="_"),levels=names(pop_n_str))
   strata_level<-sub(".*_", "", names(pop_n_str))[1:length(unique(pop$stratum))]     

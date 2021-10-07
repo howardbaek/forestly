@@ -1,13 +1,13 @@
 ## Test case 1
-test_that("throw error when the length of n0, n1, s0, s1 doesn't match", {
+test_that("throw error when the length of n0, n1, x0, x1 doesn't match", {
   expect_error(rate_compare_sum(n0 = c(10, 20, 30), n1 = c(20, 10, 40), 
-                                s0 = c(1, 2, 3),    s1 = c(2, 4),  
+                                x0 = c(1, 2, 3),    x1 = c(2, 4),  
                                 strata = c(1, 2, 3)))
   expect_error(rate_compare_sum(n0 = c(10, 20, 30), n1 = c(20, 40), 
-                                s0 = c(1, 2, 3),    s1 = c(2, 4, 6),  
+                                x0 = c(1, 2, 3),    x1 = c(2, 4, 6),  
                                 strata = c(1, 2, 3)))
   expect_error(rate_compare_sum(n0 = c(10, 20, 30), n1 = c(20, 10, 40), 
-                                s0 = c(1, 2, 3),    s1 = c(2, 4, 6),  
+                                x0 = c(1, 2, 3),    x1 = c(2, 4, 6),  
                                 strata = c("a", "b")))
 })
 
@@ -16,13 +16,13 @@ test_that("match with prop_test_mn()", {
   
   my_n0 = 100  # number of subjects in arm 0
   my_n1 = 105  # number of subjects in arm 1
-  my_s0 = 40   # number of response in arm 0
-  my_s1 = 60   # number of response in arm 1
+  my_x0 = 40   # number of response in arm 0
+  my_x1 = 60   # number of response in arm 1
   
-  xx <- rate_compare_sum(n0 = my_n0, n1 = my_n1, s0 = my_s0, s1 = my_s1)
-  yy <- prop_test_mn(n0 = my_n0, n1 = my_n1, x0 = my_s0, x1 = my_s1)
+  xx <- rate_compare_sum(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_s1)
+  yy <- prop_test_mn(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_s1)
   
-  xx_output <- c(xx$r_diff, xx$lower.limit, xx$upper.limit) * 100
+  xx_output <- c(xx$est, xx$lower, xx$upper) * 100
   yy_output <- c(yy$est, yy$lower, yy$upper)
   
   expect_equal(xx_output, yy_output, tolerance = 1e-4)
@@ -42,10 +42,10 @@ test_that("match with rate_compare()", {
   n1 <- 100
   
   xx <- rate_compare(response~treatment, data = ana)
-  yy <- rate_compare_sum(n0 = n0, n1 = n1, s0 = x0, s1 = x1)
+  yy <- rate_compare_sum(n0 = n0, n1 = n1, x0 = x0, x1 = x1)
   
-  xx_output <- c(xx$r_diff, xx$lower.limit, xx$upper.limit, xx$pval)
-  yy_output <- c(yy$r_diff, yy$lower.limit, yy$upper.limit, yy$pval)
+  xx_output <- c(xx$est, xx$lower, xx$upper, xx$p)
+  yy_output <- c(yy$est, yy$lower, yy$upper, yy$p)
   expect_equal(xx_output, yy_output, tolerance = 1e-4)
   expect_equal(colnames(xx), colnames(yy))
 })
