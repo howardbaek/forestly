@@ -27,18 +27,19 @@ library(dplyr)
 treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 
 db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
-                    treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo", 
-                                          "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"), 
-                                       levels = treatment_order, labels = treatment_order),
-                    ae = c("headache", "pain", "headache", "fever", "running nose", 
+            stratum = c("a", "a", "b", "c", "c", "c", "b", "b", "a"),
+            treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo", 
+                                 "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"), 
+                               levels = treatment_order, labels = treatment_order),
+            ae = c("headache", "pain", "headache", "fever", "running nose", 
                            "pain", "headache", "fever", "headache"),
-                    AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
-                    AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"))
+            AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
+            AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"))
                     
 db_N = tibble(treatment = factor(c("Xanomeline", "Placebo"), 
-                                         levels = treatment_order, 
-                                         labels = treatment_order), 
-                      N = c(3, 2))
+                                 levels = treatment_order, 
+                                 labels = treatment_order), 
+              N = c(3, 2))
 
 tidy_multi_ae_label(db, db_N, ae_interested = NULL)
 tidy_multi_ae_label(db, db_N, ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),

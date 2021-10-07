@@ -53,7 +53,7 @@ tidy_population <- function(population_from,
 
   # Define treatment group
   pop[["treatment"]] <- pop[[treatment_var]]
-  pop <- subset(pop, treatment %in% treatment_order)  ## here is the difference between tidy_population()
+  pop <- subset(pop, treatment %in% treatment_order)  
   
   # Define treatment label
   if (!is.null(names(treatment_order))) {
