@@ -29,7 +29,7 @@
 #' population_where = "ITTFL=='Y'",
 #' observation_where = "TRTEMFL=='Y'",
 #' treatment_var = "TRTA",
-#' treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+#' treatment_order =c("MK9999"="Xanomeline High Dose", "Placebo"="Placebo"),
 #' ae_var = "AEDECOD",
 #' ae_grp="AEBODSYS",
 #' display_ci = FALSE,
@@ -37,8 +37,10 @@
 #' display_pval = FALSE,
 #' stratum_var = NULL,
 #' title_text1 = "Participants With Adverse Events",
-#' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
-#' end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
+#' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)",
+#' "(APaT Population)"),
+#' end_notes=c("Every subject is counted a single time for each applicable row 
+#' and column.","Database Cutoff Date: 01SEP2021"),
 #' output_name='s01specific0ae.rtf')
 #' 
 
