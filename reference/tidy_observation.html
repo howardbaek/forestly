@@ -144,7 +144,8 @@ The function filter the <code>adae</code> dataset, and define proper treatment o
   <span class='va'>observation_from</span>,
   <span class='va'>observation_where</span>,
   treatment_var <span class='op'>=</span> <span class='va'>treatment_var</span>,
-  treatment_order <span class='op'>=</span> <span class='va'>treatment_order</span>
+  treatment_order <span class='op'>=</span> <span class='va'>treatment_order</span>,
+  stratum_var <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -169,6 +170,11 @@ It is the source of variables mentioned in
       <th>treatment_order</th>
       <td><p>A vector of character strings that tells the function which rows of the table should be select, only if the values in "treatment" is in this vector.
 It also provide the label names of the treatments after turning them into factors.</p></td>
+    </tr>
+    <tr>
+      <th>stratum_var</th>
+      <td><p>A character string to define the variable of baseline stratum in 'population_from'.
+Only one 'stratum_var' is allowed.</p></td>
     </tr>
     </table>
 
