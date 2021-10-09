@@ -37,9 +37,12 @@
 #'                       rep("FATAL", 3))
 #' )
 #' 
-#' detail1 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
-#' detail2 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
-#' detail3 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
+#' detail1 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
+#' detail2 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
+#' detail3 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
 
 
 tidy_ae_listing <- function(db, listing_var = NULL){

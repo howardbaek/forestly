@@ -95,7 +95,8 @@ The function filter the \code{adae} dataset, and define proper treatment order i
 db <- tidy_observation(observation_from = adae,
  observation_where = NULL,
  treatment_var    = "TRTA",
- treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"))
+ treatment_order  = c("MK9999" = "Xanomeline High Dose", 
+                      "Placebo" = "Placebo"))
 
 
 }
