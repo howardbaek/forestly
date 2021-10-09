@@ -42,7 +42,6 @@
 #' end_notes="Every subject is counted a single time for each applicable row and column.
 #'            Database Cutoff Date: 01SEP2021",
 #' output_name=file.path(tempdir(), 's01specific0ae.rtf'))
-#' stop(dim(c("x", "y")), nrow(c("x","y")), ncol(c("x", "y")))
 specific_ae <- function(population_from,
                         observation_from,
                         population_where ,
