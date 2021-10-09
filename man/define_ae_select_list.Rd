@@ -33,6 +33,7 @@ to filter OUT the NONE-SERIOUS ae and NONE-DRUG-RELATED AE
 \examples{
 define_ae_select_list(ae_criterion = 'AESER != "N"', ae_label = "with serious adverse events")
 define_ae_select_list(ae_criterion = c('AESER != "N"', 'AEREL != "None"'),
-                      ae_label = c("with serious adverse events", "with drug-related adverse events"))
+                      ae_label = c("with serious adverse events", 
+                                   "with drug-related adverse events"))
 
 }

@@ -56,7 +56,8 @@ Generate interactive forest plot with a select list as filter
 library(dplyr)
 library(crosstalk)
 library(crosstool)
-tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
+tb <- data.frame(ae = c("headache", "pain", "fever", "running nose", 
+                        "fever", "headache", "running nose"),
                  ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
                  n_1 = c(40, 50, 30, 50, 30, 30, 50),
                  n_2 = c(20, 30, 10, 50, 10, 10, 30),

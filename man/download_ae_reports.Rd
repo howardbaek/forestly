@@ -31,7 +31,8 @@ Generate download button for ae tables
 }
 \examples{
 \dontrun{
-tbl <- data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
+tbl <- data.frame(ae = c("headache", "pain", "fever", "running nose", 
+                         "fever", "headache", "running nose"),
                   ae_label = c("All", "All", "All", "All", "AESER", "AEREL", "AEREL"),
                   n_1 = c(2, 3, 1, 5, 1, 1, 3),
                   n_2 = c(4, 5, 3, 7, 3, 3, 5),

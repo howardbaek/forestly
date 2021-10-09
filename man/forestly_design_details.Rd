@@ -69,7 +69,8 @@ design_diff_footer: a function to design the footer of the difference between tw
 Define auxiliary functions for the interactive plot
 }
 \examples{
-tb = data.frame(ae = c("headache", "pain", "fever", "running nose", "fever", "headache", "running nose"),
+tb = data.frame(ae = c("headache", "pain", "fever", "running nose", 
+                       "fever", "headache", "running nose"),
                 ae_label = c("ALL", "ALL", "ALL", "ALL", "AESER", "AEREL", "AEREL"),
                 n_1 = c(2, 3, 1, 5, 1, 1, 3),
                 n_2 = c(4, 5, 3, 7, 3, 3, 5),

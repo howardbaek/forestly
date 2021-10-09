@@ -77,7 +77,8 @@ display_pval = FALSE,
 stratum_var = NULL,
 title_text1 = "Participants With Adverse Events",
 subtitle_text = c("(Incidence > 0\% in More or More Treatment Group)","(APaT Population)"),
-end_notes=c("Every subject is counted a single time for each applicable row and column.","Database Cutoff Date: 01SEP2021"),
-output_name='s01specific0ae.rtf')
+end_notes="Every subject is counted a single time for each applicable row and column.
+           Database Cutoff Date: 01SEP2021",
+output_name=file.path(tempdir(), 's01specific0ae.rtf'))
 
 }
