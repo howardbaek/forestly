@@ -22,7 +22,7 @@ test_that("match with prop_test_mn()", {
   xx <- rate_compare_sum(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_x1)
   yy <- prop_test_mn(n0 = my_n0, n1 = my_n1, x0 = my_x0, x1 = my_x1)
   
-  xx_output <- c(xx$r_diff, xx$lower.limit, xx$upper.limit) * 100
+  xx_output <- c(xx$est, xx$lower, xx$upper) * 100
   yy_output <- c(yy$est, yy$lower, yy$upper)
   
   expect_equal(xx_output, yy_output, tolerance = 1e-4)
@@ -44,8 +44,8 @@ test_that("match with rate_compare()", {
   xx <- rate_compare(response~treatment, data = ana)
   yy <- rate_compare_sum(n0 = n0, n1 = n1, x0 = x0, x1 = x1)
   
-  xx_output <- c(xx$r_diff, xx$lower.limit, xx$upper.limit, xx$pval)
-  yy_output <- c(yy$r_diff, yy$lower.limit, yy$upper.limit, yy$pval)
+  xx_output <- c(xx$est, xx$lower, xx$upper, xx$p)
+  yy_output <- c(yy$est, yy$lower, yy$upper, yy$p)
   expect_equal(xx_output, yy_output, tolerance = 1e-4)
   expect_equal(colnames(xx), colnames(yy))
 })
