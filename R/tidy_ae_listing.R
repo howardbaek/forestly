@@ -13,8 +13,11 @@
 #'             SITEID = c("a1", "a1", "b2", "c3", "c3", "c3", "d4", "d4", "e5"),
 #'             SEX = c("F", "F", "M", "F", "F", "F", "M", "M", "F"),
 #'             AGE = c(65, 65, 30, 22, 22, 22, 70, 70, 53),
-#'             RACE = c("Asian", "Asian", "Latino or Hispanic", "WHITE", "WHITE", "WHITE",
-#'                      "BLACK OR AFRICAN AMERICAN", "BLACK OR AFRICAN AMERICAN", "AMERICAN INDIAN OR ALASKA NATIVE"),
+#'             RACE = c("Asian", "Asian", "Latino or Hispanic", 
+#'                      "WHITE", "WHITE", "WHITE",
+#'                      "BLACK OR AFRICAN AMERICAN", 
+#'                      "BLACK OR AFRICAN AMERICAN", 
+#'                      "AMERICAN INDIAN OR ALASKA NATIVE"),
 #'             treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo",
 #'                                  "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"),
 #'                                levels = treatment_order, labels = treatment_order),
@@ -26,13 +29,20 @@
 #'             AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
 #'             AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
 #'             AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"),
-#'             AEACN = c(rep("DOSE NOT CHANGED", 3),  rep("DRUG INTERRUPTED", 3), rep("DRUG WITHDRAWN", 3)),
-#'             AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), rep("RECOVERED/RESOLVED", 3), rep("FATAL", 3))
+#'             AEACN = c(rep("DOSE NOT CHANGED", 3),  
+#'                       rep("DRUG INTERRUPTED", 3), 
+#'                       rep("DRUG WITHDRAWN", 3)),
+#'             AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), 
+#'                       rep("RECOVERED/RESOLVED", 3), 
+#'                       rep("FATAL", 3))
 #' )
 #' 
-#' detail1 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
-#' detail2 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
-#' detail3 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
+#' detail1 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
+#' detail2 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
+#' detail3 <- tidy_ae_listing(db, 
+#'      listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
 
 
 tidy_ae_listing <- function(db, listing_var = NULL){

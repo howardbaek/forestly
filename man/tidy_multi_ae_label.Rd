@@ -42,6 +42,9 @@ db_N = tibble(treatment = factor(c("Xanomeline", "Placebo"),
               N = c(3, 2))
 
 tidy_multi_ae_label(db, db_N, ae_interested = NULL)
-tidy_multi_ae_label(db, db_N, ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
-                                                                    ae_label = c("with serious adverse events","with drug-related adverse events")))
+tidy_multi_ae_label(db, db_N, 
+                    ae_interested = define_ae_select_list(
+                         ae_criterion = c('AESER == "Y"', 'AEREL != "N"'),
+                         ae_label = c("with serious adverse events",
+                                      "with drug-related adverse events")))
 }

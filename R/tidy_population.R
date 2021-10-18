@@ -31,7 +31,8 @@
 #' pop3 <- tidy_population(population_from  = adsl %>% rename(TRTA = TRT01A),
 #'                         population_where = "ITTFL=='Y'",
 #'                         treatment_var    = "TRTA",
-#'                         treatment_order  = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+#'                         treatment_order  = c("MK9999" = "Xanomeline High Dose", 
+#'                                              "Placebo" = "Placebo"),
 #'                         stratum_var      = NULL,
 #'                         baseline_var     = NULL)
 
