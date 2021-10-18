@@ -132,11 +132,11 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 # Download the AE Summary Count Table
 
 ```{r}
-ae_label_download = c("with serious adverse events",
-                      "with drug-related adverse events",
-                      "with toxicity grade 3-5 adverse events",
-                      "discontinued due to an adverse event")
-download_ae_reports(db, ae_label_download)
+# ae_label_download = c("with serious adverse events",
+#                       "with drug-related adverse events",
+#                       "with toxicity grade 3-5 adverse events",
+#                       "discontinued due to an adverse event")
+# download_ae_reports(db, ae_label_download)
 ```
 
 
