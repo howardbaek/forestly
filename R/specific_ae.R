@@ -16,7 +16,7 @@
 #' @param display_pval A logic value indicating whether displaying p-value for the risk difference. Default is FALSE.
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'. Only one 'stratum_var' is allowed.
 #' Default is NULL, for which nonstratified MN analysis will be conducted. If specified, stratified MN analysis will be conducted.
-#' @param title_text1 The part of the text string to appear in the title row.
+#' @param title_text The text string to appear in the title row.
 #' @param subtitle_text A vector of text strings to appear in the subtitle row(s).
 #' @param end_notes A vector of text strings to appear in the footnote.
 #' @param output_name A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.
@@ -37,11 +37,12 @@
 #' display_total = FALSE,
 #' display_pval = FALSE,
 #' stratum_var = NULL,
-#' title_text1 = "Participants With Adverse Events",
+#' title_text = "Participants With Adverse Events by System Organ Class and Preferred Term",
 #' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
 #' end_notes="Every subject is counted a single time for each applicable row and column.
-#'            Database Cutoff Date: 01SEP2021",
-#' output_name=file.path(tempdir(), 's01specific0ae.rtf'))
+#' Database Cutoff Date: 01SEP2021.",
+#' output_name=file.path(tempdir(), 's01specific0ae0soc.rtf'))
+#' 
 specific_ae <- function(population_from,
                         observation_from,
                         population_where ,
@@ -54,16 +55,13 @@ specific_ae <- function(population_from,
                         display_ci = FALSE,
                         display_pval = FALSE,
                         stratum_var = NULL,
-                        title_text1 ,
+                        title_text ,
                         subtitle_text  ,
                         end_notes,
                         output_name){
   
   if (display_ci==TRUE&display_total==TRUE) stop('Cannot display difference estimates and total columns together.')
   if (display_total==FALSE&display_ci==FALSE&display_pval==TRUE) stop('Cannot display p-values without difference estimates.')
-  
-  if (!is.null(ae_grp)) title_text<-paste0(title_text1," by System Organ Class and Preferred Term")
-  if (is.null(ae_grp)) title_text<-title_text1
   
   # Population Level Tidy Data
   pop <- tidy_population(population_from  = population_from,

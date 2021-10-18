@@ -17,7 +17,7 @@ specific_ae(
   display_ci = FALSE,
   display_pval = FALSE,
   stratum_var = NULL,
-  title_text1,
+  title_text,
   subtitle_text,
   end_notes,
   output_name
@@ -49,7 +49,7 @@ specific_ae(
 \item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'. Only one 'stratum_var' is allowed.
 Default is NULL, for which nonstratified MN analysis will be conducted. If specified, stratified MN analysis will be conducted.}
 
-\item{title_text1}{The part of the text string to appear in the title row.}
+\item{title_text}{The text string to appear in the title row.}
 
 \item{subtitle_text}{A vector of text strings to appear in the subtitle row(s).}
 
@@ -75,9 +75,10 @@ display_ci = FALSE,
 display_total = FALSE,
 display_pval = FALSE,
 stratum_var = NULL,
-title_text1 = "Participants With Adverse Events",
+title_text = "Participants With Adverse Events by System Organ Class and Preferred Term",
 subtitle_text = c("(Incidence > 0\% in More or More Treatment Group)","(APaT Population)"),
 end_notes="Every subject is counted a single time for each applicable row and column.
-           Database Cutoff Date: 01SEP2021",
-output_name=file.path(tempdir(), 's01specific0ae.rtf'))
+Database Cutoff Date: 01SEP2021.",
+output_name=file.path(tempdir(), 's01specific0ae0soc.rtf'))
+
 }
