@@ -13,7 +13,7 @@
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
 #' @param display_ci A logic value indicating whether displaying the risk difference, corresponding confidence interval and its p-value. Default is FALSE.
 #' @param display_total A logic value indicating whether displaying the total column. Default is FALSE.
-#' @param title_text1 The part of the text string to appear in the title row.
+#' @param title_text The part of the text string to appear in the title row.
 #' @param subtitle_text A vector of text strings to appear in the subtitle row(s).
 #' @param end_notes A vector of text strings to appear in the footnote.
 #' @param output_name A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table. 
