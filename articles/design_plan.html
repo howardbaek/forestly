@@ -167,13 +167,11 @@ tidy_ae_table(...,
 <li>
 <code>tlf_download</code>: a function to download multiple TLFs in Rmarkdown. Rewrite <code>ae_download_report</code> to allow it use <code>tlf_xxx</code> functions as input.</li>
 </ul>
-<pre><code>tlf &lt;- list()
-tlf[[1]] &lt;- tlf_ae_summary()
-tlf[[2]] &lt;- tlf_ae_specific()  # AESER
-tlf[[3]] &lt;- tlf_ae_specifcc()  # All AE 
-tlf[[4]] &lt;- tlf_ae_listing()   # As needed 
+<pre><code><a href="../reference/tlf_ae_summary.html">tlf_ae_summary()   # generate the AE summary table
+tlf_ae_specific()  # generate the specific AE table
+# tlf[[4]] &lt;- tlf_ae_listing()   # As needed ????
 
-tlf_download(tlf)</code></pre>
+tlf_download()    # download the above tables</a></code></pre>
 </div>
 <div id="main-function-3-forestly" class="section level1">
 <h1 class="hasAnchor">

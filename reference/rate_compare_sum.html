@@ -141,8 +141,8 @@
     <pre class="usage"><span class='fu'>rate_compare_sum</span><span class='op'>(</span>
   <span class='va'>n0</span>,
   <span class='va'>n1</span>,
-  <span class='va'>s0</span>,
-  <span class='va'>s1</span>,
+  <span class='va'>x0</span>,
+  <span class='va'>x1</span>,
   strata <span class='op'>=</span> <span class='cn'>NULL</span>,
   delta <span class='op'>=</span> <span class='fl'>0</span>,
   weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ss"</span>, <span class='st'>"equal"</span>, <span class='st'>"cmh"</span><span class='op'>)</span>,
@@ -157,16 +157,16 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>n0, n1</th>
-      <td><p>the sample size in the control group and experimental group, separately. The length should be the same as the length for <code>s0/s1</code> and <code>strata</code>.</p></td>
+      <td><p>the sample size in the control group and experimental group, separately. The length should be the same as the length for <code>x0/x1</code> and <code>strata</code>.</p></td>
     </tr>
     <tr>
-      <th>s0, s1</th>
+      <th>x0, x1</th>
       <td><p>the number of events in the control group and experimental group, separately. The length should be the same as the length for <code>n0/n1</code> and <code>strata</code>.</p></td>
     </tr>
     <tr>
       <th>strata</th>
       <td><p>a vector of stratum indication to be used in the analysis. If <code>NULL</code> or the length of unique values of <code>strata</code> equals to 1, it is unstratified MN analysis. Otherwise,
-it is stratified MN analysis. The length of <code>strata</code> should be the same as the length for <code>s0/s1</code> and <code>n0/n1</code>.</p></td>
+it is stratified MN analysis. The length of <code>strata</code> should be the same as the length for <code>x0/x1</code> and <code>n0/n1</code>.</p></td>
     </tr>
     <tr>
       <th>delta</th>
@@ -211,19 +211,19 @@ must be one of <code>"one.sided"</code>, or <code>"two.sided"</code>.</p></td>
 <span class='va'>stratum</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>12</span><span class='op'>)</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>12</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, <span class='fl'>25</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>n0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>treatment</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>length</span><span class='op'>)</span>
 <span class='va'>n1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>treatment</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>length</span><span class='op'>)</span>
-<span class='va'>s0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>response</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>sum</span><span class='op'>)</span>
-<span class='va'>s1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>response</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>sum</span><span class='op'>)</span>
+<span class='va'>x0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>response</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'pbo'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>sum</span><span class='op'>)</span>
+<span class='va'>x1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>response</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span>, <span class='va'>stratum</span><span class='op'>[</span><span class='va'>treatment</span><span class='op'>==</span><span class='st'>'exp'</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>sum</span><span class='op'>)</span>
 <span class='va'>strata</span><span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"a"</span>,<span class='st'>"b"</span>,<span class='st'>"c"</span>,<span class='st'>"d"</span><span class='op'>)</span>
 <span class='fu'>rate_compare_sum</span><span class='op'>(</span>
-  <span class='va'>n0</span>,<span class='va'>n1</span>,<span class='va'>s0</span>,<span class='va'>s1</span>,
+  <span class='va'>n0</span>,<span class='va'>n1</span>,<span class='va'>x0</span>,<span class='va'>x1</span>,
   <span class='va'>strata</span>,
   delta <span class='op'>=</span> <span class='fl'>0</span>,
   weight <span class='op'>=</span> <span class='st'>"ss"</span>,
   test <span class='op'>=</span> <span class='st'>"one.sided"</span>,
   alpha <span class='op'>=</span> <span class='fl'>0.05</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt;      r_diff  z_score         pval lower.limit upper.limit
-#&gt; 1 0.3998397 5.712797 5.556727e-09   0.2684383   0.5172779</div></pre>
+</div><div class='output co'>#&gt;         est  z_score            p     lower     upper
+#&gt; 1 0.3998397 5.712797 5.556727e-09 0.2684383 0.5172779</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>tidy_ae_table — tidy_ae_table • forestly</title>
+<title>Specific Adverse Events Table — tlf_ae_specific • forestly</title>
 
 
 <!-- jquery -->
@@ -41,8 +41,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="tidy_ae_table — tidy_ae_table" />
-<meta property="og:description" content="This function is used to obtain AE information ready for visualization" />
+<meta property="og:title" content="Specific Adverse Events Table — tlf_ae_specific" />
+<meta property="og:description" content="The function creates specific adverse events tables by AE term or grouped by AE SOC. The user can select whether displaying
+Total, confidence interval, or P-value columns." />
 
 
 
@@ -129,26 +130,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>tidy_ae_table</h1>
+    <h1>Specific Adverse Events Table</h1>
     
-    <div class="hidden name"><code>tidy_ae_table.Rd</code></div>
+    <div class="hidden name"><code>tlf_ae_specific.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is used to obtain AE information ready for visualization</p>
+    <p>The function creates specific adverse events tables by AE term or grouped by AE SOC. The user can select whether displaying
+Total, confidence interval, or P-value columns.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_ae_table</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>tlf_ae_specific</span><span class='op'>(</span>
   <span class='va'>population_from</span>,
   <span class='va'>observation_from</span>,
-  population_where <span class='op'>=</span> <span class='st'>"ITTFL=='Y'"</span>,
-  observation_where <span class='op'>=</span> <span class='cn'>NULL</span>,
-  treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
-  treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='va'>population_from</span><span class='op'>[[</span><span class='va'>treatment_var</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,
-  ae_var <span class='op'>=</span> <span class='va'>ae_var</span>,
-  ae_interested <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>population_where</span>,
+  <span class='va'>observation_where</span>,
+  <span class='va'>treatment_var</span>,
+  <span class='va'>treatment_order</span>,
+  <span class='va'>ae_var</span>,
+  ae_grp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  display_total <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  display_ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  display_pval <span class='op'>=</span> <span class='cn'>FALSE</span>,
   stratum_var <span class='op'>=</span> <span class='cn'>NULL</span>,
-  listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>observation_from</span><span class='op'>)</span>
+  <span class='va'>title_text</span>,
+  <span class='va'>subtitle_text</span>,
+  <span class='va'>end_notes</span>,
+  <span class='va'>output_name</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -156,7 +164,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>population_from</th>
-      <td><p>A data frame to obtain population level variables.Typically an 'adsl' dataset.</p></td>
+      <td><p>A data frame to obtain population level variables. Typically an 'adsl' dataset.</p></td>
     </tr>
     <tr>
       <th>observation_from</th>
@@ -172,7 +180,7 @@
     </tr>
     <tr>
       <th>treatment_var</th>
-      <td><p>A character string to define the variable of new column called "treatment"</p></td>
+      <td><p>A character string to define the variable of new column called "treatment".</p></td>
     </tr>
     <tr>
       <th>treatment_order</th>
@@ -180,46 +188,69 @@
     </tr>
     <tr>
       <th>ae_var</th>
-      <td><p>A character string to define the variable of new column called ae</p></td>
+      <td><p>A character string to define the variable of new column called aedecod.</p></td>
     </tr>
     <tr>
-      <th>ae_interested</th>
-      <td><p>An object returned by function define_ae_select_list()</p></td>
+      <th>ae_grp</th>
+      <td><p>A character string to define the variable of new column called aebodsys, which is used to group AE terms. Default is NULL, for which no AE grouping is performed.</p></td>
+    </tr>
+    <tr>
+      <th>display_total</th>
+      <td><p>A logic value indicating whether displaying the total column. Default is FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>display_ci</th>
+      <td><p>A logic value indicating whether displaying the risk difference and its corresponding confidence interval. Default is FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>display_pval</th>
+      <td><p>A logic value indicating whether displaying p-value for the risk difference. Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>stratum_var</th>
-      <td><p>A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.</p></td>
+      <td><p>A character string to define the variable of baseline stratum in 'population_from'. Only one 'stratum_var' is allowed.
+Default is NULL, for which nonstratified MN analysis will be conducted. If specified, stratified MN analysis will be conducted.</p></td>
     </tr>
     <tr>
-      <th>listing_var</th>
-      <td><p>A character string to define the criteria to select the column of the table</p></td>
+      <th>title_text</th>
+      <td><p>The text string to appear in the title row.</p></td>
+    </tr>
+    <tr>
+      <th>subtitle_text</th>
+      <td><p>A vector of text strings to appear in the subtitle row(s).</p></td>
+    </tr>
+    <tr>
+      <th>end_notes</th>
+      <td><p>A vector of text strings to appear in the footnote.</p></td>
+    </tr>
+    <tr>
+      <th>output_name</th>
+      <td><p>A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Return a standard adverse event data frame</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='va'>db</span> <span class='op'>&lt;-</span> <span class='fu'>tidy_ae_table</span><span class='op'>(</span>population_from  <span class='op'>=</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>TRTA <span class='op'>=</span> <span class='va'>TRT01A</span><span class='op'>)</span>,
-                    observation_from <span class='op'>=</span> <span class='va'>adae</span>,
-                    population_where <span class='op'>=</span> <span class='cn'>NULL</span>,
-                    observation_where <span class='op'>=</span> <span class='cn'>NULL</span>,
-                    treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
-                    treatment_order <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span>,
-                    ae_var <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
-                    ae_interested <span class='op'>=</span> <span class='fu'><a href='define_ae_select_list.html'>define_ae_select_list</a></span><span class='op'>(</span>
-                             ae_criterion <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'AESER == "Y"'</span>, <span class='st'>'AEREL != "NONE"'</span><span class='op'>)</span>,
-                             ae_label <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"with serious adverse events"</span>,
-                                          <span class='st'>"with drug-related adverse events"</span><span class='op'>)</span><span class='op'>)</span>,
-                    listing_var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"USUBJID"</span>, <span class='st'>"SEX"</span>, <span class='st'>"RACE"</span>, <span class='st'>"AGE"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("treatment", "stratum")</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "treatment"</span></div></pre>
+<span class='fu'>tlf_ae_specific</span><span class='op'>(</span>population_from <span class='op'>=</span> <span class='va'>adsl</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>TRTA<span class='op'>=</span><span class='va'>TRT01A</span><span class='op'>)</span>,
+observation_from <span class='op'>=</span> <span class='va'>adae</span>,
+population_where <span class='op'>=</span> <span class='st'>"ITTFL == 'Y'"</span>,
+observation_where <span class='op'>=</span> <span class='st'>"TRTEMFL == 'Y'"</span>,
+treatment_var <span class='op'>=</span> <span class='st'>"TRTA"</span>,
+treatment_order <span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MK9999"</span> <span class='op'>=</span> <span class='st'>"Xanomeline High Dose"</span>, <span class='st'>"Placebo"</span> <span class='op'>=</span> <span class='st'>"Placebo"</span><span class='op'>)</span>,
+ae_var <span class='op'>=</span> <span class='st'>"AEDECOD"</span>,
+ae_grp <span class='op'>=</span> <span class='st'>"AEBODSYS"</span>,
+display_ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
+display_total <span class='op'>=</span> <span class='cn'>FALSE</span>,
+display_pval <span class='op'>=</span> <span class='cn'>FALSE</span>,
+stratum_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+title_text <span class='op'>=</span> <span class='st'>"Participants With Adverse Events by System Organ Class and Preferred Term"</span>,
+subtitle_text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"(Incidence &gt; 0% in More or More Treatment Group)"</span>,<span class='st'>"(APaT Population)"</span><span class='op'>)</span>,
+end_notes <span class='op'>=</span> <span class='st'>"Every subject is counted a single time for each applicable row and column.
+Database Cutoff Date: 01SEP2021."</span>,
+output_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>'s01specific0ae0soc.rtf'</span><span class='op'>)</span><span class='op'>)</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

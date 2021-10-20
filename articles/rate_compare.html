@@ -223,8 +223,8 @@
 <p>The function computes the risk difference, Z-statistic, p-value given the type of test, and two-sided <span class="math inline">\(100(1-\alpha)\)</span>% confidence interval of difference between two rates.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rate_compare.html">rate_compare</a></span><span class="op">(</span><span class="va">response</span><span class="op">~</span><span class="va">treatment</span>, data <span class="op">=</span> <span class="va">ana</span><span class="op">)</span></code></pre></div>
-<pre><code>##   r_diff  z_score         pval lower.limit upper.limit
-## 1    0.4 5.759051 4.229411e-09    0.269662   0.5165743</code></pre>
+<pre><code>##   est  z_score            p    lower     upper
+## 1 0.4 5.759051 4.229411e-09 0.269662 0.5165743</code></pre>
 </div>
 <div id="stratified-analysis" class="section level2">
 <h2 class="hasAnchor">
@@ -234,8 +234,8 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rate_compare.html">rate_compare</a></span><span class="op">(</span>formula<span class="op">=</span><span class="va">response</span><span class="op">~</span><span class="va">treatment</span>, strata<span class="op">=</span><span class="va">stratum</span>, data <span class="op">=</span> <span class="va">ana</span>,
                      weight<span class="op">=</span><span class="st">"ss"</span><span class="op">)</span></code></pre></div>
-<pre><code>##      r_diff  z_score         pval lower.limit upper.limit
-## 1 0.3998397 5.712797 5.556727e-09   0.2684383   0.5172779</code></pre>
+<pre><code>##         est  z_score            p     lower     upper
+## 1 0.3998397 5.712797 5.556727e-09 0.2684383 0.5172779</code></pre>
 </div>
 </div>
 <div id="reference" class="section level1">
