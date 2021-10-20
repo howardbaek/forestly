@@ -1,4 +1,4 @@
-#' ae_summary_table
+#' tlf_ae_summary
 #' 
 #' This function is used to generate AE summary table
 #'
@@ -24,7 +24,7 @@
 #' @examples
 #' library(dplyr)
 #' library(r2rtf)
-#' ae_summary_table(population_from = adsl %>% rename(TRTA = TRT01A),
+#' tlf_ae_summary(population_from = adsl %>% rename(TRTA = TRT01A),
 #'                 observation_from = adae,
 #'                 population_where = "ITTFL=='Y'",
 #'                 observation_where = NULL,
@@ -44,23 +44,23 @@
 #'                 end_notes ="Every subject is counted a single time for each applicable row and column.",
 #'                 output_name = file.path(tempdir(), 'ae0summary.rtf'))
 
-ae_summary_table <- function(population_from,
-                             observation_from,
-                             population_where,
-                             observation_where,
-                             treatment_var,
-                             treatment_order,
-                             ae_var,
-                             ae_interested = NULL,
-                             stratum_var = NULL,
-                             display_ci = FALSE,
-                             display_total = FALSE,
-                             title_text, 
-                             subtitle_text = NULL,
-                             end_notes,
-                             output_name = "./tlf_ae_summary.rtf"){
+tlf_ae_summary <- function(population_from,
+                           observation_from,
+                           population_where,
+                           observation_where,
+                           treatment_var,
+                           treatment_order,
+                           ae_var,
+                           ae_interested = NULL,
+                           stratum_var = NULL,
+                           display_ci = FALSE,
+                           display_total = FALSE,
+                           title_text, 
+                           subtitle_text = NULL,
+                           end_notes,
+                           output_name = "./tlf_ae_summary.rtf"){
   
-  if (display_ci==TRUE&display_total==TRUE) stop('Cannot display difference estimates and total columns together.')
+  if (display_ci == TRUE & display_total == TRUE) stop('Cannot display difference estimates and total columns together.')
   
   pop <- tidy_population(population_from  = population_from,
                          population_where = population_where,
@@ -114,7 +114,7 @@ ae_summary_table <- function(population_from,
     
     ## Filter the interested AE
     db_ae_interested <- eval(parse(text = paste0("subset(db,", temp_ae_criterion, ")")))
-    res_new <- db_ae_interested %>% group_by(treatment, .drop=FALSE) %>%
+    res_new <- db_ae_interested %>% group_by(treatment, .drop = FALSE) %>%
       summarise(n = n_distinct(USUBJID)) %>%  
       mutate(ae_label = temp_ae_label) %>%    
       left_join(db_N) %>%
@@ -146,14 +146,14 @@ ae_summary_table <- function(population_from,
         alpha = 0.05
       )
       
-      res_new$est <- paste0(round(stat[[1]] *100,1), "(",round(stat[[4]], 1), ", ", round(stat[[5]], 1), ")")
+      res_new$est <- paste0(round(stat[[1]] * 100, 1), "(", round(stat[[4]], 1), ", ", round(stat[[5]], 1), ")")
       res_new$pvalue <- round(stat[[3]], 4)
       res_new$pvalue[is.nan(res_new$pvalue)] = NA
     }  
     
     if(display_total){
       res_new$tot_n <- res_new$n_1 + res_new$n_2
-      res_new$tot_pct <- round((res_new$n_1 + res_new$n_2)/total_N *100, 1)
+      res_new$tot_pct <- round((res_new$n_1 + res_new$n_2)/total_N * 100, 1)
     }
     res_new$n_1[is.na(res_new$n_1)] = 0
     res_new$pct_1[is.na(res_new$pct_1)] = 0.0
@@ -167,24 +167,24 @@ ae_summary_table <- function(population_from,
     mutate(across(pct_1 : pct_2, ~ round(.x, digits = 1))) %>%
     select( ae_label, n_1, pct_1, n_2, pct_2, everything())
   # output rtf file
-  if(display_total==FALSE&display_ci==FALSE){
+  if(display_total == FALSE & display_ci == FALSE){
     tbl_ae_summary %>%
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
-      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," "),
+      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | ")," "),
                            col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
       ) %>%
       r2rtf::rtf_colheader(" | n | (%) | n | (%) ",
-                           border_top = c("",rep("single",3*length(unique(pop$treatment)))),
+                           border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
                            border_bottom = "single",
                            border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
-                           col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))))
+                           col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))))
       ) %>%
       r2rtf::rtf_body(
-        col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment)))),
-        border_left = c("single",rep(c("single",""),length(unique(pop$treatment)))),
-        text_justification = c("l", rep("c", 2*length(unique(pop$treatment))))) %>% 
+        col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment)))),
+        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
+        text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))))) %>% 
       
       r2rtf::rtf_footnote(end_notes) %>%
       r2rtf::rtf_encode() %>%
@@ -196,20 +196,20 @@ ae_summary_table <- function(population_from,
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
-      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Difference in % vs ",levels(pop$treatment)[2]," "),
-                           col_rel_width = c(3, rep(2, length(unique(pop$treatment))),3)
+      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), " | Difference in % vs ", levels(pop$treatment)[2], " "),
+                           col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 3)
       ) %>%
       r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
-                           border_top = c("",rep("single",3*length(unique(pop$treatment)))),
+                           border_top = c("", rep("single", 3 * length(unique(pop$treatment)))),
                            border_bottom = "single",
-                           border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
-                           col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),2,1)
+                           border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
+                           col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1)
       ) %>%
       
       r2rtf::rtf_body(
-        col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment))),2,1),
-        border_left = c("single",rep(c("single",""),length(unique(pop$treatment))),"single","single"),
-        text_justification = c("l", rep("c", 3*length(unique(pop$treatment))))) %>% 
+        col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment))), 2, 1),
+        border_left = c("single", rep(c("single", ""),length(unique(pop$treatment))), "single", "single"),
+        text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))) %>% 
       
       r2rtf::rtf_footnote(end_notes) %>%
       r2rtf::rtf_encode() %>%
@@ -220,20 +220,20 @@ ae_summary_table <- function(population_from,
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
-      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | ")," | Total "),
+      r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), " | Total "),
                            col_rel_width = c(3, rep(2, length(unique(pop$treatment))),2)
       ) %>%
       r2rtf::rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
-                           border_top = c("",rep("single",3*length(unique(pop$treatment)))),
+                           border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
                            border_bottom = "single",
-                           border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
-                           col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))),1,1)
+                           border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
+                           col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 1, 1)
       ) %>%
       
       r2rtf::rtf_body(
-        col_rel_width = c(3,  rep(1, 2*length(unique(pop$treatment))),1,1),
-        border_left = c("single",rep(c("single",""),length(unique(pop$treatment))),"single","single"),
-        text_justification = c("l", rep("c", 3*length(unique(pop$treatment))))) %>% 
+        col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment))), 1, 1),
+        border_left = c("single",rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
+        text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))) %>% 
       
       r2rtf::rtf_footnote(end_notes) %>%
       r2rtf::rtf_encode() %>%

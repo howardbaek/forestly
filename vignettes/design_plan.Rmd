@@ -87,13 +87,11 @@ The output of the `tlf_xxx` functions are `r2rtf` objects created by `rtf_encode
 Rewrite `ae_download_report` to allow it use `tlf_xxx` functions as input. 
 
 ```{}
-tlf <- list()
-tlf[[1]] <- tlf_ae_summary()
-tlf[[2]] <- tlf_ae_specific()  # AESER
-tlf[[3]] <- tlf_ae_specifcc()  # All AE 
-tlf[[4]] <- tlf_ae_listing()   # As needed 
+tlf_ae_summary()   # generate the AE summary table
+tlf_ae_specific()  # generate the specific AE table
+# tlf[[4]] <- tlf_ae_listing()   # As needed ????
 
-tlf_download(tlf)
+tlf_download()    # download the above tables
 ```
 
 # Main function 3: `forestly()`

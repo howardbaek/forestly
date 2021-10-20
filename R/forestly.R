@@ -105,10 +105,9 @@ forestly <- function(db,
   tb_rate_compare <- as.data.frame(do.call(rbind, db$table %>% 
                                                      group_by(ae, ae_label) %>% 
                                                      group_map(~ rate_compare_sum(n0 = .x$N_1, n1 = .x$N_2, 
-                                                                                  s0 = .x$n_1, s1 = .x$n_2, 
+                                                                                  x0 = .x$n_1, x1 = .x$n_2, 
                                                                                   strata = .x$stratum))))
   tb <- cbind(tb_no_stratum, tb_rate_compare) %>% 
-    dplyr::rename(est = r_diff, lower = lower.limit, upper = upper.limit, p = pval) %>% 
     dplyr::mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%  # round into 4 digits
     dplyr::mutate(est = est * 100, lower = lower * 100, upper = upper * 100)       # change 0.1 into 10%
   # tb <- cbind(db$table,

@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+
 This vignette introduces the construction of an interactive forest plot for the review of the Data Monitoring Committee (DMC).
 The interactive features include:
 
@@ -88,10 +89,6 @@ adae$AEACN = sample(c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN"),
 adsl$STRATUMN <- sample(seq(1,3), size = length(adsl$USUBJID), prob = c(0.3, 0.3, 0.4), replace = TRUE)
 
 adae <- adae %>% left_join(data.frame(USUBJID = adsl$USUBJID, STRATUMN = adsl$STRATUMN))
-
-# adae <- adae %>% group_by(USUBJID) %>% 
-#   mutate(STRATUMN = rep(sample(seq(1,3), size = 1, prob = c(0.3, 0.3, 0.4), replace = TRUE), n()))%>%
-#   ungroup()
 ```
 
 
@@ -132,11 +129,48 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
 # Download the AE Summary Count Table
 
 ```{r}
-ae_label_download = c("with serious adverse events",
-                      "with drug-related adverse events",
-                      "with toxicity grade 3-5 adverse events",
-                      "discontinued due to an adverse event")
-download_ae_reports(db, ae_label_download)
+temp_dir <- tempdir()
+tlf_ae_summary(population_from = adsl %>% rename(TRTA = TRT01A),
+               observation_from = adae,
+               population_where = "ITTFL=='Y'",
+               observation_where = NULL,
+               treatment_var = "TRTA",
+               treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+               ae_var = "AEDECOD",
+               ae_interested = define_ae_select_list(ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"',
+                                                                      'Grade3To5Flag == "Y"',
+                                                                      'AEACN == "DRUG WITHDRAWN"'),
+                                                     ae_label = c("with serious adverse events",
+                                                                  "with drug-related adverse events",
+                                                                  "with toxicity grade 3-5 adverse events",
+                                                                  "discontinued due to an adverse event")),
+               stratum_var = "STRATUMN", #stratum_var = NULL,
+               display_ci = TRUE,
+               display_total = FALSE,
+               title_text = "Analysis of Adverse Event Summary",
+               subtitle_text = NULL,
+               end_notes = "Every subject is counted a single time for each applicable row and column.",
+               output_name = file.path(temp_dir, 'ae0summary.rtf'))
+
+tlf_ae_specific(population_from = adsl %>% rename(TRTA=TRT01A),
+                observation_from = adae,
+                population_where = "ITTFL == 'Y'",
+                observation_where = NULL,
+                treatment_var = "TRTA",
+                treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
+                ae_var = "AEDECOD",
+                ae_grp = "AEBODSYS",
+                stratum_var = "STRATUMN", #stratum_var = NULL,
+                display_ci = FALSE,
+                display_total = FALSE,
+                display_pval = FALSE,
+                title_text = "Participants With Adverse Events by System Organ Class and Preferred Term",
+                subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
+                end_notes = "Every subject is counted a single time for each applicable row and column.
+Database Cutoff Date: 01SEP2021.",
+                output_name = file.path(temp_dir, 's01specific0ae0soc.rtf'))
+
+tlf_download(temp_dir)
 ```
 
 
