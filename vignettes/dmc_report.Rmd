@@ -1,0 +1,99 @@
+---
+title: "Interactive Safety Reports for DMC"
+output:
+  flexdashboard::flex_dashboard:
+    theme: 
+      version: 4
+      fg: "#00857C"
+      bg: "#FFFFFF"
+---
+
+<style>
+/* Set font color of inactive tab to green */
+.nav-tabs-custom .nav-tabs > li > a {
+  background-color: #00857C;
+  color: #FFFFFF;
+} 
+
+/* Set font color of active tab to red */
+.nav-tabs-custom .nav-tabs > li.active > a {
+  background-color: #00857C;
+  color: #FFFFFF;
+} 
+
+/* To set color on hover */
+.nav-tabs-custom .nav-tabs > li.active > a:hover {
+  background-color: #00857C;
+  color: #FFFFFF;
+}
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE, 
+  warning = FALSE
+)
+```
+
+```{r setup}
+library(flexdashboard)
+library(reactable)
+library(downloadthis)
+```
+
+Sidebar {.sidebar}
+=======================================================================
+
+### MK9999
+
+```{r}
+download_file("dmc_report.Rmd", button_label = "Download Reports")
+```
+
+Cutoff date: 2021-10-19
+
+Study Information
+=======================================================================
+
+Demographic
+=======================================================================
+
+Adverse Events
+=======================================================================
+
+Row {.tabset .tabset-fade}
+-------------------------------------
+
+### AE Summary 
+
+```{r}
+reactable(iris[1:5,])
+```
+
+### Specific AE
+
+```{r}
+shiny::selectInput(inputId = "ae_filter", 
+                   label = "\n\nAE Filter", 
+                   choices = c("Any AE", "Drug-related AE"))
+```
+
+
+```{r}
+reactable(iris[6:10, ])
+```
+
+### AE of Special Interest 
+
+```{r}
+reactable(iris[11:15,])
+```
+
+Labs
+=======================================================================
+
+Exposure
+=======================================================================
+
