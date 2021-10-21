@@ -57,5 +57,6 @@ db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                              ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
                              ae_label = c("with serious adverse events",
                                           "with drug-related adverse events")),
-                    listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                    listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                           listing_label = c("ID", "Gender", "Race", "Age")))
 }

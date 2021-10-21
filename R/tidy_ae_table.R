@@ -28,7 +28,8 @@
 #'                              ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
 #'                              ae_label = c("with serious adverse events",
 #'                                           "with drug-related adverse events")),
-#'                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+#'                     listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+#'                                                            listing_label = c("ID", "Gender", "Race", "Age")))
 
 tidy_ae_table <- function(population_from,
                           observation_from,
