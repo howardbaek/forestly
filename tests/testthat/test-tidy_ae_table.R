@@ -11,7 +11,7 @@ test_that("tidy_ae_table's 2 variables:'population_from', 'observation_from', mu
                              treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                              ae_var = "AEDECOD",
                              stratum_var = NULL,
-                             listing_var = names(observation_from)), "argument \"population_from\" is missing")
+                             listing_interested = define_ae_listing() ), "argument \"population_from\" is missing")
   expect_error(tidy_ae_table(population_from = adsl %>% rename(TRTA = TRT01A),
                              population_where = "ITTFL=='Y'",
                              observation_where = NULL,
@@ -19,7 +19,7 @@ test_that("tidy_ae_table's 2 variables:'population_from', 'observation_from', mu
                              treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                              ae_var = "AEDECOD",
                              stratum_var = NULL,
-                             listing_var = names(observation_from)), "argument \"observation_from\" is missing")
+                             listing_interested = define_ae_listing()), "argument \"observation_from\" is missing")
 })
 
 # test case 2
@@ -31,7 +31,7 @@ test_that("tidy_ae_table can tidy the data for non-stratum case", {
                                 trt_var, trt_order,
                                 ae_var, ae_instd,
                                 str_var = NULL,
-                                listing_var = names(observation_from)){
+                                listing_interested = define_ae_listing()){
     
     pop <- tidy_population(population_from  = data1,
                            population_where = pop_where,
@@ -52,7 +52,9 @@ test_that("tidy_ae_table can tidy the data for non-stratum case", {
     db <- subset(db, USUBJID %in% pop$USUBJID)
     
     # Select the variables to be listed in the detailed listing
-    db_listing <- tidy_ae_listing(db, listing_var)
+    db_listing <- tidy_ae_listing(db, 
+                                  listing_var = listing_interested$listing_var,
+                                  listing_label = listing_interested$listing_label)
     
     # count the sample size of each arm
     db_N <- dplyr::count(pop, treatment, stratum, name = "N")
@@ -123,7 +125,8 @@ test_that("tidy_ae_table can tidy the data for non-stratum case", {
                      treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                      ae_var = "AEDECOD",
                      ae_interested = define_ae_select_list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
-                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                     listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                            listing_label = c("ID", "Gender", "Race", "Age")) )
   b <- expectation_table(data1 = adsl %>% rename(TRTA = TRT01A),
                          data2 = adae,
                          pop_where = "ITTFL=='Y'",
@@ -133,7 +136,8 @@ test_that("tidy_ae_table can tidy the data for non-stratum case", {
                          trt_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                          ae_var = "AEDECOD",
                          ae_instd = list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
-                         listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                         listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                                listing_label = c("ID", "Gender", "Race", "Age")))
   expect_equal(a$sample_size, b$sample_size)
   expect_equal(a$treatment_order, b$treatment_order)
   expect_equal(a$table, b$table)
@@ -155,7 +159,7 @@ test_that("tidy_ae_table can tidy the data for stratum case", {
                                 trt_var, trt_order,
                                 ae_var, ae_instd,
                                 str_var = NULL,
-                                listing_var = names(observation_from)){
+                                listing_instd = NULL){
     
     pop <- tidy_population(population_from  = data1,
                            population_where = pop_where,
@@ -176,7 +180,9 @@ test_that("tidy_ae_table can tidy the data for stratum case", {
     db <- subset(db, USUBJID %in% pop$USUBJID)
     
     # Select the variables to be listed in the detailed listing
-    db_listing <- tidy_ae_listing(db, listing_var)
+    db_listing <- tidy_ae_listing(db, 
+                                  listing_var = listing_instd$listing_var,
+                                  listing_label = listing_instd$listing_label)
     
     # count the sample size of each arm
     db_N <- dplyr::count(pop, treatment, stratum, name = "N")
@@ -247,7 +253,8 @@ test_that("tidy_ae_table can tidy the data for stratum case", {
                      treatment_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                      ae_var = "AEDECOD",
                      ae_interested = define_ae_select_list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
-                     listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                     listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                     listing_label = c("ID", "Gender", "Race", "Age")))
   b <- expectation_table(data1 = adsl %>% rename(TRTA = TRT01A),
                          data2 = adae,
                          pop_where = "ITTFL=='Y'",
@@ -257,7 +264,8 @@ test_that("tidy_ae_table can tidy the data for stratum case", {
                          trt_order = c("MK9999" = "Xanomeline High Dose", "Placebo" = "Placebo"),
                          ae_var = "AEDECOD",
                          ae_instd = list(ae_criterion = 'AESER == "Y"', ae_label = "with serious adverse events"),
-                         listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                         listing_instd = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                         listing_label = c("ID", "Gender", "Race", "Age")))
   expect_equal(a$sample_size, b$sample_size)
   expect_equal(a$treatment_order, b$treatment_order)
   expect_equal(a$table, b$table)

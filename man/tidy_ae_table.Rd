@@ -14,7 +14,7 @@ tidy_ae_table(
   ae_var = ae_var,
   ae_interested = NULL,
   stratum_var = NULL,
-  listing_var = names(observation_from)
+  listing_interested = define_ae_listing()
 )
 }
 \arguments{

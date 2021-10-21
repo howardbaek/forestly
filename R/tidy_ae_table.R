@@ -39,7 +39,7 @@ tidy_ae_table <- function(population_from,
                           ae_var = ae_var,
                           ae_interested = NULL,
                           stratum_var = NULL,
-                          listing_var = names(observation_from)){
+                          listing_interested = define_ae_listing()){
 
   # Population Level Tidy Data
   pop <- tidy_population(population_from  = population_from,
@@ -61,7 +61,9 @@ tidy_ae_table <- function(population_from,
   db <- subset(db, USUBJID %in% pop$USUBJID)
   
   # Select the variables to be listed in the detailed listing
-  db_listing <- tidy_ae_listing(db, listing_var)
+  db_listing <- tidy_ae_listing(db, 
+                                listing_var = listing_interested$listing_var,
+                                listing_label = listing_interested$listing_label)
   
   # count the sample size of each arm
   db_N <- dplyr::count(pop, treatment, stratum, name = "N")

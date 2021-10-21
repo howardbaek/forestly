@@ -32,7 +32,8 @@ Suggests:
     reactR,
     ggplot2,
     crosstool,
-    tibble
+    tibble,
+    stringr
 Depends: 
     R (>= 3.6)
 Remotes: bwlewis/crosstool
