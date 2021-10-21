@@ -9,9 +9,9 @@
 #' @param treatment_var A character string to define the variable of new column called "treatment"
 #' @param treatment_order A character vector to define the treatment display order and label.
 #' @param ae_var A character string to define the variable of new column called ae
-#' @param ae_interested An object returned by function define_ae_select_list()
 #' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
-#' @param listing_var  A character string to define the criteria to select the column of the table
+#' @param ae_interested An object returned by function define_ae_select_list()
+#' @param listing_interested  An objected return by function define_ae_listing()
 #'
 #' @return Return a standard adverse event data frame
 #' @export
