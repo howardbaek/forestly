@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' temp_dir <- tempdir()
 #' tlf_ae_summary(population_from = adsl %>% rename(TRTA = TRT01A),
 #'                observation_from = adae,
