@@ -20,7 +20,8 @@ tlf_ae_specific(
   title_text,
   subtitle_text,
   end_notes,
-  output_name
+  output_report = file.path(tempdir(), "ae0specific.rtf"),
+  output_dataframe = file.path(tempdir(), "ae0specific.RData")
 )
 }
 \arguments{
@@ -55,7 +56,11 @@ Default is NULL, for which nonstratified MN analysis will be conducted. If speci
 
 \item{end_notes}{A vector of text strings to appear in the footnote.}
 
-\item{output_name}{A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.}
+\item{output_report}{A text string to output the rtf table, can be specified with the path together.
+If no path specified, the default path will be used to save the table.}
+
+\item{output_dataframe}{A text string to output the rtf R object, like "./ae_summary.Rdata".
+It can be specified with the path together. If no path specified, the default path will be used to save the table.}
 }
 \description{
 The function creates specific adverse events tables by AE term or grouped by AE SOC. The user can select whether displaying
@@ -63,6 +68,7 @@ Total, confidence interval, or P-value columns.
 }
 \examples{
 library(dplyr)
+temp_dir <- tempdir()
 tlf_ae_specific(population_from = adsl \%>\% rename(TRTA=TRT01A),
 observation_from = adae,
 population_where = "ITTFL == 'Y'",
@@ -79,6 +85,6 @@ title_text = "Participants With Adverse Events by System Organ Class and Preferr
 subtitle_text = c("(Incidence > 0\% in More or More Treatment Group)","(APaT Population)"),
 end_notes = "Every subject is counted a single time for each applicable row and column.
 Database Cutoff Date: 01SEP2021.",
-output_name = file.path(tempdir(), 's01specific0ae0soc.rtf'))
-
+output_report = file.path(temp_dir, 'ae0specific.rtf'),
+output_dataframe = file.path(temp_dir, 'ae0specific.RData'))
 }

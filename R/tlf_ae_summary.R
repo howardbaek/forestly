@@ -10,14 +10,19 @@
 #' @param treatment_order A character vector to define the treatment display order and label.
 #' @param ae_var A character string to define the variable of new column called ae
 #' @param ae_interested An object returned by function define_ae_select_list()
-#' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.
-#' @param display_ci A logic value indicating whether displaying the risk difference, corresponding confidence interval and its p-value. Default is FALSE.
-#' @param display_total A logic value indicating whether displaying the total column. Default is FALSE.
+#' @param stratum_var A character string to define the variable of baseline stratum in 'population_from'.
+#'                    Only one 'stratum_var' is allowed.
+#' @param display_ci A logic value indicating whether displaying the risk difference, corresponding confidence interval and its p-value. 
+#'                   Default is FALSE.
+#' @param display_total A logic value indicating whether displaying the total column. 
+#'                      Default is FALSE.
 #' @param title_text The part of the text string to appear in the title row.
 #' @param subtitle_text A vector of text strings to appear in the subtitle row(s).
 #' @param end_notes A vector of text strings to appear in the footnote.
-#' @param output_name A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table. 
-#'
+#' @param output_report A text string to output the rtf table, can be specified with the path together. 
+#'                      If no path specified, the default path will be used to save the table. 
+#' @param output_dataframe A text string to output the rtf R object, like "./ae_summary.Rdata". 
+#'                         It can be specified with the path together. If no path specified, the default path will be used to save the table. 
 #' @return Return a table for summary of AE
 #' @export
 #' @importFrom dplyr mutate count summarise select group_by left_join n_distinct ungroup across union_all starts_with
@@ -42,7 +47,8 @@
 #'                 title_text = "Analysis of Adverse Event Summary", 
 #'                 subtitle_text = NULL,
 #'                 end_notes ="Every subject is counted a single time for each applicable row and column.",
-#'                 output_name = file.path(tempdir(), 'ae0summary.rtf'))
+#'                 output_report = file.path(tempdir(), 'ae0summary.rtf'),
+#'                 output_dataframe = file.path(tempdir(), 'ae0summary.RData'))
 
 tlf_ae_summary <- function(population_from,
                            observation_from,
@@ -58,7 +64,8 @@ tlf_ae_summary <- function(population_from,
                            title_text, 
                            subtitle_text = NULL,
                            end_notes,
-                           output_name = "./tlf_ae_summary.rtf"){
+                           output_report = "./tlf_ae_summary.rtf",
+                           output_dataframe = "./tlf_ae_summary.RData"){
   
   if (display_ci == TRUE & display_total == TRUE) stop('Cannot display difference estimates and total columns together.')
   
@@ -138,7 +145,7 @@ tlf_ae_summary <- function(population_from,
       x1 <- res_new$n_2
       
       stat <- rate_compare_sum(
-        n0,n1,x0,x1,
+        n0, n1, x0, x1,
         delta = 0,
         weight = "ss",
         strata = stratum_var,
@@ -166,9 +173,10 @@ tlf_ae_summary <- function(population_from,
   tbl_ae_summary <- res %>%
     mutate(across(pct_1 : pct_2, ~ round(.x, digits = 1))) %>%
     select( ae_label, n_1, pct_1, n_2, pct_2, everything())
+  
   # output rtf file
   if(display_total == FALSE & display_ci == FALSE){
-    tbl_ae_summary %>%
+    x<- tbl_ae_summary %>%
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
@@ -184,15 +192,24 @@ tlf_ae_summary <- function(population_from,
       r2rtf::rtf_body(
         col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment)))),
         border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
-        text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))))) %>% 
+        text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))))
+        ) %>% 
+      r2rtf::rtf_footnote(end_notes) 
+    
+    if(!is.null(output_report)){
+      x %>% 
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_report)
+    }
+    
+    if(!is.null(output_dataframe)){
+      save(x, file = output_dataframe)
+    }
       
-      r2rtf::rtf_footnote(end_notes) %>%
-      r2rtf::rtf_encode() %>%
-      r2rtf::write_rtf(output_name)
   }
   
   if(display_ci){
-    tbl_ae_summary %>%
+    x <- tbl_ae_summary %>%
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
@@ -210,13 +227,20 @@ tlf_ae_summary <- function(population_from,
         col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment))), 2, 1),
         border_left = c("single", rep(c("single", ""),length(unique(pop$treatment))), "single", "single"),
         text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))) %>% 
-      
-      r2rtf::rtf_footnote(end_notes) %>%
-      r2rtf::rtf_encode() %>%
-      r2rtf::write_rtf(output_name)
+      r2rtf::rtf_footnote(end_notes) 
+    
+    if(!is.null(output_report)){
+      x %>% r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_report)
+    }
+    
+    if(!is.null(output_dataframe)){
+      save(x, file = output_dataframe)
+    }
   }
+  
   if(display_total){
-    tbl_ae_summary %>%
+    x <- tbl_ae_summary %>%
       r2rtf::rtf_title(title_text, 
                        subtitle_text) %>%
       
@@ -235,9 +259,17 @@ tlf_ae_summary <- function(population_from,
         border_left = c("single",rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
         text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))) %>% 
       
-      r2rtf::rtf_footnote(end_notes) %>%
-      r2rtf::rtf_encode() %>%
-      r2rtf::write_rtf(output_name)
+      r2rtf::rtf_footnote(end_notes) 
+    
+    if(!is.null(output_report)){
+      x %>% 
+        r2rtf::rtf_encode() %>%
+        r2rtf::write_rtf(output_report)
+    }
+    
+    if(!is.null(output_dataframe)){
+      save(x, file = output_dataframe)
+    }
   }
   
 }

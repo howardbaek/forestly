@@ -19,12 +19,16 @@
 #' @param title_text The text string to appear in the title row.
 #' @param subtitle_text A vector of text strings to appear in the subtitle row(s).
 #' @param end_notes A vector of text strings to appear in the footnote.
-#' @param output_name A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.
+#' @param output_report A text string to output the rtf table, can be specified with the path together. 
+#'                      If no path specified, the default path will be used to save the table. 
+#' @param output_dataframe A text string to output the rtf R object, like "./ae_summary.Rdata". 
+#'                         It can be specified with the path together. If no path specified, the default path will be used to save the table. 
 #'
 #' @export
 #'
 #' @examples
 #' library(dplyr)
+#' temp_dir <- tempdir()
 #' tlf_ae_specific(population_from = adsl %>% rename(TRTA=TRT01A),
 #' observation_from = adae,
 #' population_where = "ITTFL == 'Y'",
@@ -41,8 +45,9 @@
 #' subtitle_text = c("(Incidence > 0% in More or More Treatment Group)","(APaT Population)"),
 #' end_notes = "Every subject is counted a single time for each applicable row and column.
 #' Database Cutoff Date: 01SEP2021.",
-#' output_name = file.path(tempdir(), 's01specific0ae0soc.rtf'))
-#' 
+#' output_report = file.path(temp_dir, 'ae0specific.rtf'),
+#' output_dataframe = file.path(temp_dir, 'ae0specific.RData'))
+
 tlf_ae_specific <- function(population_from,
                            observation_from,
                            population_where ,
@@ -58,7 +63,8 @@ tlf_ae_specific <- function(population_from,
                            title_text ,
                            subtitle_text,
                            end_notes,
-                           output_name){
+                           output_report = file.path(tempdir(), 'ae0specific.rtf'),
+                           output_dataframe = file.path(tempdir(), 'ae0specific.RData')){
   
   if (display_ci == TRUE & display_total == TRUE) stop('Cannot display difference estimates and total columns together.')
   if (display_total == FALSE & display_ci == FALSE & display_pval == TRUE) stop('Cannot display p-values without difference estimates.')
@@ -70,8 +76,8 @@ tlf_ae_specific <- function(population_from,
                          treatment_order  = treatment_order,
                          stratum_var      = stratum_var,
                          baseline_var     = NULL)
-  pop[["trt_label"]] <- ifelse(pop$treatment == names(treatment_order)[1],"exp","pbo")
-  pop[["trt_label"]] <- factor(pop[["trt_label"]], levels = c("exp","pbo"))
+  pop[["trt_label"]] <- ifelse(pop$treatment == names(treatment_order)[1], "exp", "pbo")
+  pop[["trt_label"]] <- factor(pop[["trt_label"]], levels = c("exp", "pbo"))
   
   # Select the Desired Observation
   db <- tidy_observation(observation_from = observation_from,
@@ -93,7 +99,9 @@ tlf_ae_specific <- function(population_from,
   # count the sample size of each arm and total
   pop_n <-  sapply(split(pop$trt_label, pop$trt_label), length)
   
-  db_n <- sapply(split(unique(db[, c("USUBJID","trt_label")])$trt_label, unique(db[,c("USUBJID", "trt_label")])$trt_label), length)
+  db_n <- sapply(split(unique(db[, c("USUBJID","trt_label")])$trt_label, 
+                       unique(db[,c("USUBJID", "trt_label")])$trt_label), 
+                 length)
   db_prop <- data.frame(t(format(round(db_n / pop_n * 100, 1), nsmall = 1)))
   names(db_prop) <- paste(names(db_n),"_CI",sep="")
   db_out <- data.frame(data.frame(t(db_n)),db_prop)
@@ -109,7 +117,7 @@ tlf_ae_specific <- function(population_from,
   
   pop_db <- merge(pop,db,by = c('USUBJID', "trt_label", "stratum", "treatment"))
   pop_n_str <- sapply(split(pop$trt_label, paste(pop$trt_label, pop$stratum, sep = "_")), length)
-  pop_db$trt_str <- factor(paste(pop_db$trt_label, pop_db$stratum, sep = "_"),levels = names(pop_n_str))
+  pop_db$trt_str <- factor(paste(pop_db$trt_label, pop_db$stratum, sep = "_"), levels = names(pop_n_str))
   strata_level <- sub(".*_", "", names(pop_n_str))[1 : length(unique(pop$stratum))]     
   uni <- unique(pop_db[,c("USUBJID", "trt_label", "stratum", "trt_str")])
   db_n_str <- sapply(split(uni$trt_label, uni$trt_str), length)
@@ -132,24 +140,30 @@ tlf_ae_specific <- function(population_from,
                                    strata = strata_level,
                                    delta = 0, weight = "ss",
                                    test = "one.sided", alpha = 0.05))
-  estimate <- unlist(output[,1])
-  pval <- format(round(unlist(output[,3]),3), nsmall = 3)
-  lower <- unlist(output[,4])
-  upper <- unlist(output[,5])
-  est <- paste(format(round(estimate*100,1), nsmall = 1)," (",format(round(lower * 100, 1), nsmall = 1),",",format(round(upper*100,1), nsmall = 1),")", sep = "")
+  estimate <- unlist(output[, 1])
+  pval <- format(round(unlist(output[, 3]), 3), nsmall = 3)
+  lower <- unlist(output[, 4])
+  upper <- unlist(output[, 5])
+  est <- paste(format(round(estimate * 100, 1), nsmall = 1),
+               " (",
+               format(round(lower * 100, 1), nsmall = 1),
+               ",",
+               format(round(upper * 100, 1), nsmall = 1), 
+               ")", 
+               sep = "")
   t_pop[["est"]] <- c(NA, est)
   t_pop[["pval"]] <- c(NA, pval)
   t_pop[["total"]] <- t_pop[["exp"]] + t_pop[["pbo"]]
   
-  t_pop$total_CI <- c(NA,format(round(t_pop$total[-1] / t_pop$total[1] * 100), nsmall = 1))
+  t_pop$total_CI <- c(NA, format(round(t_pop$total[-1] / t_pop$total[1] * 100), nsmall = 1))
   
   # count the ae count 
   ##count the soc
   if (!is.null(ae_grp)){
-    soc_unique <- unique(pop_db[,c("USUBJID","trt_label","aebodsys")])
+    soc_unique <- unique(pop_db[, c("USUBJID","trt_label","aebodsys")])
     soc_n <- data.frame(unclass(table(soc_unique$aebodsys, soc_unique$trt_label)))
-    soc_prop <- data.frame(format(round(soc_n/pop_n*100,1),nsmall=1))
-    names(soc_prop) <- paste(names(soc_prop),"_CI", sep = "")
+    soc_prop <- data.frame(format(round(soc_n/pop_n * 100, 1), nsmall = 1))
+    names(soc_prop) <- paste(names(soc_prop), "_CI", sep = "")
     soc <- data.frame(soc_n,soc_prop)
     soc$aedecod <- row.names(soc_n)
     soc$aebodsys <- row.names(soc_n)
@@ -163,12 +177,12 @@ tlf_ae_specific <- function(population_from,
   ##count the specific ae 
   ae_unique <- unique(db[,c("USUBJID","trt_label","aedecod","aebodsys")])
   ae_n <- data.frame(unclass(table(ae_unique$aedecod, ae_unique$trt_label)))
-  ae_prop <- data.frame(format(round(ae_n/pop_n*100,1), nsmall = 1))
-  names(ae_prop) <- paste(names(ae_prop),"_CI", sep = "")
+  ae_prop <- data.frame(format(round(ae_n/pop_n * 100, 1), nsmall = 1))
+  names(ae_prop) <- paste(names(ae_prop), "_CI", sep = "")
   ae <- data.frame(ae_n, ae_prop)
   ae$aedecod <- row.names(ae)
   rownames(ae) <- NULL
-  ae <- merge(unique(db[,c("aedecod","aebodsys")]), ae, by="aedecod")
+  ae <- merge(unique(db[, c("aedecod", "aebodsys")]), ae, by = "aedecod")
   ae$order <- 1
   
   ##merge soc and specific ae
@@ -181,7 +195,12 @@ tlf_ae_specific <- function(population_from,
   
   ##calculate CI with or with stratified
   if (is.null(stratum_var)){
-    output <- sapply(1:(dim(soc_ae)[1]), function(i) rate_compare_sum(n0 = pop_n[["pbo"]], n1 = pop_n[["exp"]], x0 = soc_ae[["pbo"]][i], x1 = soc_ae[["exp"]][i], strata = strata_level, delta = 0,weight = "ss", test = "one.sided",alpha = 0.05))
+    output <- sapply(1:(dim(soc_ae)[1]), 
+                     function(i) rate_compare_sum(n0 = pop_n[["pbo"]], n1 = pop_n[["exp"]], 
+                                                  x0 = soc_ae[["pbo"]][i], x1 = soc_ae[["exp"]][i], 
+                                                  strata = strata_level, 
+                                                  delta = 0,
+                                                  weight = "ss", test = "one.sided", alpha = 0.05))
   }
   if (!is.null(stratum_var)){
     ##count the soc by stratum
@@ -201,26 +220,38 @@ tlf_ae_specific <- function(population_from,
     ae_n$order <- 1
     
     soc_ae_str <- rbind(soc_n,ae_n)
-    soc_ae_str <- subset(soc_ae_str[order(soc_ae_str$aebodsys, soc_ae_str$order, soc_ae_str$aedecod),], select = -order)
+    soc_ae_str <- subset(soc_ae_str[order(soc_ae_str$aebodsys, soc_ae_str$order, soc_ae_str$aedecod),], 
+                         select = -order)
     
     ae_s0 <- soc_ae_str[grepl(levels(pop_db$trt_label)[2], names(soc_ae_str))]
     ae_s1 <- soc_ae_str[grepl(levels(pop_db$trt_label)[1], names(soc_ae_str))]
     
-    output<-sapply(1:(dim(soc_ae)[1]), function(i) rate_compare_sum(n0 = pop_n0, n1 = pop_n1, x0 = unlist(ae_s0[i,]), x1 = unlist(ae_s1[i,]), strata = strata_level, delta = 0, weight = "ss", test = "one.sided", alpha = 0.05))
+    output<-sapply(1:(dim(soc_ae)[1]), 
+                   function(i) rate_compare_sum(n0 = pop_n0, n1 = pop_n1, 
+                                                x0 = unlist(ae_s0[i,]), x1 = unlist(ae_s1[i,]), 
+                                                strata = strata_level, 
+                                                delta = 0, 
+                                                weight = "ss", test = "one.sided", alpha = 0.05))
     
   }
-  estimate <- unlist(output[1,])
-  pval <- format(round(unlist(output[3,]),3), nsmall = 3)
-  lower <- unlist(output[4,])
-  upper <-unlist(output[5,])
-  est <- paste(format(round(estimate*100,1), nsmall = 1)," (", format(round(lower * 100, 1), nsmall = 1), ",", format(round(upper * 100, 1), nsmall = 1), ")", sep = "")
+  estimate <- unlist(output[1, ])
+  pval <- format(round(unlist(output[3, ]), 3), nsmall = 3)
+  lower <- unlist(output[4, ])
+  upper <-unlist(output[5, ])
+  est <- paste(format(round(estimate * 100, 1), nsmall = 1),
+               " (", 
+               format(round(lower * 100, 1), nsmall = 1), 
+               ",", 
+               format(round(upper * 100, 1), nsmall = 1), 
+               ")", 
+               sep = "")
   soc_ae$est <- est
   soc_ae$pval <- pval
   
   tbl_ae_spec <-  dplyr::bind_rows(t_pop,
                                    data.frame(aebodsys = "pop"), 
                                    soc_ae) %>% 
-    dplyr::mutate(aedecod = ifelse(aedecod == "Participants in population" | aedecod == aebodsys , 
+    dplyr::mutate(aedecod = ifelse(aedecod == "Participants in population" | aedecod == aebodsys, 
                                    aedecod, paste0("  ", aedecod)))
 
   #prepare reporting data
@@ -228,7 +259,7 @@ tlf_ae_specific <- function(population_from,
     tbl_ae_spec <- tbl_ae_spec[, c(6,5,1,3,2,4)]
   }
   if (display_total == TRUE){
-    tbl_ae_spec <- tbl_ae_spec[,c(6,5,1,3,2,4,9,10)]
+    tbl_ae_spec <- tbl_ae_spec[, c(6,5,1,3,2,4,9,10)]
   }
   if (display_ci == TRUE){
     if (display_pval == TRUE) tbl_ae_spec <- tbl_ae_spec[, c(6,5,1,3,2,4,7,8)]
@@ -247,211 +278,271 @@ tlf_ae_specific <- function(population_from,
   #format output
   if (display_total == FALSE & display_ci == FALSE){
     if (!is.null(ae_grp)){
-      tbl_ae_spec %>% 
-        r2rtf::rtf_title(title_text, subtitle_text) %>%
-        
+      x <- tbl_ae_spec %>% 
+        r2rtf::rtf_title(title_text, subtitle_text
+                         ) %>%
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse=" | ")," "),
-                      col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
-        ) %>%
+                             col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
+                             ) %>%
         r2rtf::rtf_colheader(" | n | (%) | n | (%) ",
-                      border_top = c("",rep("single", 2 * length(unique(pop$treatment)))),
-                      border_bottom = "single",
-                      border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
-                      col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))))
-        ) %>%
-        
-        r2rtf::rtf_body(
-          col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment)))),
-          border_left = c("single", "single", rep(c("single",""), length(unique(pop$treatment)))),
-          text_justification = c("l","l", rep("c", 2 * length(unique(pop$treatment)))),
-          text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
-          page_by = "aebodsys", 
-          pageby_row = "first_row") %>% 
-        r2rtf::rtf_footnote(end_notes) %>%
-        r2rtf::rtf_encode() %>%
-        r2rtf::write_rtf(output_name)
+                             border_top = c("",rep("single", 2 * length(unique(pop$treatment)))),
+                             border_bottom = "single",
+                             border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
+                             col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))))
+                             ) %>%
+        r2rtf::rtf_body(col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment)))),
+                        border_left = c("single", "single", rep(c("single",""), length(unique(pop$treatment)))),
+                        text_justification = c("l","l", rep("c", 2 * length(unique(pop$treatment)))),
+                        text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
+                        page_by = "aebodsys", 
+                        pageby_row = "first_row"
+                        ) %>% 
+        r2rtf::rtf_footnote(end_notes)
+      
+      if(!is.null(output_report)){
+        x %>% 
+          r2rtf::rtf_encode() %>% 
+          r2rtf::write_rtf(output_report)
+      }
+      
+      if(!is.null(output_dataframe)){
+        save(x, file = output_dataframe)
+      }
     }
+    
     if (is.null(ae_grp)){
-      tbl_ae_spec  %>% dplyr::select(-aebodsys)%>%
+      x <- tbl_ae_spec  %>% 
+        dplyr::select(-aebodsys) %>%
         r2rtf::rtf_title(title_text, subtitle_text) %>%
-        
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | ")," "),
-                      col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
-        ) %>%
+                             col_rel_width = c(3, rep(2, length(unique(pop$treatment))))
+                             ) %>%
         r2rtf::rtf_colheader(" | n | (%) | n | (%) ",
-                      border_top = c("",rep("single",2*length(unique(pop$treatment)))),
-                      border_bottom = "single",
-                      border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
-                      col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))))
-        ) %>%
-        
-        r2rtf::rtf_body(
-          col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment)))),
-          border_left = c("single", rep(c("single",""), length(unique(pop$treatment)))),
-          text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))))) %>% 
-        
-        r2rtf::rtf_footnote(end_notes) %>%
-        r2rtf::rtf_encode() %>%
-        r2rtf::write_rtf(output_name)
+                             border_top = c("", rep("single", 2 * length(unique(pop$treatment)))),
+                             border_bottom = "single",
+                             border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
+                             col_rel_width = c(3, rep(1, 2*length(unique(pop$treatment))))
+                             ) %>%
+        r2rtf::rtf_body(col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment)))),
+                        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment)))),
+                        text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))))
+                        ) %>% 
+        r2rtf::rtf_footnote(end_notes) 
+      
+      if(!is.null(output_report)){
+        x %>% 
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_report)
+      }
+      
+      if(!is.null(output_dataframe)){
+        save(x, file = output_dataframe)
+      }
     }
   }
+  
+  
   if (display_ci == TRUE){
     if (display_pval == TRUE){
       if (!is.null(ae_grp)){
-        tbl_ae_spec %>% 
+        x <- tbl_ae_spec %>% 
           r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), " | Difference in % vs ", levels(pop$treatment)[2], " "),
-                        col_rel_width = c(3, rep(2, length(unique(pop$treatment))),3)
-          ) %>%
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), 
+                                      " | Difference in % vs ", levels(pop$treatment)[2], " "),
+                               col_rel_width = c(3, rep(2, length(unique(pop$treatment))),3)
+                               ) %>%
           r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
-                        border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
-                        border_bottom = "single",
-                        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
-                        col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1)
-          ) %>%
-          
-          r2rtf::rtf_body(
-            col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment))), 2, 1),
-            border_left = c("single","single",rep(c("single",""), length(unique(pop$treatment))), "single", "single"),
-            text_justification = c("l", "l", rep("c", 3 * length(unique(pop$treatment)))),
-            text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
-            page_by = "aebodsys", 
-            pageby_row = "first_row") %>% 
-          
-          r2rtf::rtf_footnote(end_notes) %>%
-          r2rtf::rtf_encode() %>%
-          r2rtf::write_rtf(output_name)
+                               border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
+                               border_bottom = "single",
+                               border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single","single"),
+                               col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1)
+                               ) %>%
+          r2rtf::rtf_body(col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment))), 2, 1),
+                          border_left = c("single","single",rep(c("single",""), length(unique(pop$treatment))), "single", "single"),
+                          text_justification = c("l", "l", rep("c", 3 * length(unique(pop$treatment)))),
+                          text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
+                          page_by = "aebodsys", 
+                          pageby_row = "first_row") %>% 
+          r2rtf::rtf_footnote(end_notes) 
+        
+        if(!is.null(output_report)){
+          x %>% 
+            r2rtf::rtf_encode() %>%
+            r2rtf::write_rtf(output_report)
+        }
+        
+        if(!is.null(output_dataframe)){
+          save(x, file = output_dataframe)
+        }
       }
+      
       if (is.null(ae_grp)){
-        tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
+        x <- tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
           r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), " | Difference in % vs ", levels(pop$treatment)[2], " "),
-                        col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 3)
-          ) %>%
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | "), 
+                                      " | Difference in % vs ", levels(pop$treatment)[2], " "),
+                               col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 3)
+                               ) %>%
           r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) | p-value",
-                        border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
-                        border_bottom = "single",
-                        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
-                        col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1)
-          ) %>%
-          
-          r2rtf::rtf_body(
-            col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1),
-            border_left = c("single", rep(c("single", ""),length(unique(pop$treatment))), "single", "single"),
-            text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))) %>% 
-          
-          r2rtf::rtf_footnote(end_notes) %>%
-          r2rtf::rtf_encode() %>%
-          r2rtf::write_rtf(output_name)
+                               border_top = c("",rep("single", 3 * length(unique(pop$treatment)))),
+                               border_bottom = "single",
+                               border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single", "single"),
+                               col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1)
+                               ) %>%
+          r2rtf::rtf_body(col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2, 1),
+                          border_left = c("single", rep(c("single", ""),length(unique(pop$treatment))), "single", "single"),
+                          text_justification = c("l", rep("c", 3 * length(unique(pop$treatment))))
+                          ) %>% 
+          r2rtf::rtf_footnote(end_notes) 
+        
+        if(!is.null(output_report)){
+          x %>% 
+            r2rtf::rtf_encode() %>%
+            r2rtf::write_rtf(output_report)
+        }
+        
+        if(!is.null(output_dataframe)){
+          save(x, file = output_dataframe)
+        }
       }
     }
+    
+    
     if (display_pval == FALSE){
       if (!is.null(ae_grp)){
-        tbl_ae_spec %>% 
+        x <- tbl_ae_spec %>% 
           r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | "), " | Difference in % vs ", levels(pop$treatment)[2], " "),
-                        col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 2)
-          ) %>%
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse=" | "), 
+                                      " | Difference in % vs ", levels(pop$treatment)[2], " "),
+                               col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 2)
+                               ) %>%
           r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
-                        border_top = c("",rep("single",2*length(unique(pop$treatment))),"single"),
-                        border_bottom = "single",
-                        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single"),
-                        col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2)
-          ) %>%
-          
-          r2rtf::rtf_body(
-            col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment))), 2),
-            border_left = c("single", "single", rep(c("single",""),length(unique(pop$treatment))), "single"),
-            text_justification = c("l","l", rep("c", 2 * length(unique(pop$treatment))), "c"),
-            text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
-            page_by = "aebodsys", 
-            pageby_row = "first_row") %>% 
-          
-          r2rtf::rtf_footnote(end_notes) %>%
-          r2rtf::rtf_encode() %>%
-          r2rtf::write_rtf(output_name)
+                               border_top = c("",rep("single", 2 * length(unique(pop$treatment))),"single"),
+                               border_bottom = "single",
+                               border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))),"single"),
+                               col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2)
+                               ) %>%
+          r2rtf::rtf_body(col_rel_width = c(1, 3,  rep(1, 2 * length(unique(pop$treatment))), 2),
+                          border_left = c("single", "single", rep(c("single",""), length(unique(pop$treatment))), "single"),
+                          text_justification = c("l","l", rep("c", 2 * length(unique(pop$treatment))), "c"),
+                          text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
+                          page_by = "aebodsys", 
+                          pageby_row = "first_row"
+                          ) %>% 
+          r2rtf::rtf_footnote(end_notes) 
+        
+        if(!is.null(output_report)){
+          x %>% 
+            r2rtf::rtf_encode() %>%
+            r2rtf::write_rtf(output_report)
+        }
+        
+        if(!is.null(output_dataframe)){
+          save(x, file = output_dataframe)
+        }
       }
       if (is.null(ae_grp)){
-        tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
+        x <- tbl_ae_spec %>% dplyr::select(-aebodsys)%>%
           r2rtf::rtf_title(title_text, 
                     subtitle_text) %>%
           
-          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse = " | "), " | Difference in % vs ", levels(pop$treatment)[2], " "),
-                        col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 2)
-          ) %>%
+          r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment),collapse = " | "), 
+                                      " | Difference in % vs ", levels(pop$treatment)[2], " "),
+                               col_rel_width = c(3, rep(2, length(unique(pop$treatment))), 2)
+                               ) %>%
           r2rtf::rtf_colheader(" | n | (%) | n | (%) | Estimate (95% CI) ",
-                        border_top = c("",rep("single", 2 * length(unique(pop$treatment))), "single"),
-                        border_bottom = "single",
-                        border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single"),
-                        col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2)
-          ) %>%
-          
-          r2rtf::rtf_body(
-            col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment))), 2),
-            border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single"),
-            text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))),"c")) %>% 
-          
-          r2rtf::rtf_footnote(end_notes) %>%
-          r2rtf::rtf_encode() %>%
-          r2rtf::write_rtf(output_name)
+                               border_top = c("",rep("single", 2 * length(unique(pop$treatment))), "single"),
+                               border_bottom = "single",
+                               border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single"),
+                               col_rel_width = c(3, rep(1, 2 * length(unique(pop$treatment))), 2)
+                               ) %>%
+          r2rtf::rtf_body(col_rel_width = c(3,  rep(1, 2 * length(unique(pop$treatment))), 2),
+                          border_left = c("single", rep(c("single", ""), length(unique(pop$treatment))), "single"),
+                          text_justification = c("l", rep("c", 2 * length(unique(pop$treatment))),"c")
+                          ) %>% 
+          r2rtf::rtf_footnote(end_notes) 
+        
+        if(!is.null(output_report)){
+          x %>% 
+            r2rtf::rtf_encode() %>%
+            r2rtf::write_rtf(output_report)
+        }
+        
+        if(!is.null(output_dataframe)){
+          save(x, file = output_dataframe)
+        }
       }
     }
   }
+  
+  
   if (display_total==TRUE){
     if (!is.null(ae_grp)){
-      tbl_ae_spec %>% 
+      x <- tbl_ae_spec %>% 
         r2rtf::rtf_title(title_text, subtitle_text) %>%
         
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse=" | "), " | Total"),
-                      col_rel_width = c(3, rep(2, 1 + length(unique(pop$treatment))))
-        ) %>%
+                             col_rel_width = c(3, rep(2, 1 + length(unique(pop$treatment))))
+                             ) %>%
         r2rtf::rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
-                      border_top = c("", rep("single",2+2*length(unique(pop$treatment)))),
-                      border_bottom = "single",
-                      border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
-                      col_rel_width = c(3, rep(1, 2 + 2 * length(unique(pop$treatment))))
-        ) %>%
-        
-        r2rtf::rtf_body(
-          col_rel_width = c(1, 3,  rep(1, 2 + 2 * length(unique(pop$treatment)))),
-          border_left = c("single", "single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
-          text_justification = c("l", "l", rep("c", 2 + 2 * length(unique(pop$treatment)))),
-          text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
-          page_by = "aebodsys", 
-          pageby_row = "first_row") %>% 
-        
-        r2rtf::rtf_footnote(end_notes) %>%
-        r2rtf::rtf_encode() %>%
-        r2rtf::write_rtf(output_name)
+                             border_top = c("", rep("single", 2 + 2* length(unique(pop$treatment)))),
+                             border_bottom = "single",
+                             border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
+                             col_rel_width = c(3, rep(1, 2 + 2 * length(unique(pop$treatment))))
+                             ) %>%
+        r2rtf::rtf_body(col_rel_width = c(1, 3,  rep(1, 2 + 2 * length(unique(pop$treatment)))),
+                        border_left = c("single", "single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
+                        text_justification = c("l", "l", rep("c", 2 + 2 * length(unique(pop$treatment)))),
+                        text_format = matrix(text_format, nrow = n_row, ncol = n_col), 
+                        page_by = "aebodsys", 
+                        pageby_row = "first_row"
+                        ) %>% 
+        r2rtf::rtf_footnote(end_notes) 
+      
+      if(!is.null(output_report)){
+        x %>% 
+          r2rtf::rtf_encode() %>%
+          r2rtf::write_rtf(output_report)
+      }
+      
+      if(!is.null(output_dataframe)){
+        save(x, file = output_dataframe)
+      }
     }
     if (is.null(ae_grp)){
-      tbl_ae_spec %>% dplyr::select(-aebodsys) %>%
+      x <- tbl_ae_spec %>% 
+        dplyr::select(-aebodsys) %>%
         r2rtf::rtf_title(title_text, subtitle_text) %>%
-        
         r2rtf::rtf_colheader(paste0(" | ", paste(levels(pop$treatment), collapse = " | ")," | Total"),
-                      col_rel_width = c(3, rep(2, 1 + length(unique(pop$treatment))))
-        ) %>%
+                             col_rel_width = c(3, rep(2, 1 + length(unique(pop$treatment))))
+                             ) %>%
         r2rtf::rtf_colheader(" | n | (%) | n | (%) | n | (%) ",
-                      border_top = c("",rep("single",2 + 2 * length(unique(pop$treatment)))),
-                      border_bottom = "single",
-                      border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
-                      col_rel_width = c(3, rep(1, 2 + 2 * length(unique(pop$treatment))))
-        ) %>%
+                             border_top = c("",rep("single", 2 + 2 * length(unique(pop$treatment)))),
+                             border_bottom = "single",
+                             border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
+                             col_rel_width = c(3, rep(1, 2 + 2 * length(unique(pop$treatment))))
+                             ) %>%
+        r2rtf::rtf_body(col_rel_width = c(3,  rep(1, 2 + 2 * length(unique(pop$treatment)))),
+                        border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
+                        text_justification = c("l", rep("c", 2 + 2 * length(unique(pop$treatment))))
+                        ) %>% 
+        r2rtf::rtf_footnote(end_notes) 
         
-        r2rtf::rtf_body(
-          col_rel_width = c(3,  rep(1, 2 + 2 * length(unique(pop$treatment)))),
-          border_left = c("single", rep(c("single", ""), 1 + length(unique(pop$treatment)))),
-          text_justification = c("l", rep("c", 2 + 2 * length(unique(pop$treatment))))) %>% 
+        if(!is.null(output_report)){
+          x %>% 
+            r2rtf::rtf_encode() %>%
+            r2rtf::write_rtf(output_report)
+        }
         
-        r2rtf::rtf_footnote(end_notes) %>%
-        r2rtf::rtf_encode() %>%
-        r2rtf::write_rtf(output_name)
+        if(!is.null(output_dataframe)){
+          save(x, file = output_dataframe)
+        }
     }
   }
 }
