@@ -114,16 +114,14 @@ db <- tidy_ae_table(population_from  = adsl %>% rename(TRTA = TRT01A),
                                                                        "with drug-related adverse events",
                                                                        "with toxicity grade 3-5 adverse events",
                                                                        "discontinued due to an adverse event")),
-                    listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE",  # personal information
-                                    "AETERM", # AE term
-                                    "TRTA",   # treatment/control arm
-                                    "ADURN", "ADURU", # duration time and unit
-                                    "AESEV",  # Intensity: c("MILD", "MODERATE", "SEVERE")
-                                    "AESER",  # Serious event: c("N", "Y")
-                                    "AEREL",  # Related: c("PROBABLE", "REMOTE", "POSSIBLE", "NONE")
-                                    "AEACN",  # Action taken: c("DOSE NOT CHANGED", "DRUG INTERRUPTED", "DRUG WITHDRAWN")
-                                    "AEOUT"  # Outcome: c("NOT RECOVERED/NOT RESOLVED", "RECOVERED/RESOLVED", "FATAL" )
-                                    ))
+                    listing_interested = define_ae_listing(listing_var = c("SITEID", "USUBJID", "SEX", "RACE", "AGE",  
+                                                                           "AETERM", "TRTA", "ADURN", "ADURU",
+                                                                           "AESEV",  "AESER", "AEREL", "AEACN", "AEOUT"),
+                                                           listing_label = c("Site Number", "Participant ID", "Gender", "Race", "Age",
+                                                                             "AE", "Onset Epoch", "Duration", "Duration", 
+                                                                             "Intensity", "Serious", "Related", "Action Taken",
+                                                                             "Outcome"))
+                    )
 ```
 
 # Download the AE Summary Count Table

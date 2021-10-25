@@ -14,7 +14,7 @@ tidy_ae_table(
   ae_var = ae_var,
   ae_interested = NULL,
   stratum_var = NULL,
-  listing_var = names(observation_from)
+  listing_interested = define_ae_listing()
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ tidy_ae_table(
 
 \item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.}
 
-\item{listing_var}{A character string to define the criteria to select the column of the table}
+\item{listing_interested}{An objected return by function define_ae_listing()}
 }
 \value{
 Return a standard adverse event data frame
@@ -57,5 +57,6 @@ db <- tidy_ae_table(population_from  = adsl \%>\% rename(TRTA = TRT01A),
                              ae_criterion = c('AESER == "Y"', 'AEREL != "NONE"'),
                              ae_label = c("with serious adverse events",
                                           "with drug-related adverse events")),
-                    listing_var = c("USUBJID", "SEX", "RACE", "AGE"))
+                    listing_interested = define_ae_listing(listing_var = c("USUBJID", "SEX", "RACE", "AGE"),
+                                                           listing_label = c("ID", "Gender", "Race", "Age")))
 }

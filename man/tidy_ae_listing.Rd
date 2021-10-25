@@ -4,12 +4,14 @@
 \alias{tidy_ae_listing}
 \title{Output a data frame with the listed details in the reactable}
 \usage{
-tidy_ae_listing(db, listing_var = NULL)
+tidy_ae_listing(db, listing_var = NULL, listing_label = NULL)
 }
 \arguments{
 \item{db}{the data frame, whose subset will servers as the listed details in the reactable}
 
 \item{listing_var}{a character vector specifying the variable names to be displayed in the listed details}
+
+\item{listing_label}{a character vector specifying the variable labels to be displayed in the listed details}
 }
 \value{
 a data frame with selected/renamed variables
@@ -19,39 +21,22 @@ Output a data frame with the listed details in the reactable
 }
 \examples{
 library(tibble)
-treatment_order = c("MK9999" = "Xanomeline", "Placebo" = "Placebo")
 db = tibble(USUBJID = c("01", "01", "02", "03", "03", "03", "04", "04", "05"),
-            SITEID = c("a1", "a1", "b2", "c3", "c3", "c3", "d4", "d4", "e5"),
+            SITEID = c("site1", "site1", "site2", "site3", "site3", "site3", "site4", "site4", "site5"),
             SEX = c("F", "F", "M", "F", "F", "F", "M", "M", "F"),
             AGE = c(65, 65, 30, 22, 22, 22, 70, 70, 53),
-            RACE = c("Asian", "Asian", "Latino or Hispanic", 
+            RACE = c("Asian", "Asian", "Latino or Hispanic",
                      "WHITE", "WHITE", "WHITE",
-                     "BLACK OR AFRICAN AMERICAN", 
-                     "BLACK OR AFRICAN AMERICAN", 
+                     "BLACK OR AFRICAN AMERICAN",
+                     "BLACK OR AFRICAN AMERICAN",
                      "AMERICAN INDIAN OR ALASKA NATIVE"),
-            treatment = factor(c("Xanomeline", "Xanomeline", "Placebo", "Placebo", "Placebo",
-                                 "Placebo", "Xanomeline", "Xanomeline", "Xanomeline"),
-                               levels = treatment_order, labels = treatment_order),
-            ae = c("headache", "pain", "headache", "fever", "running nose",
-                   "pain", "headache", "fever", "headache"),
-            stratum = c("a", "a", "b", "c", "c", "c", "b", "b", "a"),
             ADURN = c(11, 3, 4, 5, 7, 20, 90, 34, 58),
-            ADURU = rep("minutes", 9),
-            AESEV = c(rep("MILD", 3), rep("MODERATE", 3), rep("SEVERE", 3)),
-            AESER = c("N", "N", "N", "Y", "N", "N", "N", "Y", "N"),
-            AEREL = c("N", "Y", "N", "N", "N", "Y", "N", "N", "Y"),
-            AEACN = c(rep("DOSE NOT CHANGED", 3),  
-                      rep("DRUG INTERRUPTED", 3), 
-                      rep("DRUG WITHDRAWN", 3)),
-            AEOUT = c(rep("NOT RECOVERED/NOT RESOLVED", 3), 
-                      rep("RECOVERED/RESOLVED", 3), 
-                      rep("FATAL", 3))
-)
+            ADURU = rep("minutes", 9))
 
-detail1 <- tidy_ae_listing(db, 
-     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"))
-detail2 <- tidy_ae_listing(db, 
-     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU"))
-detail3 <- tidy_ae_listing(db, 
-     listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE", "ADURN", "ADURU", "AESEV"))
+detail1 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SITEID", "SEX", "RACE", "AGE"),
+                           listing_label = c("ID", "Site Number", "Sex", "Race", "Age"))
+detail2 <- tidy_ae_listing(db, listing_var = c("USUBJID", "SEX", "ADURN", "ADURU"),
+                           listing_label = c("ID", "Gender", "Duration", "Duration"))
+detail3 <- tidy_ae_listing(db, listing_var = c("USUBJID", "ADURN", "ADURU", "AGE"),
+                           listing_label = c("ID", "Duration", "Duration", "Age"))
 }
