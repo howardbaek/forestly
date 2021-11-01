@@ -38,7 +38,8 @@ tlf_ae_summary(population_from = adsl \%>\% rename(TRTA = TRT01A),
                title_text = "Analysis of Adverse Event Summary",
                subtitle_text = NULL,
                end_notes = "Every subject is counted a single time for each applicable row and column.",
-               output_name = file.path(temp_dir, 'ae0summary.rtf'))
+               output_report = file.path(temp_dir, 'ae0summary.rtf'),
+               output_dataframe = NULL)
 tlf_download(path = temp_dir,
              output_name = "AE summary table", 
              button_label = "Download AE summary table")

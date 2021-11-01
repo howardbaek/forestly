@@ -19,7 +19,8 @@ tlf_ae_summary(
   title_text,
   subtitle_text = NULL,
   end_notes,
-  output_name = "./tlf_ae_summary.rtf"
+  output_report = "./tlf_ae_summary.rtf",
+  output_dataframe = "./tlf_ae_summary.RData"
 )
 }
 \arguments{
@@ -39,11 +40,14 @@ tlf_ae_summary(
 
 \item{ae_interested}{An object returned by function define_ae_select_list()}
 
-\item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.Only one 'stratum_var' is allowed.}
+\item{stratum_var}{A character string to define the variable of baseline stratum in 'population_from'.
+Only one 'stratum_var' is allowed.}
 
-\item{display_ci}{A logic value indicating whether displaying the risk difference, corresponding confidence interval and its p-value. Default is FALSE.}
+\item{display_ci}{A logic value indicating whether displaying the risk difference, corresponding confidence interval and its p-value.
+Default is FALSE.}
 
-\item{display_total}{A logic value indicating whether displaying the total column. Default is FALSE.}
+\item{display_total}{A logic value indicating whether displaying the total column.
+Default is FALSE.}
 
 \item{title_text}{The part of the text string to appear in the title row.}
 
@@ -51,7 +55,11 @@ tlf_ae_summary(
 
 \item{end_notes}{A vector of text strings to appear in the footnote.}
 
-\item{output_name}{A text string to output the table, can be specified with the path together. If no path specified, the default path will be used to save the table.}
+\item{output_report}{A text string to output the rtf table, can be specified with the path together.
+If no path specified, the default path will be used to save the table.}
+
+\item{output_dataframe}{A text string to output the rtf R object, like "./ae_summary.Rdata".
+It can be specified with the path together. If no path specified, the default path will be used to save the table.}
 }
 \value{
 Return a table for summary of AE
@@ -80,5 +88,6 @@ tlf_ae_summary(population_from = adsl \%>\% rename(TRTA = TRT01A),
                 title_text = "Analysis of Adverse Event Summary", 
                 subtitle_text = NULL,
                 end_notes ="Every subject is counted a single time for each applicable row and column.",
-                output_name = file.path(tempdir(), 'ae0summary.rtf'))
+                output_report = file.path(tempdir(), 'ae0summary.rtf'),
+                output_dataframe = file.path(tempdir(), 'ae0summary.RData'))
 }
