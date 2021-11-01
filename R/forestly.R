@@ -90,10 +90,14 @@ forestly <- function(db,
     small_sample = c(4, 4)
   }
   
+  # Set the order of ae, ae_label
+  db$table <- db$table %>% mutate(ae = as.factor(ae),
+                                  ae_label = as.factor(ae_label)) 
+  
   # Listing of subjects details
   t_detail <- db$listing
   
-  # count number of events for each AE regardless the stratum
+  # Count number of events for each AE regardless the stratum
   tb_no_stratum <- db$table %>% 
     select(-pct_1, -pct_2) %>% 
     group_by(ae, ae_label) %>% 
@@ -102,13 +106,14 @@ forestly <- function(db,
     mutate(pct_1 = n_1 / N_1 * 100, pct_2 = n_2 / N_2 * 100)
   
   # Calculate test using M&N method 
-  tb_rate_compare <- as.data.frame(do.call(rbind, db$table %>% 
-                                                     group_by(ae, ae_label) %>% 
-                                                     group_map(~ rate_compare_sum(n0 = .x$N_1, n1 = .x$N_2, 
-                                                                                  x0 = .x$n_1, x1 = .x$n_2, 
-                                                                                  strata = .x$stratum))))
+  tb_rate_compare <- as.data.frame(do.call(rbind, 
+                                           db$table %>% 
+                                             group_by(ae, ae_label) %>% 
+                                             group_map(~ rate_compare_sum(n0 = .x$N_1, n1 = .x$N_2, 
+                                                                          x0 = .x$n_1, x1 = .x$n_2, 
+                                                                          strata = .x$stratum))))
   tb <- cbind(tb_no_stratum, tb_rate_compare) %>% 
-    dplyr::mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%  # round into 4 digits
+    dplyr::mutate_at(vars(pct_1, pct_2, est, lower, upper, p), ~round(., 4)) %>%   # round into 4 digits
     dplyr::mutate(est = est * 100, lower = lower * 100, upper = upper * 100)       # change 0.1 into 10%
   # tb <- cbind(db$table,
   #             with(db$table, prop_test_mn(x0 = n_2, n0 = N_2, x1 = n_1, n1 = N_1))) 
@@ -167,7 +172,8 @@ forestly <- function(db,
       # Define listing of subjects
       details = function(index){
         t_row <- t_display[index, ]
-        subset(t_detail, toupper(AE) %in% toupper(t_row$ae)) %>% mk_reactable
+        subset(t_detail, 
+               toupper(AE) %in% toupper(t_row$ae)) %>% mk_reactable
       },
       
       # Customize cell feature
@@ -180,7 +186,7 @@ forestly <- function(db,
       columns = list(
         ae = reactable::colDef(header = "Adverse Events", minWidth = 150, align = "right"),
         
-        #stratum = reactable::colDef(header = "Stratum", show = FALSE),
+        #stratum = reactable::colDef(header = "Stratum", show = TRUE),
         
         ae_label = reactable::colDef(header = "Label", show = FALSE),
         
@@ -215,15 +221,15 @@ forestly <- function(db,
       )
     ),
     crosstool(t_display1,
-              # transceiver widgets are more like normal crosstalk widgets.
+              # Transceiver widgets are more like normal crosstalk widgets.
               class = "transceiver",
-              # set the initial value
+              # Set the initial value
               init = which(t_display$ae_label == "All"),
-              # channel set to "filter" to use the crosstalk filter handle
+              # Channel set to "filter" to use the crosstalk filter handle
               channel = "filter",
-              # reset optional vector of crosstalk group keys;
-              # use with init when data == relay (one crosstalk group) to 
-              # reset the initial filter/select handle.
+              # Reset optional vector of crosstalk group keys;
+              # Use with init when data == relay (one crosstalk group) to 
+              # Reset the initial filter/select handle.
               reset = rownames(t_display))
   )
   
