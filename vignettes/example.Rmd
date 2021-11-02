@@ -177,7 +177,7 @@ tlf_download(temp_dir)
 ```
 
 
-# Construct Interactive Froest Plot
+# Construct Interactive Forest Plot
 
 ```{r}
 forestly(db, 
